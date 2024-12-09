@@ -1,0 +1,13 @@
+env:
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: AIzaSyDkNntvsqQbav7oNwvF1M8hxdVvZAVXTeQ
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: repsp123.firebaseapp.com
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: repsp123
+  - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: repsp123-content-uploads
+  - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    value: 1081890506539
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: 1:1081890506539:web:65bc9128b23f175426276e

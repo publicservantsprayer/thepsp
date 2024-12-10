@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import Box from '@mui/material/Box'
+import Box from '@mui/material-pigment-css/Box'
 import Toolbar from '@mui/material/Toolbar'
 import Drawer from '@mui/material/Drawer'
 import List from '@mui/material/List'

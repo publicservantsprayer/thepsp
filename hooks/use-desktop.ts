@@ -1,4 +1,4 @@
-import { useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material-pigment-css'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 export function useDesktop() {

@@ -2,8 +2,8 @@
 
 import React from 'react'
 import Typography from '@mui/material/Typography'
-import Container from '@mui/material/Container'
-import Box from '@mui/material/Box'
+import Container from '@mui/material-pigment-css/Container'
+import Box from '@mui/material-pigment-css/Box'
 import Link from 'next/link'
 
 export default function Footer() {

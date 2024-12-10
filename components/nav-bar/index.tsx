@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import makeStyles from '@mui/styles/makeStyles'
 import Toolbar from '@mui/material/Toolbar'
 import Paper from '@mui/material/Paper'
-import Box from '@mui/material/Box'
+import Box from '@mui/material-pigment-css/Box'
 
 import AppBar from './app-bar'
 // import DrawerMenu from './drawer-menu'

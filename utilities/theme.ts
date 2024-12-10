@@ -1,6 +1,9 @@
-import { createTheme } from '@mui/material/styles'
+'use client'
 
-export const darkTheme = createTheme({
+import { createTheme } from '@mui/material'
+
+export const theme = createTheme({
+  cssVariables: true,
   palette: {
     mode: 'dark',
     contrastThreshold: 3,
@@ -12,10 +15,11 @@ export const darkTheme = createTheme({
       main: '#ffe082',
     },
     background: {
-      dark: '#212121',
+      // dark: '#212121',
     },
   },
   typography: {
+    fontFamily: 'var(--font-roboto)',
     h1: {
       fontSize: '4rem',
     },
@@ -26,24 +30,16 @@ export const darkTheme = createTheme({
       fontSize: '3rem',
     },
   },
-  overrides: {
+  components: {
     // Style sheet name
     MuiLink: {
-      // Name of the rule
-      root: {
-        // CSS
-        color: 'white',
+      styleOverrides: {
+        // Name of the rule
+        root: {
+          // CSS
+          color: 'white',
+        },
       },
     },
   },
-  props: {
-    MuiPaper: {
-      elevation: 6,
-    },
-    MuiLink: {
-      underline: 'always',
-    },
-  },
 })
-
-export default darkTheme

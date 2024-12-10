@@ -9,11 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fontsource/roboto": "^5.1.0",
     "@mui/icons-material": "^6.1.10",
     "@mui/lab": "6.0.0-beta.18",
     "@mui/material": "^6.1.10",
+    "@mui/material-pigment-css": "^6.1.10",
     "@mui/styles": "^6.1.10",
     "@mui/x-date-pickers": "^7.23.1",
+    "@pigment-css/react": "^0.0.28",
     "firebase": "^11.0.2",
     "firebase-admin": "^13.0.1",
     "next": "15.0.4",
@@ -22,6 +25,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@pigment-css/nextjs-plugin": "^0.0.28",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

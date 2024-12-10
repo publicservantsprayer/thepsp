@@ -1,8 +1,8 @@
-import { createTheme } from '@material-ui/core/styles'
+import { createTheme } from '@mui/material/styles'
 
 export const darkTheme = createTheme({
   palette: {
-    type: 'dark',
+    mode: 'dark',
     contrastThreshold: 3,
     tonalOffset: 0.2,
     primary: {
@@ -42,24 +42,6 @@ export const darkTheme = createTheme({
     },
     MuiLink: {
       underline: 'always',
-    },
-  },
-})
-
-export const lightTheme = createTheme({
-  ...darkTheme,
-  palette: {
-    type: 'light',
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#ffe082',
-    },
-  },
-  props: {
-    MuiLink: {
-      underline: 'hover',
     },
   },
 })

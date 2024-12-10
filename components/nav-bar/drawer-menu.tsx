@@ -1,29 +1,27 @@
 'use client'
 
 import React from 'react'
-import { Link as RouterLink, useLocation } from 'react-router-dom'
-import Box from '@material-ui/core/Box'
-import Toolbar from '@material-ui/core/Toolbar'
-import Drawer from '@material-ui/core/Drawer'
-import List from '@material-ui/core/List'
-import MuiListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import Divider from '@material-ui/core/Divider'
-import HomeIcon from '@material-ui/icons/Home'
-import PeopleIcon from '@material-ui/icons/People'
-import MapIcon from '@material-ui/icons/Map'
-import FavoriteIcon from '@material-ui/icons/Favorite'
-import DashboardIcon from '@material-ui/icons/Dashboard'
-import EventIcon from '@material-ui/icons/Event'
-import PostAddIcon from '@material-ui/icons/PostAdd'
-import AccountBoxIcon from '@material-ui/icons/AccountBox'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import TwitterIcon from 'mdi-material-ui/TwitterBox'
-import FilterVintageIcon from '@material-ui/icons/FilterVintage'
-import NaturePeopleIcon from '@material-ui/icons/NaturePeople'
-import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle'
+import Box from '@mui/material/Box'
+import Toolbar from '@mui/material/Toolbar'
+import Drawer from '@mui/material/Drawer'
+import List from '@mui/material/List'
+import MuiListItem from '@mui/material/ListItem'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import Divider from '@mui/material/Divider'
+import HomeIcon from '@mui/icons-material/Home'
+import PeopleIcon from '@mui/icons-material/People'
+import MapIcon from '@mui/icons-material/Map'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import EventIcon from '@mui/icons-material/Event'
+import PostAddIcon from '@mui/icons-material/PostAdd'
+import AccountBoxIcon from '@mui/icons-material/AccountBox'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'
+import FilterVintageIcon from '@mui/icons-material/FilterVintage'
+import NaturePeopleIcon from '@mui/icons-material/NaturePeople'
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle'
 
 // import { useUser, useAdmin } from '../utilities/firebase'
 import MobileOnly from '../mobile-only'
@@ -33,8 +31,10 @@ const ListItem = ({ Icon, text, to }) => {
   const location = useLocation()
   const selected = to === location.pathname
 
+  const NullComponent = () => null
+
   return (
-    <MuiListItem button component={RouterLink} to={to} selected={selected}>
+    <MuiListItem button component={NullComponent} to={to} selected={selected}>
       <ListItemIcon>
         <Icon />
       </ListItemIcon>
@@ -44,9 +44,10 @@ const ListItem = ({ Icon, text, to }) => {
 }
 
 export default function DrawerMenu({ drawerOpen, toggleDrawer, stateCode }) {
-  const [user] = useUser()
-  const [admin] = useAdmin()
-  const homePath = useHomePath()
+  // const [user] = useUser()
+  // const [admin] = useAdmin()
+  // const homePath = useHomePath()
+  const homePath = '/'
 
   if (!stateCode) return null
 
@@ -111,12 +112,8 @@ export default function DrawerMenu({ drawerOpen, toggleDrawer, stateCode }) {
         {admin && (
           <>
             <ListItem text="Content" Icon={DashboardIcon} to="/content" />
-            <ListItem
-              text="Twitter Accounts"
-              Icon={TwitterIcon}
-              to="/twitter-accounts"
-            />
-            <ListItem text="Data Import" Icon={TwitterIcon} to="/data" />
+            {/* <ListItem text="Twitter Accounts" to="/twitter-accounts" /> */}
+            <ListItem text="Data Import" Icon={DashboardIcon} to="/data" />
           </>
         )}
       </List>

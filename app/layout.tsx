@@ -1,10 +1,20 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
+import '@mui/material-pigment-css/styles.css'
 // import './globals.css'
-import { ThemeProvider } from '@/components/theme-provider'
+import {
+  ThemeProvider,
+  Theme,
+  StyledEngineProvider,
+} from '@/components/theme-provider'
 import { NavBar } from '@/components/nav-bar'
 import Footer from '@/components/footer'
 import { CssBaseline } from '@/components/css-baseline'
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  interface DefaultTheme extends Theme {}
+}
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -32,12 +42,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider>
-          <CssBaseline />
-          <NavBar />
-          {children}
-          <Footer />
-        </ThemeProvider>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider>
+            <CssBaseline />
+            <NavBar />
+            {children}
+            <Footer />
+          </ThemeProvider>
+        </StyledEngineProvider>
       </body>
     </html>
   )

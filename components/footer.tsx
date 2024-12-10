@@ -1,9 +1,9 @@
 'use client'
 
 import React from 'react'
-import Typography from '@material-ui/core/Typography'
-import Container from '@material-ui/core/Container'
-import Box from '@material-ui/core/Box'
+import Typography from '@mui/material/Typography'
+import Container from '@mui/material/Container'
+import Box from '@mui/material/Box'
 import Link from 'next/link'
 
 export default function Footer() {

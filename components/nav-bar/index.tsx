@@ -1,15 +1,15 @@
 'use client'
 
 import React, { useState } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import Toolbar from '@material-ui/core/Toolbar'
-import Paper from '@material-ui/core/Paper'
-import Box from '@material-ui/core/Box'
+import makeStyles from '@mui/styles/makeStyles'
+import Toolbar from '@mui/material/Toolbar'
+import Paper from '@mui/material/Paper'
+import Box from '@mui/material/Box'
 
 import AppBar from './app-bar'
-import DrawerMenu from './drawer-menu'
+// import DrawerMenu from './drawer-menu'
 // import DailyLeaders from '../DailyLeaders'
-import { useDesktop } from '@/hooks/use-desktop'
+// import { useDesktop } from '@/hooks/use-desktop'
 // import useHomePath from '../utilities/useHomePath'
 // import useUSAState from '../utilities/useUSAState'
 
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundPositionY: '-400px',
       //height: '220px',
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       background:
         'url("/images/capitol-color-night-700.jpg") top left no-repeat',
       backgroundPositionY: '-150px',

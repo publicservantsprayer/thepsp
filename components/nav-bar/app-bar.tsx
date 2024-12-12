@@ -30,7 +30,10 @@ export default function AppBar({ setDrawerOpen }: AppBarProps) {
     <MuiAppBar
       color="inherit"
       position="fixed"
-      sx={{ backgroundColor: 'background.default' }}
+      sx={(theme) => ({
+        backgroundColor: 'background.default',
+        zIndex: theme.zIndex.drawer + 1,
+      })}
     >
       <Toolbar variant="regular">
         <div sx={{ flexGrow: 1 }}>

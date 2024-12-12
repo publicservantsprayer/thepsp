@@ -3,12 +3,11 @@ import localFont from 'next/font/local'
 import '@mui/material-pigment-css/styles.css'
 // import './globals.css'
 import { DefaultPropsProvider } from '@/components/default-props-provider'
-// import { NavBar } from '@/components/nav-bar'
-// import Footer from '@/components/footer'
+import { NavBar } from '@/components/nav-bar'
+import Footer from '@/components/footer'
 import { CssBaseline } from '@/components/css-baseline'
 import type { Theme, SxProps } from '@mui/material/styles'
 
-// import 'react'
 import { Roboto } from 'next/font/google'
 import { ThemeProvider } from '@mui/material/styles'
 import { theme } from '@/utilities/theme'
@@ -67,9 +66,9 @@ export default function RootLayout({
           <DefaultPropsProvider>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              {/* <NavBar /> */}
+              <NavBar />
               {children}
-              {/* <Footer /> */}
+              <Footer />
             </ThemeProvider>
           </DefaultPropsProvider>
         </AppRouterCacheProvider>

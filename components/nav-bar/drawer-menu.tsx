@@ -1,11 +1,10 @@
 'use client'
 
 import React from 'react'
-import Box from '@mui/material-pigment-css/Box'
 import Toolbar from '@mui/material/Toolbar'
 import Drawer from '@mui/material/Drawer'
 import List from '@mui/material/List'
-import MuiListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Divider from '@mui/material/Divider'
@@ -22,41 +21,62 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 import FilterVintageIcon from '@mui/icons-material/FilterVintage'
 import NaturePeopleIcon from '@mui/icons-material/NaturePeople'
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle'
+import Link from 'next/link'
 
 // import { useUser, useAdmin } from '../utilities/firebase'
 import MobileOnly from '../mobile-only'
 // import useHomePath from '../utilities/useHomePath'
 
-const ListItem = ({ Icon, text, to }) => {
-  const location = useLocation()
+interface ListItemProps {
+  Icon: React.ElementType
+  text: string
+  to: string
+}
+
+const ListItem = ({ Icon, text, to }: ListItemProps) => {
+  // const location = useLocation()
   const selected = to === location.pathname
 
-  const NullComponent = () => null
-
   return (
-    <MuiListItem button component={NullComponent} to={to} selected={selected}>
+    <ListItemButton LinkComponent={Link} href={to} selected={selected}>
       <ListItemIcon>
         <Icon />
       </ListItemIcon>
       <ListItemText primary={text} />
-    </MuiListItem>
+    </ListItemButton>
   )
 }
+interface Props {
+  drawerOpen: boolean
+  setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>
+  stateCode: string
+}
 
-export default function DrawerMenu({ drawerOpen, toggleDrawer, stateCode }) {
+export default function DrawerMenu({
+  drawerOpen,
+  setDrawerOpen,
+  stateCode,
+}: Props) {
   // const [user] = useUser()
   // const [admin] = useAdmin()
   // const homePath = useHomePath()
+  const user: { email: string } = { email: 'test@test.com' }
+  const admin = null
   const homePath = '/'
+  stateCode = 'tx'
 
   if (!stateCode) return null
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false)
+  }
 
   return (
     <Drawer
       open={drawerOpen}
       anchor="right"
-      onClose={toggleDrawer(false)}
-      onClick={toggleDrawer(false)}
+      onClose={handleDrawerClose}
+      onClick={handleDrawerClose}
       variant="temporary"
     >
       <Toolbar />
@@ -102,7 +122,7 @@ export default function DrawerMenu({ drawerOpen, toggleDrawer, stateCode }) {
           <ListItem text="Sign In" Icon={AccountCircleIcon} to="/sign-in" />
         )}
 
-        {user && <Box m={2}>{user.email}</Box>}
+        {user && <div sx={{ margin: 2 }}>{user.email}</div>}
         {user && (
           <ListItem text="Profile" Icon={AccountBoxIcon} to="/profile" />
         )}

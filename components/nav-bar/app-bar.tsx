@@ -13,64 +13,82 @@ import MapIcon from '@mui/icons-material/Map'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import MoreIcon from '@mui/icons-material/MoreVert'
 
-import MobileOnly from '@/components/mobile-only'
-import DesktopOnly from '@/components/desktop-only'
 // // import useUSAState from '../utilities/useUSAState'
 import Link from 'next/link'
+import { DrawerMenu } from './drawer-menu'
+import { User } from 'firebase/auth'
 
-interface AppBarProps {
-  setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>
+interface Props {
+  initialUser: User | null
 }
 
-export default function AppBar({ setDrawerOpen }: AppBarProps) {
+export function AppBar({ initialUser }: Props) {
   // const { stateName } = useUSAState()
-  const stateName = 'tx'
+  const stateName = 'Texas'
+  const stateCode = 'tx'
+  const [drawerOpen, setDrawerOpen] = React.useState(false)
 
   return (
-    <MuiAppBar
-      color="inherit"
-      position="fixed"
-      sx={(theme) => ({
-        backgroundColor: 'background.default',
-        zIndex: theme.zIndex.drawer + 1,
-      })}
-    >
-      <Toolbar variant="regular">
-        <div sx={{ flexGrow: 1 }}>
-          <Typography variant="h6" color="inherit">
-            PSP {stateName}
-          </Typography>
-        </div>
+    <>
+      <MuiAppBar
+        color="inherit"
+        position="fixed"
+        sx={(theme) => ({
+          backgroundColor: 'background.default',
+          zIndex: theme.zIndex.drawer + 1,
+        })}
+      >
+        <Toolbar variant="regular">
+          <div sx={{ flexGrow: 1 }}>
+            <Typography variant="h6" color="inherit">
+              PSP {stateName}
+            </Typography>
+          </div>
 
-        <MobileOnly>
-          <IconButton
-            onClick={() => setDrawerOpen((prev: boolean) => !prev)}
-            edge="start"
-            color="inherit"
-            size="large"
+          <div sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              onClick={() => setDrawerOpen((prev: boolean) => !prev)}
+              edge="start"
+              color="inherit"
+              size="large"
+            >
+              <MenuIcon />
+            </IconButton>
+          </div>
+
+          <div
+            sx={{
+              display: { xs: 'none', md: 'flex' },
+              gap: 2,
+            }}
           >
-            <MenuIcon />
-          </IconButton>
-        </MobileOnly>
+            <Item text="Home" Icon={HomeIcon} to="/" />
+            <Item text="Find Your State" Icon={MapIcon} to="/find-your-state" />
+            <Item text="What We Do" Icon={PeopleIcon} to="/what-we-do" />
+            <Item text="Why We Pray" Icon={FavoriteIcon} to="/why-we-pray" />
+            <Item text="About" Icon={FavoriteIcon} to="/about" />
 
-        <DesktopOnly>
-          <Item text="Home" Icon={HomeIcon} to="/" />
-          <Item text="Find Your State" Icon={MapIcon} to="/find-your-state" />
-          <Item text="What We Do" Icon={PeopleIcon} to="/what-we-do" />
-          <Item text="Why We Pray" Icon={FavoriteIcon} to="/why-we-pray" />
-          <Item text="About" Icon={FavoriteIcon} to="/about" />
+            <IconButton
+              onClick={() => setDrawerOpen((prev: boolean) => !prev)}
+              edge="end"
+              color="inherit"
+              size="large"
+            >
+              <MoreIcon />
+            </IconButton>
+          </div>
+        </Toolbar>
+      </MuiAppBar>
 
-          <IconButton
-            onClick={() => setDrawerOpen((prev: boolean) => !prev)}
-            edge="end"
-            color="inherit"
-            size="large"
-          >
-            <MoreIcon />
-          </IconButton>
-        </DesktopOnly>
-      </Toolbar>
-    </MuiAppBar>
+      <Toolbar />
+
+      <DrawerMenu
+        setDrawerOpen={setDrawerOpen}
+        drawerOpen={drawerOpen}
+        stateCode={stateCode}
+        initialUser={initialUser}
+      />
+    </>
   )
 }
 
@@ -80,15 +98,9 @@ interface ItemProps {
   Icon: React.ElementType
 }
 
-const Item = ({ text, to, Icon }: ItemProps) => {
+function Item({ text, to, Icon }: ItemProps) {
   return (
-    <Button
-      color="inherit"
-      LinkComponent={Link}
-      href={to}
-      startIcon={<Icon />}
-      sx={{ margin: 1 }}
-    >
+    <Button color="inherit" LinkComponent={Link} href={to} startIcon={<Icon />}>
       {text}
     </Button>
   )

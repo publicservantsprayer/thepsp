@@ -1,26 +1,21 @@
-'use client'
-
-import React, { useState } from 'react'
-import Toolbar from '@mui/material/Toolbar'
 import Paper from '@mui/material/Paper'
+import Image from 'next/image'
+import { AppBar } from '@/components/nav-bar/app-bar'
 
-import AppBar from './app-bar'
-import DrawerMenu from './drawer-menu'
+import { getAuthenticatedAppForUser } from '@/lib/firebase/server-app'
+import { User } from 'firebase/auth'
 
-export function NavBar() {
-  const [drawerOpen, setDrawerOpen] = useState(false)
-  const stateCode = 'tx'
+export const dynamic = 'force-dynamic'
+
+export async function NavBar() {
+  const { currentUser } = await getAuthenticatedAppForUser()
+  const initialUser: User = currentUser?.toJSON() as User
+
+  console.log({ currentUser })
 
   return (
     <div sx={{ boxShadow: 12 }}>
-      <AppBar setDrawerOpen={setDrawerOpen} />
-      <Toolbar />
-
-      <DrawerMenu
-        setDrawerOpen={setDrawerOpen}
-        drawerOpen={drawerOpen}
-        stateCode={stateCode}
-      />
+      <AppBar initialUser={initialUser} />
 
       <div
         sx={{
@@ -38,16 +33,18 @@ export function NavBar() {
           <Paper
             sx={{
               background: 'rgba(0, 0, 0, 0.6)',
-              width: { sm: '38%', xs: '100%' },
+              width: { md: '38%', sm: '100%' },
               marginLeft: 'auto',
               marginRight: 'auto',
             }}
             square
           >
-            <img
-              sx={{ width: '100%' }}
+            <Image
+              sx={{ width: '100%', height: 'auto' }}
+              width={1500}
+              height={351}
               src="/images/public-servants-prayer.png"
-              alt="public servants' prayer"
+              alt="Public Servants' Prayer"
             />
           </Paper>
         </div>

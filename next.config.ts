@@ -3,7 +3,14 @@ import { withPigment, PigmentOptions } from '@pigment-css/nextjs-plugin'
 import { theme } from './utilities/theme'
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+    ],
+  },
 }
 
 const pigmentConfig: PigmentOptions = {

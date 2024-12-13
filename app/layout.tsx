@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
+import './globals.css'
 import '@mui/material-pigment-css/styles.css'
-// import './globals.css'
 import { DefaultPropsProvider } from '@/components/default-props-provider'
 import { NavBar } from '@/components/nav-bar'
 import Footer from '@/components/footer'
@@ -60,6 +60,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
+        id="__next"
         className={`${roboto.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>

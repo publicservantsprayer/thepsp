@@ -2,11 +2,12 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   onAuthStateChanged as _onAuthStateChanged,
+  User,
 } from 'firebase/auth'
 
-import { auth } from '@/src/lib/firebase/clientApp'
+import { auth } from '@/lib/firebase/clientApp'
 
-export function onAuthStateChanged(cb) {
+export function onAuthStateChanged(cb: (user: User | null) => void) {
   return _onAuthStateChanged(auth, cb)
 }
 

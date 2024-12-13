@@ -25,37 +25,22 @@ import Link from 'next/link'
 
 // import { useUser, useAdmin } from '../utilities/firebase'
 import MobileOnly from '../mobile-only'
+import { AuthButton } from '@/components/nav-bar/auth-button'
+import { User } from 'firebase/auth'
 // import useHomePath from '../utilities/useHomePath'
 
-interface ListItemProps {
-  Icon: React.ElementType
-  text: string
-  to: string
-}
-
-const ListItem = ({ Icon, text, to }: ListItemProps) => {
-  // const location = useLocation()
-  const selected = to === location.pathname
-
-  return (
-    <ListItemButton LinkComponent={Link} href={to} selected={selected}>
-      <ListItemIcon>
-        <Icon />
-      </ListItemIcon>
-      <ListItemText primary={text} />
-    </ListItemButton>
-  )
-}
 interface Props {
   drawerOpen: boolean
   setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>
   stateCode: string
+  initialUser: User | null
 }
 
-export default function DrawerMenu({
+export function DrawerMenu({
   drawerOpen,
   setDrawerOpen,
   stateCode,
+  initialUser,
 }: Props) {
   // const [user] = useUser()
   // const [admin] = useAdmin()
@@ -118,6 +103,8 @@ export default function DrawerMenu({
 
         <Divider />
 
+        <AuthButton initialUser={initialUser} />
+
         {!user && (
           <ListItem text="Sign In" Icon={AccountCircleIcon} to="/sign-in" />
         )}
@@ -138,5 +125,25 @@ export default function DrawerMenu({
         )}
       </List>
     </Drawer>
+  )
+}
+
+interface ListItemProps {
+  Icon: React.ElementType
+  text: string
+  to: string
+}
+
+const ListItem = ({ Icon, text, to }: ListItemProps) => {
+  // const location = useLocation()
+  const selected = to === location.pathname
+
+  return (
+    <ListItemButton LinkComponent={Link} href={to} selected={selected}>
+      <ListItemIcon>
+        <Icon />
+      </ListItemIcon>
+      <ListItemText primary={text} />
+    </ListItemButton>
   )
 }

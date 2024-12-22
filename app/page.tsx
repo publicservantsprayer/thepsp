@@ -1,10 +1,16 @@
+import { makeValidStateCode } from '@/data/make-valid-state-code'
 import { RedirectToState } from './redirect-to-state'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <h1 className="text-blue-400">test</h1>
-      <RedirectToState />
-    </div>
-  )
+export default async function Home() {
+  const cookieStore = await cookies()
+  const cookieStateCodeRequest = cookieStore.get('stateCode')
+
+  if (cookieStateCodeRequest) {
+    const stateCode = makeValidStateCode(cookieStateCodeRequest.value)
+    return redirect(`/states/${stateCode.toLowerCase()}`)
+  }
+
+  return <RedirectToState />
 }

@@ -1,5 +1,6 @@
 import { Detect } from './detect'
-
+import { cookies } from 'next/headers'
+import { UpdateCookieStateCode } from './update-cookie-state-code'
 interface Props {
   params: Promise<{
     stateCode: string
@@ -7,10 +8,19 @@ interface Props {
 }
 
 export default async function StatePage({ params }: Props) {
-  const { stateCode } = await params
-  if (stateCode === 'detect') {
-    return <Detect />
+  const { stateCode: paramStateCode } = await params
+  const cookieStore = await cookies()
+  const cookieStateCode = cookieStore.get('stateCode')
+
+  if (paramStateCode === 'detect') {
+    return <Detect cookieStateCode={cookieStateCode?.value} />
   }
 
-  return <div>{stateCode}</div>
+  console.log('paramStateCode', paramStateCode)
+
+  return (
+    <div>
+      <UpdateCookieStateCode paramStateCode={paramStateCode} />
+    </div>
+  )
 }

@@ -2,17 +2,18 @@
 
 import * as React from 'react'
 
-import { useHomePath } from '@/hooks/use-home-path'
 import { useRouter } from 'next/navigation'
+import { useUSAState } from '@/hooks/use-usa-state'
 
 export function RedirectToState() {
-  const homePath = useHomePath()
   const router = useRouter()
-  console.log({ homePath })
+  const { stateCode } = useUSAState({
+    fetchGeoLocation: true,
+  })
 
   React.useEffect(() => {
-    router.push(homePath)
-  }, [homePath, router])
+    router.push(`/states/${stateCode.toLowerCase()}`)
+  }, [router, stateCode])
 
   return null
 }

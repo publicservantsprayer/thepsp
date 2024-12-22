@@ -3,11 +3,11 @@
 import * as React from 'react'
 
 import { useRouter } from 'next/navigation'
-import { useUSAState } from '@/hooks/use-usa-state'
+import { useUSAStateWithoutContext } from '@/hooks/use-usa-state'
 
 export function RedirectToState() {
   const router = useRouter()
-  const { stateCode } = useUSAState({
+  const { stateCode } = useUSAStateWithoutContext({
     fetchGeoLocation: true,
   })
 

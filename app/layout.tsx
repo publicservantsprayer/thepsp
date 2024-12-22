@@ -12,6 +12,7 @@ import { Roboto } from 'next/font/google'
 import { ThemeProvider } from '@mui/material/styles'
 import { theme } from '@/utilities/theme'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
+import { UsaStateProvider } from '@/hooks/use-usa-state'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -67,9 +68,11 @@ export default function RootLayout({
           <DefaultPropsProvider>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              <NavBar />
-              {children}
-              <Footer />
+              <UsaStateProvider>
+                <NavBar />
+                {children}
+                <Footer />
+              </UsaStateProvider>
             </ThemeProvider>
           </DefaultPropsProvider>
         </AppRouterCacheProvider>

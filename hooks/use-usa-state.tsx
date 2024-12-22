@@ -11,7 +11,12 @@ interface Props {
   fetchGeoLocation?: boolean
 }
 
-export function useUSAState({
+/**
+ * Hook to get state information from the URL, cookie, or geolocation.
+ *
+ * Preforms geo location lookup if no state code is provided.
+ */
+export function useUSAStateWithoutContext({
   paramStateCode,
   cookieStateCode,
   fetchGeoLocation,
@@ -50,6 +55,42 @@ export function useUSAState({
     lat,
     lng,
   }
+}
+
+type UseUSAState = ReturnType<typeof useUSAStateWithoutContext>
+
+const USAStateContext = React.createContext<UseUSAState>({
+  stateCode: 'TX',
+  lowerCaseStateCode: 'tx',
+  stateName: 'Texas',
+  stateNameFromStateCode: (stateCode: StateCode) => states[stateCode],
+  statesObj: states,
+  facebookPage: 'PSPTexas',
+  paramStateCode: undefined,
+  geoStateCode: '',
+  lat: '',
+  lng: '',
+})
+
+type ProviderProps = Props & { children: React.ReactNode }
+
+export const UsaStateProvider = ({ children, ...props }: ProviderProps) => {
+  const usaState = useUSAStateWithoutContext(props)
+
+  return (
+    <USAStateContext.Provider value={usaState}>
+      {children}
+    </USAStateContext.Provider>
+  )
+}
+
+export const useUSAState = () => {
+  const context = React.useContext(USAStateContext)
+  if (!context) {
+    throw new Error('useUSAState must be used within a UsaStateProvider')
+  }
+
+  return context
 }
 
 const googleBrowserKey = 'AIzaSyBQkLQ1DJEtDczE179QNc7fF1UM6t0piqY'

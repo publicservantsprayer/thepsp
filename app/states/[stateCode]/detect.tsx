@@ -1,6 +1,6 @@
 'use client'
 
-import { useUSAState } from '@/hooks/use-usa-state'
+import { useUSAStateWithoutContext } from '@/hooks/use-usa-state'
 
 export function Detect({ cookieStateCode }: { cookieStateCode?: string }) {
   const {
@@ -11,7 +11,7 @@ export function Detect({ cookieStateCode }: { cookieStateCode?: string }) {
     geoStateCode,
     lat,
     lng,
-  } = useUSAState({ fetchGeoLocation: true })
+  } = useUSAStateWithoutContext({ fetchGeoLocation: true })
 
   return (
     <div>

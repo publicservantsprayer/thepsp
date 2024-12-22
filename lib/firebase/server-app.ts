@@ -9,10 +9,11 @@ import { firebaseConfig } from './config'
 import { getAuth } from 'firebase/auth'
 
 export async function getAuthenticatedAppForUser() {
+  console.log('getting server app!!!!!!!!!!!!!!!')
   const nextHeaders = await headers()
   const idToken = nextHeaders.get('Authorization')?.split('Bearer ')[1]
-  console.log('idToken', idToken)
-  console.log('firebaseConfig', JSON.stringify(firebaseConfig))
+  // console.log('idToken', idToken)
+  // console.log('firebaseConfig', JSON.stringify(firebaseConfig))
   const firebaseServerApp = initializeServerApp(
     firebaseConfig,
     idToken

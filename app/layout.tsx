@@ -70,17 +70,17 @@ export default function RootLayout({
             <NextThemeProvider
               attribute="class"
               defaultTheme="dark"
-              // enableSystem
+              enableSystem
               disableTransitionOnChange
             >
-              <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <UsaStateProvider>
-                  <NavBar />
-                  {children}
-                  <Footer />
-                </UsaStateProvider>
-              </ThemeProvider>
+              {/* <ThemeProvider theme={theme}> */}
+              <CssBaseline />
+              <UsaStateProvider>
+                <NavBar />
+                {children}
+                <Footer />
+              </UsaStateProvider>
+              {/* </ThemeProvider> */}
             </NextThemeProvider>
           </DefaultPropsProvider>
         </AppRouterCacheProvider>

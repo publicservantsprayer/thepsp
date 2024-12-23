@@ -17,6 +17,7 @@ import MoreIcon from '@mui/icons-material/MoreVert'
 import Link from 'next/link'
 import { DrawerMenu } from './drawer-menu'
 import { User } from 'firebase/auth'
+import { ModeSelect } from '../mode-select'
 
 interface Props {
   initialUser: User | null
@@ -76,6 +77,7 @@ export function AppBar({ initialUser }: Props) {
             >
               <MoreIcon />
             </IconButton>
+            <ModeSelect />
           </div>
         </Toolbar>
       </MuiAppBar>

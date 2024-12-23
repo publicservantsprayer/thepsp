@@ -10,16 +10,14 @@ import { Leader } from '@/lib/leader'
 interface Props {
   leaders: Leader[]
   chamber: Leader['Chamber']
-  currentTab: number
-  index: number
 }
 
-export function TabPanel({ leaders, chamber, currentTab, index }: Props) {
+export function TabPanel({ leaders, chamber }: Props) {
   const { stateName } = useUSAState()
   const chamberTitle = chamber === 'H' ? 'Representatives' : 'Senators'
 
   return (
-    <div role="tabpanel" hidden={currentTab !== index}>
+    <div role="tabpanel">
       <div className="px-2 pt-5 text-center">
         <H4>
           US {chamberTitle} from {stateName}

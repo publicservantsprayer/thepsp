@@ -25,8 +25,6 @@ export default async function StatePage({ params }: Props) {
     stateCode,
   })
 
-  console.log('leaders', leaders)
-
   return (
     <div>
       <UpdateCookieStateCode paramStateCode={paramStateCode} />

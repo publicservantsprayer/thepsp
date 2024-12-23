@@ -1,11 +1,11 @@
 import { Timestamp } from 'firebase/firestore'
 
-export interface Leader {
+export interface LeaderDbType {
   BirthDate: string
   BirthMonth: string
   BirthPlace: string
   BirthYear: string
-  Chamber: string
+  Chamber: 'H' | 'S' // House or Senate
   Degree1: string
   Degree2: string
   Degree3: string
@@ -20,7 +20,7 @@ export interface Leader {
   FirstName: string
   Gender: string
   LastName: string
-  LegType: string
+  LegType: 'FL' | 'SL' // Federal or State
   LegalName: string
   MailAddr2: string
   MailAddr3: string
@@ -48,6 +48,11 @@ export interface Leader {
   hasPhoto: boolean
   lastImportDate: Timestamp
   permaLink: string
+}
+
+export interface Leader extends Omit<LeaderDbType, 'lastImportDate'> {
+  id: string
+  lastImportDate: Date
 }
 
 export const leaderPhoto = (leader: Leader) => {

@@ -2,6 +2,8 @@ import { Detect } from './detect'
 import { cookies } from 'next/headers'
 import { UpdateCookieStateCode } from './update-cookie-state-code'
 import { StateLeaders } from './state-leaders'
+import { getLeaders } from '@/lib/firebase/firestore'
+import { makeValidStateCode } from '@/data/make-valid-state-code'
 
 interface Props {
   params: Promise<{
@@ -17,11 +19,18 @@ export default async function StatePage({ params }: Props) {
   if (paramStateCode === 'detect') {
     return <Detect cookieStateCode={cookieStateCode?.value} />
   }
+  const stateCode = makeValidStateCode(paramStateCode)
+
+  const leaders = await getLeaders({
+    stateCode,
+  })
+
+  console.log('leaders', leaders)
 
   return (
     <div>
       <UpdateCookieStateCode paramStateCode={paramStateCode} />
-      <StateLeaders />
+      <StateLeaders leaders={leaders} />
     </div>
   )
 }

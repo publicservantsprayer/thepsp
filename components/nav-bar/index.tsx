@@ -11,8 +11,6 @@ export async function NavBar() {
   const { currentUser } = await getAuthenticatedAppForUser()
   const initialUser: User = currentUser?.toJSON() as User
 
-  console.log({ currentUser })
-
   return (
     <div sx={{ boxShadow: 12 }}>
       <AppBar initialUser={initialUser} />

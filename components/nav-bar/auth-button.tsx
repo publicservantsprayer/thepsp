@@ -63,7 +63,7 @@ export function AuthButton({ initialUser }: Props) {
       ) : (
         <div className="profile">
           <a href="#" onClick={handleSignIn}>
-            <img src="/profile.svg" alt="A placeholder user image" />
+            <Image src="/profile.svg" alt="A placeholder user image" />
             Sign In with Google
           </a>
         </div>

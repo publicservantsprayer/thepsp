@@ -5,14 +5,16 @@ import { H4 } from '@/components/formatting'
 import { Leaders } from './leaders'
 import { Divider } from '@mui/material'
 import { useUSAState } from '@/hooks/use-usa-state'
+import { Leader } from '@/lib/leader'
 
 interface Props {
-  chamber: string
+  leaders: Leader[]
+  chamber: Leader['Chamber']
   currentTab: number
   index: number
 }
 
-export function TabPanel({ chamber, currentTab, index }: Props) {
+export function TabPanel({ leaders, chamber, currentTab, index }: Props) {
   const { stateName } = useUSAState()
   const chamberTitle = chamber === 'H' ? 'Representatives' : 'Senators'
 
@@ -24,7 +26,7 @@ export function TabPanel({ chamber, currentTab, index }: Props) {
         </H4>
       </div>
       <div className="flex flex-wrap justify-center mb-3">
-        <Leaders legType="FL" chamber={chamber} />
+        <Leaders leaders={leaders} legType="FL" chamber={chamber} />
       </div>
       <Divider />
       <div className="px-2 pt-5 text-center">
@@ -33,7 +35,7 @@ export function TabPanel({ chamber, currentTab, index }: Props) {
         </H4>
       </div>
       <div className="flex flex-wrap justify-center">
-        <Leaders legType="SL" chamber={chamber} />
+        <Leaders leaders={leaders} legType="SL" chamber={chamber} />
       </div>
     </div>
   )

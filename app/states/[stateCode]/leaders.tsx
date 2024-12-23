@@ -3,10 +3,8 @@ import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
 import Paper from '@mui/material/Paper'
-import Skeleton from '@mui/material/Skeleton'
 
 import { Leader, leaderPhoto, leaderUrl } from '@/lib/leader'
-import { useStateLeaders } from '@/lib/firebase/firebase'
 import { Link } from '@/components/ui/link'
 
 const useStyles = makeStyles({
@@ -17,16 +15,18 @@ const useStyles = makeStyles({
   },
 })
 
-interface ActualLeadersProps {
+interface Props {
   leaders: Leader[]
+  chamber: Leader['Chamber']
+  legType: Leader['LegType']
 }
 
-const ActualLeaders = ({ leaders }: ActualLeadersProps) => {
+export const Leaders = ({ leaders, chamber, legType }: Props) => {
   const classes = useStyles()
 
   if (!leaders) return null
 
-  function compare(leaderA: Leader, leaderB: Leader) {
+  function alphabetical(leaderA: Leader, leaderB: Leader) {
     if (leaderA.LastName < leaderB.LastName) {
       return -1
     }
@@ -36,7 +36,11 @@ const ActualLeaders = ({ leaders }: ActualLeadersProps) => {
     return 0
   }
 
-  leaders.sort(compare)
+  leaders.sort(alphabetical)
+
+  leaders = leaders.filter((leader) => {
+    return leader.Chamber === chamber && leader.LegType === legType
+  })
 
   return (
     <>
@@ -67,46 +71,4 @@ const ActualLeaders = ({ leaders }: ActualLeadersProps) => {
       ))}
     </>
   )
-}
-
-interface FakeLeadersProps {
-  leaders: any[]
-  legType: string
-  chamber: string
-}
-
-const FakeLeaders = ({ leaders, legType, chamber }: FakeLeadersProps) => {
-  const classes = useStyles()
-
-  return (
-    <>
-      {leaders.map((_, i) => (
-        <div key={i} className="m-1">
-          <Paper>
-            <div className="p-1">
-              <div className="min-w-[145px] flex justify-center">
-                <Skeleton variant="circular" className={classes.avatar} />
-              </div>
-              <div className="flex justify-center">
-                <Skeleton width={100} height={6} style={{ margin: 8 }} />
-              </div>
-            </div>
-          </Paper>
-        </div>
-      ))}
-    </>
-  )
-}
-
-interface LeadersProps {
-  stateCode: string
-}
-
-export function Leaders(props: LeadersProps) {
-  // const [leaders, loading] = useStateLeaders(props)
-  const leaders = []
-  const fakeLeaders = new Array(10).fill({})
-  return null
-
-  return <ActualLeaders leaders={leaders} {...props} />
 }

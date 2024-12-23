@@ -1,19 +1,10 @@
 import React from 'react'
-import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
 import Paper from '@mui/material/Paper'
 
 import { Leader, leaderPhoto, leaderUrl } from '@/lib/leader'
 import { Link } from '@/components/ui/link'
-
-const useStyles = makeStyles({
-  avatar: {
-    margin: 10,
-    width: 60,
-    height: 60,
-  },
-})
 
 interface Props {
   leaders: Leader[]
@@ -22,8 +13,6 @@ interface Props {
 }
 
 export const Leaders = ({ leaders, chamber, legType }: Props) => {
-  const classes = useStyles()
-
   if (!leaders) return null
 
   function alphabetical(leaderA: Leader, leaderB: Leader) {
@@ -53,7 +42,7 @@ export const Leaders = ({ leaders, chamber, legType }: Props) => {
                   <Avatar
                     alt={leader.PhotoFile}
                     src={leaderPhoto(leader)}
-                    className={classes.avatar}
+                    className="m-[10px] w-[60px] h-[60px]"
                   />
                 </div>
                 <Typography

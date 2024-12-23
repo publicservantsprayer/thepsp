@@ -24,10 +24,7 @@ export function StateLeaders({ leaders }: Props) {
 
   return (
     <>
-      <div
-        id="state-legislators"
-        style={{ position: 'relative', top: '-90px' }}
-      />
+      <div id="state-legislators" className="relative top-[-90px]" />
       <AppBar position="static" enableColorOnDark>
         <Tabs
           value={currentTab}

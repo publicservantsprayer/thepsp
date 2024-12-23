@@ -13,6 +13,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import { theme } from '@/utilities/theme'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
 import { UsaStateProvider } from '@/hooks/use-usa-state'
+import { NextThemeProvider } from '@/components/next-theme-provider'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -59,21 +60,28 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         id="__next"
         className={`${roboto.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <DefaultPropsProvider>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <UsaStateProvider>
-                <NavBar />
-                {children}
-                <Footer />
-              </UsaStateProvider>
-            </ThemeProvider>
+            <NextThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              // enableSystem
+              disableTransitionOnChange
+            >
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <UsaStateProvider>
+                  <NavBar />
+                  {children}
+                  <Footer />
+                </UsaStateProvider>
+              </ThemeProvider>
+            </NextThemeProvider>
           </DefaultPropsProvider>
         </AppRouterCacheProvider>
       </body>

@@ -25,7 +25,6 @@ export const getLeaders: GetLeaders = async ({ stateCode }) => {
     },
   }
 
-  console.log({ stateCode })
   const collectionRef = db
     .collection('states')
     .doc(stateCode)
@@ -37,4 +36,12 @@ export const getLeaders: GetLeaders = async ({ stateCode }) => {
   }
 
   return querySnapshot.docs.map((doc) => doc.data())
+}
+
+export const getLeader = async (id: string) => {
+  const doc = await db
+    .collectionGroup('leaders')
+    .where('permaLink', '==', id)
+    .get()
+  return doc.docs[0].data() as Leader
 }

@@ -17,11 +17,13 @@ export interface LeaderDbType {
   ElectDate: string
   Email: string
   Facebook: string
+  Family: string
   FirstName: string
   Gender: string
   LastName: string
   LegType: 'FL' | 'SL' // Federal or State
   LegalName: string
+  MailAddr1: string
   MailAddr2: string
   MailAddr3: string
   MailAddr5: string
@@ -36,9 +38,11 @@ export interface LeaderDbType {
   PhotoPath: string
   Prefix: string
   Residence: string
+  Religion: string
   School1: string
   School2: string
   School3: string
+  Spouse: string
   State: string
   StateCode: string
   Title: string

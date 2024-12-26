@@ -59,7 +59,7 @@ export function useUSAStateWithoutContext({
 
 type UseUSAState = ReturnType<typeof useUSAStateWithoutContext>
 
-const USAStateContext = React.createContext<UseUSAState>({
+export const USAStateContext = React.createContext<UseUSAState>({
   stateCode: 'TX',
   lowerCaseStateCode: 'tx',
   stateName: 'Texas',

@@ -1,10 +1,10 @@
 'use client'
 
-import React from 'react'
+import React, { use } from 'react'
 import { H4 } from '@/components/formatting'
 import { Leaders } from './leaders'
 import { Divider } from '@mui/material'
-import { useUSAState } from '@/hooks/use-usa-state'
+import { USAStateContext } from '@/hooks/use-usa-state'
 import { Leader } from '@/lib/leader'
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function TabPanel({ leaders, chamber }: Props) {
-  const { stateName } = useUSAState()
+  const { stateName } = use(USAStateContext)
   const chamberTitle = chamber === 'H' ? 'Representatives' : 'Senators'
 
   return (

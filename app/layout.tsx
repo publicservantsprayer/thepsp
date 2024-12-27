@@ -14,6 +14,7 @@ import { theme } from '@/utilities/theme'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
 import { UsaStateProvider } from '@/hooks/use-usa-state'
 import { NextThemeProvider } from '@/components/next-theme-provider'
+import { AppBar } from '@/components/nav-bar/app-bar'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -76,7 +77,6 @@ export default function RootLayout({
               <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <UsaStateProvider>
-                  <NavBar />
                   {children}
                   <Footer />
                 </UsaStateProvider>

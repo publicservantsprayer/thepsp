@@ -1,10 +1,8 @@
-import Paper from '@mui/material/Paper'
-import Image from 'next/image'
 import { AppBar } from '@/components/nav-bar/app-bar'
-
 import { getAuthenticatedAppForUser } from '@/lib/firebase/server-app'
 import { User } from 'firebase/auth'
 import { PspTitleLogo } from '@/components/psp-title-logo'
+import { HeroBackground } from '@/components/hero-background'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,21 +18,10 @@ export default async function StatesLayout({ children }: Props) {
     <div sx={{ boxShadow: 12 }}>
       <AppBar initialUser={initialUser} />
 
-      <div
-        sx={{
-          background: {
-            sm: 'url("/images/capitol-color-night.jpg") top left no-repeat',
-            xs: 'url("/images/capitol-color-night-700.jpg") top left no-repeat',
-          },
-          backgroundPositionY: { sm: '-400px', xs: '-150px' },
-          backgroundAttachment: 'fixed',
-          overflow: 'hidden',
-          height: { sm: 'auto', xs: '180px' },
-        }}
-      >
+      <HeroBackground>
         <PspTitleLogo />
-        {children}
-      </div>
+      </HeroBackground>
+      {children}
     </div>
   )
 }

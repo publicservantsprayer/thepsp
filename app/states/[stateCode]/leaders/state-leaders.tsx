@@ -1,6 +1,6 @@
 import React from 'react'
 import { TabPanel } from './tab-panel'
-import { Leader } from '@/lib/leader'
+import { Leader } from '@/lib/types'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 interface Props {

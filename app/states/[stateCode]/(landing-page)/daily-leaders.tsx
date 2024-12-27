@@ -135,10 +135,6 @@ function PrayingForTitle({ dateID }: { dateID: string }) {
   )
 }
 
-const P = ({ children }: { children: React.ReactNode }) => (
-  <div className="mx-1 my-2">{children}</div>
-)
-
 export function StateMessage({ stateName }: { stateName: string }) {
   return (
     <div className="grid gap-3 p-4 font-light leading-relaxed text-muted-foreground">

@@ -1,4 +1,4 @@
-import { makeValidStateCode } from '@/data/make-valid-state-code'
+import { makeValidStateCode } from '@/data/get-state-info'
 import { RedirectToState } from './redirect-to-state'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'

@@ -5,7 +5,7 @@ import React from 'react'
 import { states } from '@/data/states'
 import type { StateCode } from '@/lib/types'
 import axios from 'axios'
-import { makeValidStateCode } from '@/data/make-valid-state-code'
+import { makeValidStateCode } from '@/data/get-state-info'
 
 interface Props {
   paramStateCode?: string
@@ -32,7 +32,7 @@ export function useUSAStateWithoutContext({
   })
 
   const stateCode = makeValidStateCode(
-    paramStateCode || cookieStateCode || geoStateCode
+    paramStateCode || cookieStateCode || geoStateCode,
   )
 
   const lowerCaseStateCode = stateCode.toLowerCase()
@@ -114,14 +114,14 @@ const useGeoStateCode = ({
     const getGeoCodeState = async () => {
       try {
         const geoLocation = await axios.post(
-          googleGeolocationUrl(googleBrowserKey)
+          googleGeolocationUrl(googleBrowserKey),
         )
         const { lng, lat } = geoLocation.data.location
         setLat(lat)
         setLng(lng)
 
         const geoCode = await axios.post(
-          googleGeocodeUrl(lat, lng, googleBrowserKey)
+          googleGeocodeUrl(lat, lng, googleBrowserKey),
         )
 
         const shortName =

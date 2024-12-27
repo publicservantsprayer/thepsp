@@ -1,6 +1,6 @@
 import { StateLeaders } from './state-leaders'
 import { getLeaders } from '@/lib/firebase/firestore'
-import { makeValidStateCode } from '@/data/make-valid-state-code'
+import { makeValidStateCode } from '@/data/get-state-info'
 
 interface Props {
   params: Promise<{

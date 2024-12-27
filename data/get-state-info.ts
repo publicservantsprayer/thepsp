@@ -14,3 +14,14 @@ export const makeValidStateCode = (stateCode?: string) => {
   if (validateStateCode(stateCode)) return stateCode as StateCode
   else return fallBackStateCode as StateCode
 }
+
+export const getStateInfo = (stateCode: StateCode) => {
+  return {
+    stateCode,
+    lowerCaseStateCode: stateCode.toLowerCase(),
+    stateName: states[stateCode],
+    stateNameFromStateCode: (stateCode: StateCode) => states[stateCode],
+    states,
+    facebookPage: `PSP${states[stateCode].split(' ').join('')}`,
+  }
+}

@@ -1,16 +1,13 @@
-import NextLink from 'next/link'
-import MuiLink from '@mui/material/Link'
+import NextLink, { LinkProps } from 'next/link'
 
 export function Link({
   href,
   children,
-}: {
-  href: string
-  children: React.ReactNode
-}) {
+  ...props
+}: LinkProps & { className?: string; children: React.ReactNode }) {
   return (
-    <MuiLink component={NextLink} href={href} sx={{ color: 'white' }}>
+    <NextLink href={href} {...props}>
       {children}
-    </MuiLink>
+    </NextLink>
   )
 }

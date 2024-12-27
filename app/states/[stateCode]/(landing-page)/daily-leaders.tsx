@@ -1,9 +1,6 @@
 import React from 'react'
 
-// import { useHistoricalPost, useLatestPost } from '@/lib/firebase/firestore'
-// import TabPanels from './TabPanels'
 import { notFound } from 'next/navigation'
-import { StateMessage } from './state-message'
 import type { Post, StateCode } from '@/lib/types'
 import type { Leader } from '@/lib/types'
 
@@ -16,8 +13,10 @@ import { getHistoricalPost, getLatestPost } from '@/lib/firebase/firestore'
 import { Link } from '@/components/ui/link'
 import Image from 'next/image'
 import { leaderPhoto } from '@/lib/leader'
-import { Skeleton, Typography } from '@mui/material'
+import { Skeleton } from '@mui/material'
 import { Accordion } from './accordion'
+import { Separator } from '@/components/ui/separator'
+import { getStateInfo } from '@/data/get-state-info'
 
 interface Props {
   stateCode: StateCode
@@ -39,10 +38,11 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
     post = await getLatestPost(stateCode)
   }
 
+  const { stateName } = getStateInfo(stateCode)
+
   return (
     <div className="width-full mx-auto mb-12 max-w-[900px]">
-      <Tabs defaultValue="today" className="grid gap-1">
-        {/* <div className="w-full gap-4 rounded-b-none rounded-t-lg bg-primary text-primary-foreground"> */}
+      <Tabs defaultValue="today" className="grid gap-2">
         <TabsList className="bg-psp-primary grid w-full grid-cols-4 rounded-t-lg text-accent-foreground">
           <TabsTrigger
             value="today"
@@ -58,18 +58,17 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
           </TabsTrigger>
           <TabsTrigger
             value="facebook"
-            className="data-[state=active]:text-psp-primary-foreground gap-2"
+            className="data-[state=active]:text-psp-primary-foreground h-8 gap-2"
           >
             <SiFacebook />
           </TabsTrigger>
           <TabsTrigger
             value="x"
-            className="data-[state=active]:text-psp-primary-foreground gap-2"
+            className="data-[state=active]:text-psp-primary-foreground h-8 gap-2"
           >
             <SiX />
           </TabsTrigger>
         </TabsList>
-        {/* </div> */}
 
         <div className="grid rounded-lg bg-background md:grid-cols-10">
           <div className="flex md:col-span-6">
@@ -97,47 +96,13 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
           </div>
 
           <div className="col-span-4 rounded-r-lg bg-secondary p-2 text-secondary-foreground">
-            <StateMessage />
+            <StateMessage stateName={stateName} />
           </div>
         </div>
       </Tabs>
     </div>
   )
 }
-
-// const fakePost = {
-//   leader1: {},
-//   leader2: {},
-//   leader3: {},
-// }
-
-// const HistoricalDailyLeaders = () => {
-//   const { year, month, day } = useParams()
-//   let [post, loading] = useHistoricalPost(year, month, day)
-//   post = loading ? fakePost : post
-
-//   return <ActualDailyLeaders post={post} />
-// }
-
-// const LatestDailyLeaders = () => {
-//   let [post, loading] = useLatestPost()
-//   post = loading ? fakePost : post
-
-//   return <ActualDailyLeaders post={post} />
-// }
-
-// export default function DailyLeaders() {
-//   const { stateCode } = useUSAState()
-//   const { year, month, day } = useParams()
-
-//   if (!stateCode) return null
-
-//   if (year && month && day) {
-//     return <HistoricalDailyLeaders />
-//   } else {
-//     return <LatestDailyLeaders />
-//   }
-// }
 
 function LeaderPhoto({ leader }: { leader: Leader }) {
   return (
@@ -166,6 +131,70 @@ function PrayingForTitle({ dateID }: { dateID: string }) {
     <div className="text-psp-primary-foreground text-center text-2xl">
       {today && <>Today we are praying for</>}
       {!today && <>This day we prayed for</>}
+    </div>
+  )
+}
+
+const P = ({ children }: { children: React.ReactNode }) => (
+  <div className="mx-1 my-2">{children}</div>
+)
+
+export function StateMessage({ stateName }: { stateName: string }) {
+  return (
+    <div className="grid gap-3 p-4 font-light leading-relaxed text-muted-foreground">
+      <h2 className="text-2xl">PSP {stateName}</h2>
+
+      <Separator className="bg-muted-foreground" />
+
+      <p>
+        Every day we pray for three {stateName}{' '}
+        <Link
+          href={`/states/${stateName.toLowerCase()}/leaders`}
+          className="underline"
+        >
+          legislators
+        </Link>{' '}
+        on both the state and federal level.
+      </p>
+
+      <p>
+        To help facilitate this movement, we send a post out each morning on
+        these networks:
+      </p>
+
+      <TabsList className="grid grid-cols-3">
+        <TabsTrigger
+          value="email"
+          className="gap-2 data-[state=active]:bg-transparent"
+        >
+          <MdEmail /> Email
+        </TabsTrigger>
+        <TabsTrigger
+          value="facebook"
+          className="gap-2 data-[state=active]:bg-transparent"
+        >
+          <SiFacebook />
+        </TabsTrigger>
+        <TabsTrigger
+          value="x"
+          className="gap-2 data-[state=active]:bg-transparent"
+        >
+          <SiX />
+        </TabsTrigger>
+      </TabsList>
+
+      <p>
+        If {stateName} is not your state, first{' '}
+        <Link href="/find-your-state" className="underline">
+          find your state
+        </Link>{' '}
+        and then follow on Facebook, or get on the mailing list.
+      </p>
+
+      <p>
+        You can join thousands in every state who are praying for their specific
+        state leaders each day.
+      </p>
     </div>
   )
 }

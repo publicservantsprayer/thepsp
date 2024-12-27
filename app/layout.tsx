@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import './globals.css'
-import '@mui/material-pigment-css/styles.css'
+// import '@mui/material-pigment-css/styles.css'
 import { DefaultPropsProvider } from '@/components/default-props-provider'
-import { NavBar } from '@/components/nav-bar'
 import Footer from '@/components/footer'
 import { CssBaseline } from '@/components/css-baseline'
 import type { Theme, SxProps } from '@mui/material/styles'
@@ -11,10 +10,9 @@ import type { Theme, SxProps } from '@mui/material/styles'
 import { Roboto } from 'next/font/google'
 import { ThemeProvider } from '@mui/material/styles'
 import { theme } from '@/utilities/theme'
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
+// import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
 import { UsaStateProvider } from '@/hooks/use-usa-state'
 import { NextThemeProvider } from '@/components/next-theme-provider'
-import { AppBar } from '@/components/nav-bar/app-bar'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -66,24 +64,24 @@ export default function RootLayout({
         id="__next"
         className={`${roboto.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-          <DefaultPropsProvider>
-            <NextThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <UsaStateProvider>
-                  {children}
-                  <Footer />
-                </UsaStateProvider>
-              </ThemeProvider>
-            </NextThemeProvider>
-          </DefaultPropsProvider>
-        </AppRouterCacheProvider>
+        {/* <AppRouterCacheProvider options={{ enableCssLayer: true }}> */}
+        {/* <DefaultPropsProvider> */}
+        <NextThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {/* <ThemeProvider theme={theme}> */}
+          {/* <CssBaseline /> */}
+          <UsaStateProvider>
+            {children}
+            <Footer />
+          </UsaStateProvider>
+          {/* </ThemeProvider> */}
+        </NextThemeProvider>
+        {/* </DefaultPropsProvider> */}
+        {/* </AppRouterCacheProvider> */}
       </body>
     </html>
   )

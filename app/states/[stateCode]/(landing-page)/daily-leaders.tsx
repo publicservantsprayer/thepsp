@@ -40,10 +40,10 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
   }
 
   return (
-    <div className="m-auto width-full max-w-[900px]">
+    <div className="width-full m-auto max-w-[900px]">
       <Tabs defaultValue="today">
-        <div className="">
-          <TabsList className="gap-4 w-full bg-primary text-primary-foreground h-14 rounded-t-lg rounded-b-none">
+        <div className="h-14 w-full gap-4 rounded-b-none rounded-t-lg bg-primary text-primary-foreground">
+          <TabsList>
             <TabsTrigger value="today">TODAY</TabsTrigger>
             <TabsTrigger value="email">
               <MdEmail />
@@ -55,35 +55,35 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
               <SiX />
             </TabsTrigger>
           </TabsList>
+        </div>
 
-          <div className="grid md:grid-cols-2">
-            <div className="flex">
-              <div className="p-2 mx-2 rounded flex-grow">
-                <TabsContent value="today">
-                  <div className="mb-1 text-center">
-                    {moment(post.dateID).format('dddd, MMMM Do')}
-                  </div>
+        <div className="grid md:grid-cols-2">
+          <div className="flex">
+            <div className="mx-2 flex-grow rounded p-2">
+              <TabsContent value="today">
+                <div className="mb-1 text-center">
+                  {moment(post.dateID).format('dddd, MMMM Do')}
+                </div>
 
-                  <PrayingForTitle dateID={post.dateID} />
+                <PrayingForTitle dateID={post.dateID} />
 
-                  <div className="flex justify-around">
-                    <LeaderPhoto leader={post.leader1} />
-                    <LeaderPhoto leader={post.leader2} />
-                    <LeaderPhoto leader={post.leader3} />
-                  </div>
+                <div className="flex justify-around">
+                  <LeaderPhoto leader={post.leader1} />
+                  <LeaderPhoto leader={post.leader2} />
+                  <LeaderPhoto leader={post.leader3} />
+                </div>
 
-                  <div className="my-2">
-                    <Accordion leader={post.leader1} />
-                    <Accordion leader={post.leader2} />
-                    <Accordion leader={post.leader3} />
-                  </div>
-                </TabsContent>
-              </div>
+                <div className="my-2">
+                  <Accordion leader={post.leader1} />
+                  <Accordion leader={post.leader2} />
+                  <Accordion leader={post.leader3} />
+                </div>
+              </TabsContent>
             </div>
+          </div>
 
-            <div className="p-2 bg-secondary text-secondary-foreground">
-              <StateMessage />
-            </div>
+          <div className="bg-secondary p-2 text-secondary-foreground">
+            <StateMessage />
           </div>
         </div>
       </Tabs>
@@ -127,7 +127,7 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
 
 function LeaderPhoto({ leader }: { leader: Leader }) {
   return (
-    <div className="h-[148px] w-full max-w-[108px] m-1">
+    <div className="m-1 h-[148px] w-full max-w-[108px]">
       <Link href={`/leader/${leader.permaLink}`}>
         {!leader.PID ? (
           <Skeleton height={148} width={108} />
@@ -149,7 +149,7 @@ function PrayingForTitle({ dateID }: { dateID: string }) {
   const today = moment().isSame(moment(dateID), 'day')
 
   return (
-    <div className="my-2 font-bold text-center">
+    <div className="my-2 text-center font-bold">
       <Typography variant="h5" color="secondary">
         {today && <>Today we are praying for</>}
         {!today && <>This day we prayed for</>}

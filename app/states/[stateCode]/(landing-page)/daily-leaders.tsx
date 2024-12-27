@@ -40,28 +40,42 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
   }
 
   return (
-    <div className="width-full m-auto max-w-[900px]">
-      <Tabs defaultValue="today">
-        <div className="h-14 w-full gap-4 rounded-b-none rounded-t-lg bg-primary text-primary-foreground">
-          <TabsList>
-            <TabsTrigger value="today">TODAY</TabsTrigger>
-            <TabsTrigger value="email">
-              <MdEmail />
-            </TabsTrigger>
-            <TabsTrigger value="facebook">
-              <SiFacebook />
-            </TabsTrigger>
-            <TabsTrigger value="x">
-              <SiX />
-            </TabsTrigger>
-          </TabsList>
-        </div>
+    <div className="width-full mx-auto mb-12 max-w-[900px]">
+      <Tabs defaultValue="today" className="grid gap-1">
+        {/* <div className="w-full gap-4 rounded-b-none rounded-t-lg bg-primary text-primary-foreground"> */}
+        <TabsList className="bg-psp-primary grid w-full grid-cols-4 rounded-t-lg text-accent-foreground">
+          <TabsTrigger
+            value="today"
+            className="data-[state=active]:text-psp-primary-foreground gap-2"
+          >
+            Today
+          </TabsTrigger>
+          <TabsTrigger
+            value="email"
+            className="data-[state=active]:text-psp-primary-foreground gap-2"
+          >
+            <MdEmail /> Email
+          </TabsTrigger>
+          <TabsTrigger
+            value="facebook"
+            className="data-[state=active]:text-psp-primary-foreground gap-2"
+          >
+            <SiFacebook />
+          </TabsTrigger>
+          <TabsTrigger
+            value="x"
+            className="data-[state=active]:text-psp-primary-foreground gap-2"
+          >
+            <SiX />
+          </TabsTrigger>
+        </TabsList>
+        {/* </div> */}
 
-        <div className="grid md:grid-cols-2">
-          <div className="flex">
-            <div className="mx-2 flex-grow rounded p-2">
-              <TabsContent value="today">
-                <div className="mb-1 text-center">
+        <div className="grid rounded-lg bg-background md:grid-cols-10">
+          <div className="flex md:col-span-6">
+            <div className="mx-2 flex-grow rounded p-8">
+              <TabsContent value="today" className="grid gap-4">
+                <div className="mb-0 text-center">
                   {moment(post.dateID).format('dddd, MMMM Do')}
                 </div>
 
@@ -82,7 +96,7 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
             </div>
           </div>
 
-          <div className="bg-secondary p-2 text-secondary-foreground">
+          <div className="col-span-4 rounded-r-lg bg-secondary p-2 text-secondary-foreground">
             <StateMessage />
           </div>
         </div>
@@ -149,11 +163,9 @@ function PrayingForTitle({ dateID }: { dateID: string }) {
   const today = moment().isSame(moment(dateID), 'day')
 
   return (
-    <div className="my-2 text-center font-bold">
-      <Typography variant="h5" color="secondary">
-        {today && <>Today we are praying for</>}
-        {!today && <>This day we prayed for</>}
-      </Typography>
+    <div className="text-psp-primary-foreground text-center text-2xl">
+      {today && <>Today we are praying for</>}
+      {!today && <>This day we prayed for</>}
     </div>
   )
 }

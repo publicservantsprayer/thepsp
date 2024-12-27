@@ -50,6 +50,12 @@ export default {
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))',
         },
+        psp: {
+          primary: {
+            DEFAULT: 'hsl(var(--psp-primary))',
+            foreground: 'hsl(var(--psp-primary-foreground))',
+          },
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -60,7 +66,7 @@ export default {
   },
   plugins: [require('tailwindcss-animate')],
   corePlugins: {
-    preflight: false,
+    preflight: true,
   },
-  // important: '#__next',
+  important: '#__next',
 } satisfies Config

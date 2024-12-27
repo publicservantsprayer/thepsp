@@ -13,7 +13,7 @@ import MapIcon from '@mui/icons-material/Map'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import MoreIcon from '@mui/icons-material/MoreVert'
 
-// // import useUSAState from '../utilities/useUSAState'
+import { useUSAState } from '@/hooks/use-usa-state'
 import Link from 'next/link'
 import { DrawerMenu } from './drawer-menu'
 import { User } from 'firebase/auth'
@@ -24,9 +24,7 @@ interface Props {
 }
 
 export function AppBar({ initialUser }: Props) {
-  // const { stateName } = useUSAState()
-  const stateName = 'Texas'
-  const stateCode = 'tx'
+  const { stateName } = useUSAState()
   const [drawerOpen, setDrawerOpen] = React.useState(false)
 
   return (
@@ -87,7 +85,6 @@ export function AppBar({ initialUser }: Props) {
       <DrawerMenu
         setDrawerOpen={setDrawerOpen}
         drawerOpen={drawerOpen}
-        stateCode={stateCode}
         initialUser={initialUser}
       />
     </>

@@ -36,6 +36,7 @@ export function useUSAStateWithoutContext({
   )
 
   const lowerCaseStateCode = stateCode.toLowerCase()
+  const homePath = `/states/${lowerCaseStateCode}`
   const stateName = states[stateCode]
   let facebookPage = `PSP${stateName.split(' ').join('')}`
 
@@ -50,7 +51,8 @@ export function useUSAStateWithoutContext({
     lowerCaseStateCode,
     stateName,
     stateNameFromStateCode,
-    statesObj: states,
+    states,
+    homePath,
     facebookPage,
     paramStateCode,
     geoStateCode,
@@ -59,20 +61,9 @@ export function useUSAStateWithoutContext({
   }
 }
 
-type UseUSAState = ReturnType<typeof useUSAStateWithoutContext>
+type UseUSAState = ReturnType<typeof useUSAStateWithoutContext> | undefined
 
-export const USAStateContext = React.createContext<UseUSAState>({
-  stateCode: 'TX',
-  lowerCaseStateCode: 'tx',
-  stateName: 'Texas',
-  stateNameFromStateCode: (stateCode: StateCode) => states[stateCode],
-  statesObj: states,
-  facebookPage: 'PSPTexas',
-  paramStateCode: undefined,
-  geoStateCode: '',
-  lat: '',
-  lng: '',
-})
+export const USAStateContext = React.createContext<UseUSAState>(undefined)
 
 type ProviderProps = Props & { children: React.ReactNode }
 

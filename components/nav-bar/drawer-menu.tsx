@@ -27,28 +27,22 @@ import Link from 'next/link'
 import MobileOnly from '../mobile-only'
 import { AuthButton } from '@/components/nav-bar/auth-button'
 import { User } from 'firebase/auth'
+import { useUSAState } from '@/hooks/use-usa-state'
 // import useHomePath from '../utilities/useHomePath'
 
 interface Props {
   drawerOpen: boolean
   setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>
-  stateCode: string
   initialUser: User | null
 }
 
-export function DrawerMenu({
-  drawerOpen,
-  setDrawerOpen,
-  stateCode,
-  initialUser,
-}: Props) {
+export function DrawerMenu({ drawerOpen, setDrawerOpen, initialUser }: Props) {
+  const { stateCode, homePath } = useUSAState()
   // const [user] = useUser()
   // const [admin] = useAdmin()
   // const homePath = useHomePath()
   const user: { email: string } = { email: 'test@test.com' }
   const admin = null
-  const homePath = '/'
-  stateCode = 'tx'
 
   if (!stateCode) return null
 

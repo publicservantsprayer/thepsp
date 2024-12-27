@@ -1,7 +1,9 @@
 'use client'
 
 import React from 'react'
-import { states, StateCode } from '@/data/states'
+
+import { states } from '@/data/states'
+import type { StateCode } from '@/lib/types'
 import axios from 'axios'
 import { makeValidStateCode } from '@/data/make-valid-state-code'
 

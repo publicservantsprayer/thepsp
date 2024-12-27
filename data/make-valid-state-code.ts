@@ -1,4 +1,5 @@
-import { states, StateCode } from '@/data/states'
+import { states } from '@/data/states'
+import type { StateCode } from '@/lib/types'
 
 // Uppercase, two-letter state codes
 const stateCodes = Object.keys(states)

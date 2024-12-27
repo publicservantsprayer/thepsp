@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import Image from 'next/image'
 
-import type { Leader } from '@/lib/leader'
+import type { Leader } from '@/lib/types'
 import { leaderPhoto } from '@/lib/leader'
 import { SvgIconTypeMap } from '@mui/material'
 import { OverridableComponent } from '@mui/material/OverridableComponent'

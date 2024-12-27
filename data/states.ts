@@ -50,5 +50,3 @@ export const states = {
   WI: 'Wisconsin',
   WY: 'Wyoming',
 }
-
-export type StateCode = keyof typeof states

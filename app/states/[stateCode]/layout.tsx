@@ -4,10 +4,15 @@ import { AppBar } from '@/components/nav-bar/app-bar'
 
 import { getAuthenticatedAppForUser } from '@/lib/firebase/server-app'
 import { User } from 'firebase/auth'
+import { PspTitleLogo } from '@/components/psp-title-logo'
 
 export const dynamic = 'force-dynamic'
 
-export async function NavBar() {
+interface Props {
+  children: React.ReactNode
+}
+
+export default async function StatesLayout({ children }: Props) {
   const { currentUser } = await getAuthenticatedAppForUser()
   const initialUser: User = currentUser?.toJSON() as User
 
@@ -27,25 +32,8 @@ export async function NavBar() {
           height: { sm: 'auto', xs: '180px' },
         }}
       >
-        <div sx={{ mx: 3, mt: 3, mb: 8 }}>
-          <Paper
-            sx={{
-              background: 'rgba(0, 0, 0, 0.6)',
-              width: { md: '38%', sm: '100%' },
-              marginLeft: 'auto',
-              marginRight: 'auto',
-            }}
-            square
-          >
-            <Image
-              sx={{ width: '100%', height: 'auto' }}
-              width={1500}
-              height={351}
-              src="/images/public-servants-prayer.png"
-              alt="Public Servants' Prayer"
-            />
-          </Paper>
-        </div>
+        <PspTitleLogo />
+        {children}
       </div>
     </div>
   )

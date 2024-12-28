@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next'
 import { withPigment, PigmentOptions } from '@pigment-css/nextjs-plugin'
+import { withPayload } from '@payloadcms/next/withPayload'
 import { theme } from './utilities/theme'
 
 const nextConfig: NextConfig = {
@@ -22,4 +23,4 @@ const pigmentConfig: PigmentOptions = {
   theme,
 }
 
-export default withPigment(nextConfig, pigmentConfig)
+export default withPayload(withPigment(nextConfig, pigmentConfig))

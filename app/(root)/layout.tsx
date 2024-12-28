@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import localFont from 'next/font/local'
 import './globals.css'
 import Footer from '@/components/footer'
 import type { Theme, SxProps } from '@mui/material/styles'
@@ -24,17 +23,6 @@ declare module '@mui/material-pigment-css' {
   }
 }
 
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900',
-})
-const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900',
-})
-
 export const metadata: Metadata = {
   title: "Public Servants' Prayer",
   description: 'what description?',
@@ -54,10 +42,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        id="__next"
-        className={`${roboto.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body id="__next" className={`${roboto.variable} antialiased`}>
         <NextThemeProvider
           attribute="class"
           defaultTheme="dark"

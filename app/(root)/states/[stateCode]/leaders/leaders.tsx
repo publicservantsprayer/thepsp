@@ -3,7 +3,8 @@ import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
 import Paper from '@mui/material/Paper'
 
-import { Leader, leaderPhoto, leaderUrl } from '@/lib/leader'
+import { leaderPhoto, leaderUrl } from '@/lib/leader'
+import { Leader } from '@/lib/types'
 import { Link } from '@/components/ui/link'
 
 interface Props {
@@ -38,11 +39,11 @@ export const Leaders = ({ leaders, chamber, legType }: Props) => {
           <Link href={leaderUrl(leader)}>
             <Paper>
               <div className="p-1">
-                <div className="min-w-[145px] flex justify-center">
+                <div className="flex min-w-[145px] justify-center">
                   <Avatar
                     alt={leader.PhotoFile}
                     src={leaderPhoto(leader)}
-                    className="m-[10px] w-[60px] h-[60px]"
+                    className="m-[10px] h-[60px] w-[60px]"
                   />
                 </div>
                 <Typography

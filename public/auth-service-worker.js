@@ -1267,7 +1267,7 @@
     has: (target, prop) => !!getMethod(target, prop) || oldTraps.has(target, prop)
   }));
 
-  // node_modules/.pnpm/@firebase+app@0.10.16/node_modules/@firebase/app/dist/esm/index.esm2017.js
+  // node_modules/.pnpm/@firebase+app@0.10.17/node_modules/@firebase/app/dist/esm/index.esm2017.js
   var PlatformLoggerServiceImpl = class {
     constructor(container) {
       this.container = container;
@@ -1291,7 +1291,7 @@
     return (component === null || component === void 0 ? void 0 : component.type) === "VERSION";
   }
   var name$q = "@firebase/app";
-  var version$1 = "0.10.16";
+  var version$1 = "0.10.17";
   var logger = new Logger("@firebase/app");
   var name$p = "@firebase/app-compat";
   var name$o = "@firebase/analytics-compat";
@@ -1319,7 +1319,7 @@
   var name$2 = "@firebase/vertexai";
   var name$1 = "@firebase/firestore-compat";
   var name = "firebase";
-  var version = "11.0.2";
+  var version = "11.1.0";
   var DEFAULT_ENTRY_NAME2 = "[DEFAULT]";
   var PLATFORM_LOG_STRING = {
     [name$q]: "fire-core",
@@ -1840,9 +1840,9 @@
   }
   registerCoreComponents("");
 
-  // node_modules/.pnpm/firebase@11.0.2/node_modules/firebase/app/dist/esm/index.esm.js
+  // node_modules/.pnpm/firebase@11.1.0/node_modules/firebase/app/dist/esm/index.esm.js
   var name2 = "firebase";
-  var version2 = "11.0.2";
+  var version2 = "11.1.0";
   registerVersion(name2, version2, "app");
 
   // node_modules/.pnpm/tslib@2.8.1/node_modules/tslib/tslib.es6.mjs
@@ -1858,7 +1858,7 @@
     return t;
   }
 
-  // node_modules/.pnpm/@firebase+auth@1.8.1_@firebase+app@0.10.16/node_modules/@firebase/auth/dist/esm2017/index-2cab5241.js
+  // node_modules/.pnpm/@firebase+auth@1.8.1_@firebase+app@0.10.17/node_modules/@firebase/auth/dist/esm2017/index-2cab5241.js
   function _prodErrorMap() {
     return {
       [
@@ -7674,7 +7674,7 @@
     /* ClientPlatform.BROWSER */
   );
 
-  // node_modules/.pnpm/@firebase+installations@0.6.11_@firebase+app@0.10.16/node_modules/@firebase/installations/dist/esm/index.esm2017.js
+  // node_modules/.pnpm/@firebase+installations@0.6.11_@firebase+app@0.10.17/node_modules/@firebase/installations/dist/esm/index.esm2017.js
   var name4 = "@firebase/installations";
   var version4 = "0.6.11";
   var PENDING_TIMEOUT_MS = 1e4;

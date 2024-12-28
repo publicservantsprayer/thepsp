@@ -1,10 +1,10 @@
 'use client'
 
-import React, { use } from 'react'
+import React from 'react'
 import { H4 } from '@/components/formatting'
 import { Leaders } from './leaders'
 import { Divider } from '@mui/material'
-import { USAStateContext } from '@/hooks/use-usa-state'
+import { useUSAState } from '@/hooks/use-usa-state'
 import { Leader } from '@/lib/types'
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function TabPanel({ leaders, chamber }: Props) {
-  const { stateName } = use(USAStateContext)
+  const { stateName } = useUSAState()
   const chamberTitle = chamber === 'H' ? 'Representatives' : 'Senators'
 
   return (
@@ -23,7 +23,7 @@ export function TabPanel({ leaders, chamber }: Props) {
           US {chamberTitle} from {stateName}
         </H4>
       </div>
-      <div className="flex flex-wrap justify-center mb-3">
+      <div className="mb-3 flex flex-wrap justify-center">
         <Leaders leaders={leaders} legType="FL" chamber={chamber} />
       </div>
       <Divider />

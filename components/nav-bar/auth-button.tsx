@@ -63,7 +63,7 @@ export function AuthButton({ initialUser }: Props) {
       ) : (
         <div className="profile">
           <a href="#" onClick={handleSignIn}>
-            <Image src="/profile.svg" alt="A placeholder user image" />
+            {/* <Image src="/profile.svg" alt="A placeholder user image" /> */}
             Sign In with Google
           </a>
         </div>
@@ -82,7 +82,7 @@ function useUserSession(initialUser: User | null) {
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       const serializedFirebaseConfig = encodeURIComponent(
-        JSON.stringify(firebaseConfig)
+        JSON.stringify(firebaseConfig),
       )
       const serviceWorkerUrl = `/auth-service-worker.js?firebaseConfig=${serializedFirebaseConfig}`
 

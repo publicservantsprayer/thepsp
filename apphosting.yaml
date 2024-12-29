@@ -11,3 +11,10 @@ env:
     value: 1081890506539
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
     value: 1:1081890506539:web:65bc9128b23f175426276e
+
+  - variable: MONGODB_DATABASE_URI
+    secret: mongodbDatabaseUri
+  - variable: MONGODB_DATABASE_NAME
+    secret: mongodbDatabaseName
+  - variable: PAYLOAD_SECRET
+    secret: payloadSecret

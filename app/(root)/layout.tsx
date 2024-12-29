@@ -43,7 +43,9 @@ export default function RootLayout({
 }>) {
   const ip = (() => {
     try {
-      return execSync('curl -s ifconfig.me').toString().trim()
+      return fetch('https://ifconfig.me')
+        .then((res) => res.text())
+        .then((ip) => ip.trim())
     } catch {
       return 'Unable to retrieve IP'
     }

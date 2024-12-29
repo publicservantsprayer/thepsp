@@ -6,6 +6,7 @@ import type { Theme, SxProps } from '@mui/material/styles'
 import { Roboto } from 'next/font/google'
 import { UsaStateProvider } from '@/hooks/use-usa-state'
 import { NextThemeProvider } from '@/components/next-theme-provider'
+import { execSync } from 'child_process'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -40,6 +41,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const ip = (() => {
+    try {
+      return execSync('curl -s ifconfig.me').toString().trim()
+    } catch {
+      return 'Unable to retrieve IP'
+    }
+  })()
   return (
     <html lang="en" suppressHydrationWarning>
       <body id="__next" className={`${roboto.variable} antialiased`}>
@@ -52,6 +60,7 @@ export default function RootLayout({
           <UsaStateProvider>
             {children}
             <Footer />
+            ip address: {ip}
           </UsaStateProvider>
         </NextThemeProvider>
       </body>

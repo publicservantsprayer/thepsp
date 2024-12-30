@@ -41,15 +41,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const ip = (() => {
-    try {
-      return fetch('https://ifconfig.me')
-        .then((res) => res.text())
-        .then((ip) => ip.trim())
-    } catch {
-      return 'Unable to retrieve IP'
-    }
-  })()
   return (
     <html lang="en" suppressHydrationWarning>
       <body id="__next" className={`${roboto.variable} antialiased`}>
@@ -62,7 +53,6 @@ export default function RootLayout({
           <UsaStateProvider>
             {children}
             <Footer />
-            ip address: {ip}
           </UsaStateProvider>
         </NextThemeProvider>
       </body>

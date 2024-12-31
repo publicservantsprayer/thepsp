@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from 'react'
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu'
 import { cva } from 'class-variance-authority'
@@ -5,6 +7,7 @@ import { ChevronDown } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { ForwardedRef, Ref } from 'react'
+import NextLink from 'next/link'
 
 const NavigationMenu = React.forwardRef<
   React.ElementRef<typeof NavigationMenuPrimitive.Root>,
@@ -127,6 +130,22 @@ const NavigationMenuContent = React.forwardRef<
 NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName
 
 const NavigationMenuLink = NavigationMenuPrimitive.Link
+
+export const NavigationMenuNextLink = ({
+  children,
+  href,
+}: {
+  children: React.ReactNode
+  href: string
+}) => {
+  return (
+    <NextLink href={href} legacyBehavior passHref>
+      <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+        {children}
+      </NavigationMenuLink>
+    </NextLink>
+  )
+}
 
 const NavigationMenuViewport = React.forwardRef<
   React.ElementRef<typeof NavigationMenuPrimitive.Viewport>,

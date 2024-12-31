@@ -50,3 +50,6 @@ export const states = {
   WI: 'Wisconsin',
   WY: 'Wyoming',
 }
+
+// Uppercase, two-letter state codes
+export const stateCodes = Object.keys(states)

@@ -2,13 +2,11 @@ import { PspTitleLogo } from '@/components/psp-title-logo'
 import { HeroBackground } from '@/components/hero-background'
 import { NavBar } from '@/components/nav-bar'
 
-export const dynamic = 'force-dynamic'
-
 interface Props {
   children: React.ReactNode
 }
 
-export default async function StatesLayout({ children }: Props) {
+export function LandingPageLayout({ children }: Props) {
   return (
     <>
       <NavBar />
@@ -17,6 +15,19 @@ export default async function StatesLayout({ children }: Props) {
         <PspTitleLogo />
         {children}
       </HeroBackground>
+    </>
+  )
+}
+
+export function DefaultLayout({ children }: Props) {
+  return (
+    <>
+      <NavBar />
+
+      <HeroBackground>
+        <PspTitleLogo />
+      </HeroBackground>
+      {children}
     </>
   )
 }

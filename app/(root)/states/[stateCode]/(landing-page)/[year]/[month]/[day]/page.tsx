@@ -1,4 +1,4 @@
-import { makeValidStateCode } from '@/data/get-state-info'
+import { makeValidStateCode } from '@/lib/get-state-info'
 import { DailyLeaders } from '../../../daily-leaders'
 
 interface Props {

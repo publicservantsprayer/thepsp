@@ -1,6 +1,6 @@
 'use server'
 
-import { makeValidStateCode } from '@/data/get-state-info'
+import { makeValidStateCode } from '@/lib/get-state-info'
 import type { StateCode } from '@/lib/types'
 import { cookies } from 'next/headers'
 

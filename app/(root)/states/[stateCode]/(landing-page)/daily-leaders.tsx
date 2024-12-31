@@ -16,7 +16,7 @@ import { leaderPhoto } from '@/lib/leader'
 import { Skeleton } from '@mui/material'
 import { Accordion } from './accordion'
 import { Separator } from '@/components/ui/separator'
-import { getStateInfo } from '@/data/get-state-info'
+import { getStateInfo } from '@/lib/get-state-info'
 
 interface Props {
   stateCode: StateCode
@@ -43,28 +43,28 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
   return (
     <div className="width-full mx-auto mb-12 max-w-[900px]">
       <Tabs defaultValue="today" className="grid gap-2">
-        <TabsList className="bg-psp-primary grid w-full grid-cols-4 rounded-t-lg text-accent-foreground">
+        <TabsList className="grid w-full grid-cols-4 rounded-t-lg bg-psp-primary text-accent-foreground">
           <TabsTrigger
             value="today"
-            className="data-[state=active]:text-psp-primary-foreground gap-2"
+            className="gap-2 data-[state=active]:text-psp-primary-foreground"
           >
             Today
           </TabsTrigger>
           <TabsTrigger
             value="email"
-            className="data-[state=active]:text-psp-primary-foreground gap-2"
+            className="gap-2 data-[state=active]:text-psp-primary-foreground"
           >
             <MdEmail /> Email
           </TabsTrigger>
           <TabsTrigger
             value="facebook"
-            className="data-[state=active]:text-psp-primary-foreground h-8 gap-2"
+            className="h-8 gap-2 data-[state=active]:text-psp-primary-foreground"
           >
             <SiFacebook />
           </TabsTrigger>
           <TabsTrigger
             value="x"
-            className="data-[state=active]:text-psp-primary-foreground h-8 gap-2"
+            className="h-8 gap-2 data-[state=active]:text-psp-primary-foreground"
           >
             <SiX />
           </TabsTrigger>
@@ -96,7 +96,7 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
           </div>
 
           <div className="col-span-4 rounded-r-lg bg-secondary p-2 text-secondary-foreground">
-            <StateMessage stateName={stateName} />
+            <StateMessage stateCode={stateCode} />
           </div>
         </div>
       </Tabs>
@@ -128,14 +128,16 @@ function PrayingForTitle({ dateID }: { dateID: string }) {
   const today = moment().isSame(moment(dateID), 'day')
 
   return (
-    <div className="text-psp-primary-foreground text-center text-2xl">
+    <div className="text-center text-2xl text-psp-primary-foreground">
       {today && <>Today we are praying for</>}
       {!today && <>This day we prayed for</>}
     </div>
   )
 }
 
-export function StateMessage({ stateName }: { stateName: string }) {
+export function StateMessage({ stateCode }: { stateCode: StateCode }) {
+  const { stateName } = getStateInfo(stateCode)
+
   return (
     <div className="grid gap-3 p-4 font-light leading-relaxed text-muted-foreground">
       <h2 className="text-2xl">PSP {stateName}</h2>
@@ -145,7 +147,7 @@ export function StateMessage({ stateName }: { stateName: string }) {
       <p>
         Every day we pray for three {stateName}{' '}
         <Link
-          href={`/states/${stateName.toLowerCase()}/leaders`}
+          href={`/states/${stateCode.toLowerCase()}/leaders`}
           className="underline"
         >
           legislators

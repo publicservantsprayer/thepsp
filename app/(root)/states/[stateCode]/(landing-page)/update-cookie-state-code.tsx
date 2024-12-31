@@ -1,6 +1,6 @@
 'use client'
 
-import { makeValidStateCode, validateStateCode } from '@/data/get-state-info'
+import { makeValidStateCode, validateStateCode } from '@/lib/get-state-info'
 import { updateCookieStateCode } from '@/server-functions/update-cookie-state-code'
 import React from 'react'
 

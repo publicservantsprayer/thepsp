@@ -1,6 +1,7 @@
 import { StateLeaders } from './state-leaders'
 import { getLeaders } from '@/lib/firebase/firestore'
-import { makeValidStateCode } from '@/data/get-state-info'
+import { validateStateCode } from '@/lib/get-state-info'
+import { notFound } from 'next/navigation'
 
 interface Props {
   params: Promise<{
@@ -11,7 +12,9 @@ interface Props {
 export default async function StatePage({ params }: Props) {
   const { stateCode: paramStateCode } = await params
 
-  const stateCode = makeValidStateCode(paramStateCode)
+  const stateCode = validateStateCode(paramStateCode)
+
+  if (!stateCode) return notFound()
 
   const leaders = await getLeaders({
     stateCode,

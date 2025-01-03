@@ -2,12 +2,11 @@
 
 import React from 'react'
 
-import { states } from '@/data/states'
 import type { StateCode } from '@/lib/types'
 import {
   getStateCodeFromClientCookie,
   getStateInfo,
-  makeValidStateCode,
+  validateStateCode,
 } from '@/lib/get-state-info'
 import { useGeoStateCode } from './use-geo-state-code'
 
@@ -36,12 +35,14 @@ export function useUSAStateWithoutContext({
   const skip = !fetchGeoLocation
   const { geoStateCode, lat, lng } = useGeoStateCode(skip)
 
-  const stateCode = makeValidStateCode(
+  const stateCode = validateStateCode(
     paramStateCode || cookieStateCode || geoStateCode,
   )
 
+  const stateCodeInfo = stateCode ? getStateInfo(stateCode) : {}
+
   return {
-    ...getStateInfo(stateCode),
+    ...stateCodeInfo,
     paramStateCode,
     cookieStateCode,
     geoStateCode,

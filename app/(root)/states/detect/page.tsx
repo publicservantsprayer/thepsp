@@ -2,17 +2,14 @@
 
 import { useUSAStateWithoutContext } from '@/hooks/use-usa-state'
 
-export default function DetectPage({
-  cookieStateCode,
-}: {
-  cookieStateCode?: string
-}) {
+export default function DetectPage() {
   const {
     stateCode,
     lowerCaseStateCode,
     stateName,
     facebookPage,
     geoStateCode,
+    cookieStateCode,
     lat,
     lng,
   } = useUSAStateWithoutContext({ fetchGeoLocation: true })

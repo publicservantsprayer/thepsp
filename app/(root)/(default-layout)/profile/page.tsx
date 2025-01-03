@@ -4,7 +4,7 @@ import { User } from 'firebase/auth'
 import { getAuthenticatedAppForUser } from '@/lib/firebase/server-app'
 import { ProfileForm } from './profile-form'
 
-export default async function ProfilePage({}: { initialUser: User }) {
+export default async function ProfilePage() {
   const { currentUser } = await getAuthenticatedAppForUser()
   const initialUser: User = currentUser?.toJSON() as User
 

@@ -5,8 +5,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Map } from './map'
 import { StateName } from '@/components/state-name'
+import { DynamicMapWithoutSSR } from './dynamic-map-without-ssr'
 
 export default function Page() {
   return (
@@ -42,7 +42,7 @@ export default function Page() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Map />
+            <DynamicMapWithoutSSR />
           </CardContent>
         </Card>
       </div>

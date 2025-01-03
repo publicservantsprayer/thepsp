@@ -16,7 +16,7 @@ const stateColorOver = theme.palette.primary.dark
 
 const mapAspectRatio = 450 / 700
 
-export function Map() {
+export default function Map() {
   const [containerWidth, setContainerWidth] = React.useState(700)
 
   React.useEffect(() => {

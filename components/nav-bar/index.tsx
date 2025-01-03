@@ -18,13 +18,11 @@ import {
   NavigationMenuList,
   NavigationMenuNextLink,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 import { Menu } from 'lucide-react'
 import { StateName } from '@/components/state-name'
 import { UserMenu } from './user-menu'
 import { getAuthenticatedAppForUser } from '@/lib/firebase/server-app'
-import { init } from 'next/dist/compiled/webpack/webpack'
 import { User } from 'firebase/auth'
 
 const components: { title: string; href: string; description: string }[] = [

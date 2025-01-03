@@ -38,8 +38,6 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
     post = await getLatestPost(stateCode)
   }
 
-  const { stateName } = getStateInfo(stateCode)
-
   return (
     <div className="width-full mx-auto mb-12 max-w-[900px]">
       <Tabs defaultValue="today" className="grid gap-2">

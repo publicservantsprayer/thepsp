@@ -6,7 +6,7 @@ import { cva } from 'class-variance-authority'
 import { ChevronDown } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import { ForwardedRef, Ref } from 'react'
+import { ForwardedRef } from 'react'
 import NextLink from 'next/link'
 
 const NavigationMenu = React.forwardRef<

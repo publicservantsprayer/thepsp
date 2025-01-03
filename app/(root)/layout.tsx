@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import Footer from '@/components/footer'
 import type { Theme, SxProps } from '@mui/material/styles'
-
 import { Roboto, Frank_Ruhl_Libre } from 'next/font/google'
 import { UsaStateProvider } from '@/hooks/use-usa-state'
 import { NextThemeProvider } from '@/components/next-theme-provider'
@@ -56,10 +54,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <UsaStateProvider>
-            {children}
-            <Footer />
-          </UsaStateProvider>
+          <UsaStateProvider>{children}</UsaStateProvider>
         </NextThemeProvider>
       </body>
     </html>

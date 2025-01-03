@@ -2,66 +2,95 @@
 
 import * as React from 'react'
 
-import Link, { LinkProps } from 'next/link'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuNextLink,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu'
-import { StateName } from '@/components/state-name'
+import Link from 'next/link'
 import { User } from 'firebase/auth'
 
+import { signOut } from '@/lib/firebase/auth'
+import { CircleUser } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItemLink,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { useUserSession } from './use-user-session'
+
 export function UserMenu({ initialUser }: { initialUser: User }) {
+  const user = useUserSession(initialUser)
+
+  console.log('user', user)
+
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Sign In</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <NavigationMenuLink>Link</NavigationMenuLink>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <CircleUser />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Account</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <LoggedOutUserMenu user={user} />
+        <DropdownMenuSeparator />
+        <LoggedInUserMenu user={user} />
+        <AdminUserMenu user={user} />
+        <DropdownMenuSeparator />
+        <SignOutMenuItem user={user} />
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+
+  function LoggedOutUserMenu({ user }: { user: User | null }) {
+    if (user) return null
+
+    return (
+      <DropdownMenuItemLink asChild>
+        <Link href="/sign-in">Sign In</Link>
+      </DropdownMenuItemLink>
+    )
+  }
+}
+
+function LoggedInUserMenu({ user }: { user: User | null }) {
+  if (!user) return null
+
+  return (
+    <DropdownMenuItemLink asChild>
+      <Link href="/profile">Profile</Link>
+    </DropdownMenuItemLink>
   )
 }
 
-interface ListItemProps extends LinkProps {
-  className?: string
-  title: string
-  children: React.ReactNode
-  ref?: React.Ref<HTMLAnchorElement>
+function AdminUserMenu({ user }: { user: User | null }) {
+  if (!user) return null
+
+  return (
+    <>
+      <DropdownMenuSeparator />
+      <DropdownMenuItemLink>
+        <Link href="/admin">Content</Link>
+      </DropdownMenuItemLink>
+      <DropdownMenuItemLink asChild>
+        <Link href="/x-accounts">X Accounts</Link>
+      </DropdownMenuItemLink>
+      <DropdownMenuItemLink asChild>
+        <Link href="/">Data Import</Link>
+      </DropdownMenuItemLink>
+    </>
+  )
 }
 
-function ListItem({
-  className,
-  title,
-  children,
-  ref,
-  ...props
-}: ListItemProps) {
+function SignOutMenuItem({ user }: { user: User | null }) {
+  if (!user) return null
+
+  const handleSignOut: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    event.preventDefault()
+    signOut()
+  }
+
   return (
-    <li>
-      <Link ref={ref} {...props} legacyBehavior passHref>
-        <NavigationMenuLink
-          className={cn(
-            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-            className,
-          )}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
-        </NavigationMenuLink>
-      </Link>
-    </li>
+    <DropdownMenuItemLink onClick={handleSignOut}>
+      Sign Out
+    </DropdownMenuItemLink>
   )
 }

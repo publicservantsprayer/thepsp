@@ -3,6 +3,7 @@ import {
   signInWithPopup,
   onAuthStateChanged as _onAuthStateChanged,
   User,
+  sendSignInLinkToEmail,
 } from 'firebase/auth'
 
 import { auth } from '@/lib/firebase/clientApp'
@@ -10,6 +11,7 @@ import { auth } from '@/lib/firebase/clientApp'
 export function onAuthStateChanged(cb: (user: User | null) => void) {
   return _onAuthStateChanged(auth, cb)
 }
+
 
 export async function signInWithGoogle() {
   const provider = new GoogleAuthProvider()

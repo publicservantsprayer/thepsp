@@ -8265,7 +8265,7 @@
 
   // auth-service-worker.js
   var firebaseConfig;
-  self.addEventListener("install", (event) => {
+  self.addEventListener("install", () => {
     const serializedFirebaseConfig = new URL(location).searchParams.get(
       "firebaseConfig"
     );

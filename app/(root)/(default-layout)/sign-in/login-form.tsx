@@ -1,8 +1,8 @@
 'use client'
 
-import React from 'react'
+import React, { MouseEventHandler } from 'react'
 
-import { sendSignInLinkToEmail } from 'firebase/auth'
+import { sendSignInLinkToEmail, User } from 'firebase/auth'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -17,11 +17,14 @@ import { Label } from '@/components/ui/label'
 import { ModalDrawer } from '@/components/modal-drawer'
 import { auth } from '@/lib/firebase/clientApp'
 import { useRouter } from 'next/navigation'
+import { signInWithGoogle } from '@/lib/firebase/auth'
+import { useUserSession } from '@/components/nav-bar/use-user-session'
 
 export function LoginForm({
   className,
+  initialUser,
   ...props
-}: React.ComponentPropsWithoutRef<'div'>) {
+}: React.ComponentPropsWithoutRef<'div'> & { initialUser: User | null }) {
   const router = useRouter()
   const [email, setEmail] = React.useState('')
   const [messageSentOpen, setMessageSentOpen] = React.useState(false)
@@ -33,6 +36,13 @@ export function LoginForm({
   const handleEmailChange: React.ChangeEventHandler<HTMLInputElement> = (
     event,
   ) => setEmail(event.target.value)
+  const user = useUserSession(initialUser)
+
+  React.useEffect(() => {
+    if (user) {
+      router.push('/profile')
+    }
+  }, [router, user])
 
   const handleSendLink = async () => {
     setDisabled(true)
@@ -51,6 +61,12 @@ export function LoginForm({
       setMessageEmailErrorOpen(true)
     }
   }
+  const handleSignInWithGoogle: MouseEventHandler<HTMLButtonElement> = (
+    event,
+  ) => {
+    event.preventDefault()
+    signInWithGoogle()
+  }
 
   return (
     <div className={cn('my8 flex flex-col gap-6', className)} {...props}>
@@ -58,36 +74,38 @@ export function LoginForm({
         <CardHeader>
           <CardTitle className="text-2xl">Sign In</CardTitle>
           <CardDescription>
-            Enter your email below to sign in to your account. We will send you
-            an email with a link allowing you to access your account.
+            Enter your email address to sign in to your account. We will send
+            you an email with a link allowing you to access your account.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={handleEmailChange}
-                  required
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full"
-                onClick={handleSendLink}
-                disabled={disabled}
-              >
-                Sign in without a password
-              </Button>
-              <Button variant="outline" className="w-full">
-                Sign in with Google
-              </Button>
+          <div className="flex flex-col gap-6">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+                required
+              />
             </div>
-          </form>
+            <Button
+              type="submit"
+              className="w-full"
+              onClick={handleSendLink}
+              disabled={disabled}
+            >
+              Sign in without a password
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={handleSignInWithGoogle}
+            >
+              Sign in with Google
+            </Button>
+          </div>
         </CardContent>
       </Card>
 

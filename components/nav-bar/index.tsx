@@ -77,7 +77,7 @@ export async function NavBar() {
         {/* Hamburger menu on small screens */}
         <Sheet>
           <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon-lg" className="font-psp text-xl">
+            <Button variant="ghost" className="font-psp text-xl">
               <Menu />
               PSP <StateName />
             </Button>

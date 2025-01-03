@@ -28,7 +28,15 @@ export function UserMenu({ initialUser }: { initialUser: User }) {
         <CircleUser />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Account</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          Account
+          {user && (
+            <div className="mt-1 text-xs text-muted-foreground">
+              {user.email}
+            </div>
+          )}
+        </DropdownMenuLabel>
+
         <DropdownMenuSeparator />
         <LoggedOutUserMenu user={user} />
         <DropdownMenuSeparator />

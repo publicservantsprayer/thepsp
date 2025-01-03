@@ -1,4 +1,6 @@
-export const states: Record<string, string> = {
+import { StateCode } from '@/lib/types'
+
+export const states: Record<StateCode, string> = {
   AL: 'Alabama',
   AK: 'Alaska',
   AZ: 'Arizona',
@@ -52,4 +54,6 @@ export const states: Record<string, string> = {
 }
 
 // Uppercase, two-letter state codes
-export const stateCodes = Object.keys(states)
+export const stateCodes = Object.keys(states) as StateCode[]
+
+export const defaultStateCode = 'IN' as StateCode

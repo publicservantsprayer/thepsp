@@ -11,9 +11,16 @@ import {
 import { useGeoStateCode } from './use-geo-state-code'
 
 interface Props {
-  paramStateCode?: string
+  paramStateCode?: StateCode
   cookieStateCode?: StateCode
   fetchGeoLocation?: boolean
+}
+type UseUSAStateWithoutContext = (props: Props) => {
+  paramStateCode?: string
+  cookieStateCode?: StateCode
+  geoStateCode?: StateCode
+  lat?: string
+  lng?: string
 }
 
 /**
@@ -21,11 +28,11 @@ interface Props {
  *
  * Preforms geo location lookup if no state code is provided or if fetchGeoLocation is true.
  */
-export function useUSAStateWithoutContext({
+export const useUSAStateWithoutContext: UseUSAStateWithoutContext = ({
   paramStateCode,
   cookieStateCode,
   fetchGeoLocation,
-}: Props) {
+}) => {
   cookieStateCode ||= getStateCodeFromClientCookie()
 
   if (!paramStateCode && !cookieStateCode) {
@@ -51,14 +58,17 @@ export function useUSAStateWithoutContext({
   }
 }
 
-type UseUSAState = ReturnType<typeof useUSAStateWithoutContext> | undefined
+type UseUSAState = Partial<
+  ReturnType<typeof useUSAStateWithoutContext> & ReturnType<typeof getStateInfo>
+>
 
-export const USAStateContext = React.createContext<UseUSAState>(undefined)
+export const USAStateContext = React.createContext<UseUSAState>({})
 
 type ProviderProps = Props & { children: React.ReactNode }
 
 export const UsaStateProvider = ({ children, ...props }: ProviderProps) => {
   const usaState = useUSAStateWithoutContext(props)
+
   return (
     <USAStateContext.Provider value={usaState}>
       {children}

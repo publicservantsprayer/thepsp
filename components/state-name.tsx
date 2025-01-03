@@ -1,9 +1,13 @@
-'use client'
+import { getStateInfo } from '@/lib/get-state-info'
+import { StateCode } from '@/lib/types'
+import { StateNameClient } from './state-name-client'
 
-import { useUSAState } from '@/hooks/use-usa-state'
+export function StateName({ stateCode }: { stateCode?: StateCode }) {
+  if (stateCode) {
+    const { stateName } = getStateInfo(stateCode)
 
-export function StateName() {
-  const { stateName } = useUSAState()
+    return <>{stateName}</>
+  }
 
-  return <>{stateName}</>
+  return <StateNameClient />
 }

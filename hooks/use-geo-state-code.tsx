@@ -1,13 +1,16 @@
 import React from 'react'
 
 import axios from 'axios'
+import { StateCode } from '@/lib/types'
 
 const googleBrowserKey = 'AIzaSyBQkLQ1DJEtDczE179QNc7fF1UM6t0piqY'
 
 export const useGeoStateCode = (skip: boolean = true) => {
-  const [geoStateCode, setGeoStateCode] = React.useState('')
-  const [lat, setLat] = React.useState('')
-  const [lng, setLng] = React.useState('')
+  const [geoStateCode, setGeoStateCode] = React.useState<
+    StateCode | undefined
+  >()
+  const [lat, setLat] = React.useState<string | undefined>()
+  const [lng, setLng] = React.useState<string | undefined>()
 
   React.useEffect(() => {
     if (!skip) {
@@ -15,8 +18,8 @@ export const useGeoStateCode = (skip: boolean = true) => {
         try {
           const geoLocation = await axios.post(googleGeolocationUrl)
           const { lng, lat } = geoLocation.data.location
-          setLat(lat)
-          setLng(lng)
+          setLat(String(lat))
+          setLng(String(lng))
 
           const geoCode = await axios.post(
             googleGeocodeUrl(lat, lng, googleBrowserKey),

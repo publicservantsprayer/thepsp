@@ -24,6 +24,8 @@ import { StateName } from '@/components/state-name'
 import { UserMenu } from './user-menu'
 import { getAuthenticatedAppForUser } from '@/lib/firebase/server-app'
 import { User } from 'firebase/auth'
+import { validateStateCode } from '@/lib/get-state-info'
+import { cookies } from 'next/headers'
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -66,6 +68,9 @@ const components: { title: string; href: string; description: string }[] = [
 export async function NavBar() {
   const { currentUser } = await getAuthenticatedAppForUser()
   const initialUser: User = currentUser?.toJSON() as User
+  const cookieStore = await cookies()
+  const cookieStateCode = cookieStore.get('stateCode')?.value
+  const verifiedStateCode = validateStateCode(cookieStateCode)
 
   return (
     <nav className="sticky top-0 z-50 bg-background shadow-md">
@@ -79,7 +84,7 @@ export async function NavBar() {
           <SheetTrigger asChild className="md:hidden">
             <Button variant="ghost" className="font-psp text-xl">
               <Menu />
-              PSP <StateName />
+              PSP <StateName stateCode={verifiedStateCode} />
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="p-4">

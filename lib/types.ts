@@ -1,7 +1,4 @@
 import { Timestamp } from 'firebase/firestore'
-import { states } from '@/data/states'
-
-export type StateCode = keyof typeof states
 
 export interface LeaderDbType {
   BirthDate: string
@@ -72,3 +69,55 @@ export interface PostDbType {
 export interface Post extends PostDbType {
   id: string
 }
+
+export type StateCode =
+  | 'AL'
+  | 'AK'
+  | 'AZ'
+  | 'AR'
+  | 'CA'
+  | 'CO'
+  | 'CT'
+  | 'DE'
+  | 'FL'
+  | 'GA'
+  | 'HI'
+  | 'ID'
+  | 'IL'
+  | 'IN'
+  | 'IA'
+  | 'KS'
+  | 'KY'
+  | 'LA'
+  | 'ME'
+  | 'MD'
+  | 'MA'
+  | 'MI'
+  | 'MN'
+  | 'MS'
+  | 'MO'
+  | 'MT'
+  | 'NE'
+  | 'NV'
+  | 'NH'
+  | 'NJ'
+  | 'NM'
+  | 'NY'
+  | 'NC'
+  | 'ND'
+  | 'OH'
+  | 'OK'
+  | 'OR'
+  | 'PA'
+  | 'RI'
+  | 'SC'
+  | 'SD'
+  | 'TN'
+  | 'TX'
+  | 'UT'
+  | 'VT'
+  | 'VA'
+  | 'WA'
+  | 'WV'
+  | 'WI'
+  | 'WY'

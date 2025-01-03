@@ -3,16 +3,9 @@
 import { useUSAStateWithoutContext } from '@/hooks/use-usa-state'
 
 export default function DetectPage() {
-  const {
-    stateCode,
-    lowerCaseStateCode,
-    stateName,
-    facebookPage,
-    geoStateCode,
-    cookieStateCode,
-    lat,
-    lng,
-  } = useUSAStateWithoutContext({ fetchGeoLocation: true })
+  const { geoStateCode, cookieStateCode, lat, lng } = useUSAStateWithoutContext(
+    { fetchGeoLocation: true },
+  )
 
   return (
     <div className="container mx-auto">
@@ -20,14 +13,10 @@ export default function DetectPage() {
 
       <div className="prose">
         <ul>
-          <li>State Code: {stateCode}</li>
-          <li>Lower Case State Code: {lowerCaseStateCode}</li>
-          <li>State Name: {stateName}</li>
-          <li>Facebook Page: {facebookPage}</li>
-          <li>Cookie State Code: {cookieStateCode}</li>
           <li>Geo State Code: {geoStateCode}</li>
           <li>Latitude: {lat}</li>
           <li>Longitude: {lng}</li>
+          <li>Cookie State Code: {cookieStateCode}</li>
         </ul>
       </div>
     </div>

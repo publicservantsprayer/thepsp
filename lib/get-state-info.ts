@@ -9,7 +9,7 @@ export const validateStateCode: ValidateStateCode = (code) => {
 
   const stateCode = code.toUpperCase()
 
-  if (stateCodes.includes(stateCode)) {
+  if ((stateCodes as string[]).includes(stateCode)) {
     return stateCode as StateCode
   }
 }
@@ -46,7 +46,6 @@ export const getStateInfo = (stateCode: StateCode) => {
     lowerCaseStateCode,
     homePath: `/states/${lowerCaseStateCode}`,
     stateName: states[stateCode],
-    states,
     facebookPage,
   }
 }

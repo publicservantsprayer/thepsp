@@ -3,17 +3,20 @@
 import * as React from 'react'
 
 import { useRouter } from 'next/navigation'
-import { useUSAStateWithoutContext } from '@/hooks/use-usa-state'
+import { useUSAState } from '@/hooks/use-usa-state'
+import { defaultStateCode } from '@/data/states'
 
 export function RedirectToState() {
   const router = useRouter()
-  const { stateCode } = useUSAStateWithoutContext({
-    fetchGeoLocation: true,
-  })
+  const { stateCode } = useUSAState()
+
+  const lowerCaseStateCode = stateCode
+    ? stateCode.toLowerCase()
+    : defaultStateCode.toLowerCase()
 
   React.useEffect(() => {
-    router.push(`/states/${stateCode.toLowerCase()}`)
-  }, [router, stateCode])
+    router.push(`/states/${lowerCaseStateCode}`)
+  }, [router, stateCode, lowerCaseStateCode])
 
   return null
 }

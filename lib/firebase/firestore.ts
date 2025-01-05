@@ -36,7 +36,7 @@ export const getLeaders: GetLeaders = async ({ stateCode }) => {
     .collection('leaders')
   const querySnapshot = await collectionRef.withConverter(LeaderConverter).get()
   if (querySnapshot.empty) {
-    console.log('No matching leaders.')
+    console.error('No matching leaders.')
     return []
   }
 
@@ -86,7 +86,7 @@ export const getLatestPost = async (stateCode: StateCode) => {
 
 export const getHistoricalPost = async (
   stateCode: StateCode,
-  dateID: string
+  dateID: string,
 ) => {
   const collectionRef = db
     .doc(`/states/${stateCode}/posts/${dateID}`)

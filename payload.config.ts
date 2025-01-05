@@ -12,12 +12,21 @@ import { Media } from './collections/Media'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
-
 export default buildConfig({
   admin: {
     user: Users.slug,
     importMap: {
       baseDir: path.resolve(dirname),
+    },
+    components: {
+      header: [
+        {
+          path: '@/components/nav-bar#NavBar',
+        },
+      ],
+      // views: {
+      //   beforeLogin:
+      // },
     },
   },
   collections: [Users, Media],

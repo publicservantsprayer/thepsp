@@ -135,7 +135,7 @@ export async function NavBar() {
                       </NavigationMenuLink>
                     </Link>
                   </li>
-                  <ListItem href="/docs" title="Find Your State">
+                  <ListItem href="/find-your-state" title="Find Your State">
                     If <StateName /> is not your state, use this map to find
                     yours.
                   </ListItem>

@@ -10,10 +10,11 @@ export const Users: CollectionConfig = {
     disableLocalStrategy: true,
     strategies: [
       {
-        name: 'custom-strategy',
+        name: 'firebase-strategy',
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         authenticate: async ({ payload, headers }) => {
           const { currentUser } = await getAuthenticatedAppForUser()
+          // console.log('currentUser', currentUser)
 
           if (!currentUser) return { user: null }
 

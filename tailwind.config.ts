@@ -2,7 +2,7 @@ import type { Config } from 'tailwindcss'
 import tailwindAnimate from 'tailwindcss-animate'
 
 export default {
-  darkMode: ['class'],
+  darkMode: ['selector', '[data-theme="dark"]'],
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -73,5 +73,4 @@ export default {
   corePlugins: {
     preflight: true,
   },
-  important: '#__next',
 } satisfies Config

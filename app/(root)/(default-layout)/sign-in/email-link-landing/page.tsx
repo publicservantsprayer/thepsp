@@ -73,7 +73,7 @@ export default function EmailLinkLanding() {
         setMustConfirmEmail(true)
       }
     } else {
-      console.log('Not a valid signInWithEmailLink')
+      console.error('Not a valid signInWithEmailLink')
     }
   }, [sendEmailConfirmation])
 

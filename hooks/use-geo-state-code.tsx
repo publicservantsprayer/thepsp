@@ -27,7 +27,7 @@ export const useGeoStateCode = (skip: boolean = true) => {
 
           const shortName =
             geoCode.data.results[0].address_components[0].short_name
-          console.log('ran geocode', { shortName, lat, lng })
+          // console.log('ran geocode', { shortName, lat, lng })
 
           return geoCode.data.results[0].address_components[0].short_name
         } catch (error) {

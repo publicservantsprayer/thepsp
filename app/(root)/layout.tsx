@@ -47,7 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body id="__next" className={`${roboto.variable} ${frank.variable}`}>
+      <body className={`${roboto.variable} ${frank.variable}`}>
         <NextThemeProvider
           attribute="class"
           defaultTheme="dark"

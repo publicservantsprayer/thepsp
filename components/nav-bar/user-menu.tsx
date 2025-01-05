@@ -20,7 +20,7 @@ import { useUserSession } from './use-user-session'
 export function UserMenu({ initialUser }: { initialUser: User }) {
   const user = useUserSession(initialUser)
 
-  console.log('user', user)
+  // console.log('user', user)
 
   return (
     <DropdownMenu>

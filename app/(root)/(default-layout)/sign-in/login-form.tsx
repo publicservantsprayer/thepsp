@@ -23,8 +23,12 @@ import { useUserSession } from '@/components/nav-bar/use-user-session'
 export function LoginForm({
   className,
   initialUser,
+  signedInRedirectPath,
   ...props
-}: React.ComponentPropsWithoutRef<'div'> & { initialUser: User | null }) {
+}: React.ComponentPropsWithoutRef<'div'> & {
+  initialUser: User | null
+  signedInRedirectPath?: string
+}) {
   const router = useRouter()
   const [email, setEmail] = React.useState('')
   const [messageSentOpen, setMessageSentOpen] = React.useState(false)
@@ -40,7 +44,7 @@ export function LoginForm({
 
   React.useEffect(() => {
     if (user) {
-      router.push('/profile')
+      router.push(signedInRedirectPath || '/profile')
     }
   }, [router, user])
 

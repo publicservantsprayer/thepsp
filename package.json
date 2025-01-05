@@ -27,6 +27,7 @@
     "@payloadcms/db-mongodb": "^3.14.0",
     "@payloadcms/next": "^3.14.0",
     "@payloadcms/payload-cloud": "^3.14.0",
+    "@payloadcms/plugin-seo": "^3.14.0",
     "@payloadcms/richtext-lexical": "^3.14.0",
     "@pigment-css/react": "^0.0.28",
     "@radix-ui/react-dialog": "^1.1.4",

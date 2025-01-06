@@ -1,5 +1,9 @@
 import type { EmailField } from '@payloadcms/plugin-form-builder/types'
-import type { FieldErrorsImpl, FieldValues, UseFormRegister } from 'react-hook-form'
+import type {
+  FieldErrorsImpl,
+  FieldValues,
+  UseFormRegister,
+} from 'react-hook-form'
 
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,12 +16,22 @@ export const Email: React.FC<
   EmailField & {
     errors: Partial<
       FieldErrorsImpl<{
+        // TODO: Fix types
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         [x: string]: any
       }>
     >
     register: UseFormRegister<FieldValues>
   }
-> = ({ name, defaultValue, errors, label, register, required: requiredFromProps, width }) => {
+> = ({
+  name,
+  defaultValue,
+  errors,
+  label,
+  register,
+  required: requiredFromProps,
+  width,
+}) => {
   return (
     <Width width={width}>
       <Label htmlFor={name}>{label}</Label>
@@ -25,7 +39,10 @@ export const Email: React.FC<
         defaultValue={defaultValue}
         id={name}
         type="text"
-        {...register(name, { pattern: /^\S[^\s@]*@\S+$/, required: requiredFromProps })}
+        {...register(name, {
+          pattern: /^\S[^\s@]*@\S+$/,
+          required: requiredFromProps,
+        })}
       />
 
       {requiredFromProps && errors[name] && <Error />}

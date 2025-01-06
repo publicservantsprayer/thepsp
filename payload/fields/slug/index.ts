@@ -7,7 +7,10 @@ type Overrides = {
   checkboxOverrides?: Partial<CheckboxField>
 }
 
-type Slug = (fieldToUse?: string, overrides?: Overrides) => [TextField, CheckboxField]
+type Slug = (
+  fieldToUse?: string,
+  overrides?: Overrides,
+) => [TextField, CheckboxField]
 
 export const slugField: Slug = (fieldToUse = 'title', overrides = {}) => {
   const { slugOverrides, checkboxOverrides } = overrides
@@ -40,7 +43,7 @@ export const slugField: Slug = (fieldToUse = 'title', overrides = {}) => {
       ...(slugOverrides?.admin || {}),
       components: {
         Field: {
-          path: '@/fields/slug/SlugComponent#SlugComponent',
+          path: '@/payload/fields/slug/SlugComponent#SlugComponent',
           clientProps: {
             fieldToUse,
             checkboxFieldPath: checkBoxField.name,

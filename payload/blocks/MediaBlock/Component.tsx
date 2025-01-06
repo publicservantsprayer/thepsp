@@ -1,8 +1,8 @@
 import type { StaticImageData } from 'next/image'
 
-import { cn } from 'src/utilities/cn'
+import { cn } from '@/payload/utilities/cn'
 import React from 'react'
-import RichText from '@/components/RichText'
+import RichText from '@/payload/components/RichText'
 
 import type { MediaBlock as MediaBlockProps } from '@/payload-types'
 
@@ -30,6 +30,9 @@ export const MediaBlock: React.FC<Props> = (props) => {
   } = props
 
   let caption
+
+  // TODO: Fix this type
+  // @ts-ignore
   if (media && typeof media === 'object') caption = media.caption
 
   return (

@@ -125,6 +125,9 @@ export const Pages: CollectionConfig<'pages'> = {
   hooks: {
     afterChange: [revalidatePage],
     beforeChange: [populatePublishedAt],
+
+    // TODO: Fix this type
+    // @ts-ignore
     beforeDelete: [revalidateDelete],
   },
   versions: {

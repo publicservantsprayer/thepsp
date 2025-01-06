@@ -7,7 +7,7 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 
-import { link } from '@/fields/link'
+import { link } from '@/payload/fields/link'
 
 const columnFields: Field[] = [
   {
@@ -55,6 +55,8 @@ const columnFields: Field[] = [
   link({
     overrides: {
       admin: {
+        // TODO: Fix this
+        // @ts-ignore
         condition: (_, { enableLink }) => Boolean(enableLink),
       },
     },

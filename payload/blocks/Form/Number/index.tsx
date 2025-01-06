@@ -1,8 +1,12 @@
 import type { TextField } from '@payloadcms/plugin-form-builder/types'
-import type { FieldErrorsImpl, FieldValues, UseFormRegister } from 'react-hook-form'
+import type {
+  FieldErrorsImpl,
+  FieldValues,
+  UseFormRegister,
+} from 'react-hook-form'
 
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Input } from '@/payload/components/ui/input'
+import { Label } from '@/payload/components/ui/label'
 import React from 'react'
 
 import { Error } from '../Error'
@@ -11,12 +15,22 @@ export const Number: React.FC<
   TextField & {
     errors: Partial<
       FieldErrorsImpl<{
+        // TODO: Fix types
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         [x: string]: any
       }>
     >
     register: UseFormRegister<FieldValues>
   }
-> = ({ name, defaultValue, errors, label, register, required: requiredFromProps, width }) => {
+> = ({
+  name,
+  defaultValue,
+  errors,
+  label,
+  register,
+  required: requiredFromProps,
+  width,
+}) => {
   return (
     <Width width={width}>
       <Label htmlFor={name}>{label}</Label>

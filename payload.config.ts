@@ -1,15 +1,16 @@
-// storage-adapter-import-placeholder
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
-import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { Users } from './collections/Users'
-import { Media } from './collections/Media'
-import { Pages } from './collections/Pages'
+import { Users } from '@/payload/collections/Users'
+import { Media } from '@/payload/collections/Media'
+import { Pages } from '@/payload/collections/Pages'
+import { Posts } from '@/payload/collections/Posts'
+import { plugins } from '@/payload/plugins'
+import { Categories } from '@/payload/collections/Categories'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -22,7 +23,7 @@ export default buildConfig({
     components: {
       header: [
         {
-          path: '@/components/nav-bar#NavBar',
+          path: '@/payload/components/nav-bar#NavBar',
         },
       ],
       // views: {
@@ -30,7 +31,7 @@ export default buildConfig({
       // },
     },
   },
-  collections: [Users, Media, Pages],
+  collections: [Users, Media, Pages, Posts, Categories],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -43,8 +44,5 @@ export default buildConfig({
     },
   }),
   sharp,
-  plugins: [
-    payloadCloudPlugin(),
-    // storage-adapter-placeholder
-  ],
+  plugins: [...plugins],
 })

@@ -4,13 +4,13 @@ import type { Form as FormType } from '@payloadcms/plugin-form-builder/types'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
-import RichText from '@/components/RichText'
-import { Button } from '@/components/ui/button'
+import RichText from '@/payload/components/RichText'
+import { Button } from '@/payload/components/ui/button'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 
 import { buildInitialFormState } from './buildInitialFormState'
 import { fields } from './fields'
-import { getClientSideURL } from '@/utilities/getURL'
+import { getClientSideURL } from '@/payload/utilities/getURL'
 
 export type Value = unknown
 
@@ -38,11 +38,19 @@ export const FormBlock: React.FC<
   const {
     enableIntro,
     form: formFromProps,
-    form: { id: formID, confirmationMessage, confirmationType, redirect, submitButtonLabel } = {},
+    form: {
+      id: formID,
+      confirmationMessage,
+      confirmationType,
+      redirect,
+      submitButtonLabel,
+    } = {},
     introContent,
   } = props
 
   const formMethods = useForm({
+    // TODO: Fix this type
+    // @ts-ignore
     defaultValues: buildInitialFormState(formFromProps.fields),
   })
   const {
@@ -54,7 +62,9 @@ export const FormBlock: React.FC<
 
   const [isLoading, setIsLoading] = useState(false)
   const [hasSubmitted, setHasSubmitted] = useState<boolean>()
-  const [error, setError] = useState<{ message: string; status?: string } | undefined>()
+  const [error, setError] = useState<
+    { message: string; status?: string } | undefined
+  >()
   const router = useRouter()
 
   const onSubmit = useCallback(
@@ -74,16 +84,19 @@ export const FormBlock: React.FC<
         }, 1000)
 
         try {
-          const req = await fetch(`${getClientSideURL()}/api/form-submissions`, {
-            body: JSON.stringify({
-              form: formID,
-              submissionData: dataToSend,
-            }),
-            headers: {
-              'Content-Type': 'application/json',
+          const req = await fetch(
+            `${getClientSideURL()}/api/form-submissions`,
+            {
+              body: JSON.stringify({
+                form: formID,
+                submissionData: dataToSend,
+              }),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              method: 'POST',
             },
-            method: 'POST',
-          })
+          )
 
           const res = await req.json()
 
@@ -127,21 +140,29 @@ export const FormBlock: React.FC<
   return (
     <div className="container lg:max-w-[48rem]">
       {enableIntro && introContent && !hasSubmitted && (
-        <RichText className="mb-8 lg:mb-12" data={introContent} enableGutter={false} />
+        <RichText
+          className="mb-8 lg:mb-12"
+          data={introContent}
+          enableGutter={false}
+        />
       )}
-      <div className="p-4 lg:p-6 border border-border rounded-[0.8rem]">
+      <div className="rounded-[0.8rem] border border-border p-4 lg:p-6">
         <FormProvider {...formMethods}>
           {!isLoading && hasSubmitted && confirmationType === 'message' && (
             <RichText data={confirmationMessage} />
           )}
           {isLoading && !hasSubmitted && <p>Loading, please wait...</p>}
-          {error && <div>{`${error.status || '500'}: ${error.message || ''}`}</div>}
+          {error && (
+            <div>{`${error.status || '500'}: ${error.message || ''}`}</div>
+          )}
           {!hasSubmitted && (
+            // @ts-ignore
             <form id={formID} onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-4 last:mb-0">
                 {formFromProps &&
                   formFromProps.fields &&
                   formFromProps.fields?.map((field, index) => {
+                    // @ts-ignore
                     const Field: React.FC<any> = fields?.[field.blockType]
                     if (Field) {
                       return (

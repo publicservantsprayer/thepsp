@@ -1,6 +1,6 @@
 import React from 'react'
 
-import 'server-only'
+// import 'server-only'
 
 import { headers } from 'next/headers'
 import { initializeServerApp } from 'firebase/app'

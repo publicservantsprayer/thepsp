@@ -46,7 +46,7 @@ export function LoginForm({
     if (user) {
       router.push(signedInRedirectPath || '/profile')
     }
-  }, [router, user])
+  }, [router, user, signedInRedirectPath])
 
   const handleSendLink = async () => {
     setDisabled(true)

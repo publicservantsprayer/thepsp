@@ -2,7 +2,14 @@
 import React, { useCallback, useEffect } from 'react'
 import { TextFieldClientProps } from 'payload'
 
-import { useField, Button, TextInput, FieldLabel, useFormFields, useForm } from '@payloadcms/ui'
+import {
+  useField,
+  Button,
+  TextInput,
+  FieldLabel,
+  useFormFields,
+  useForm,
+} from '@payloadcms/ui'
 
 import { formatSlug } from './formatSlug'
 import './index.scss'
@@ -30,7 +37,7 @@ export const SlugComponent: React.FC<SlugComponentProps> = ({
   const { dispatchFields } = useForm()
 
   // The value of the checkbox
-  // We're using separate useFormFields to minimise re-renders
+  // We're using separate useFormFields to minimize re-renders
   const checkboxValue = useFormFields(([fields]) => {
     return fields[checkboxFieldPath]?.value as string
   })
@@ -53,7 +60,7 @@ export const SlugComponent: React.FC<SlugComponentProps> = ({
   }, [targetFieldValue, checkboxValue, setValue, value])
 
   const handleLock = useCallback(
-    (e) => {
+    (e: React.MouseEvent) => {
       e.preventDefault()
 
       dispatchFields({

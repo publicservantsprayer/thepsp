@@ -73,7 +73,7 @@ export async function NavBar() {
   const verifiedStateCode = validateStateCode(cookieStateCode)
 
   return (
-    <nav className="sticky top-0 z-50 bg-background shadow-md">
+    <nav className="sticky top-0 z-50 bg-background shadow-2xl">
       <div className="flex items-center justify-between px-4 py-2">
         {/* Logo or brand name */}
         <Link href="/" className="hidden font-psp text-xl md:flex">
@@ -139,13 +139,10 @@ export async function NavBar() {
                     If <StateName /> is not your state, use this map to find
                     yours.
                   </ListItem>
-                  <ListItem href="/docs/installation" title="What We Do">
+                  <ListItem href="/what-we-do" title="What We Do">
                     Every day we pray for three leaders in our state.
                   </ListItem>
-                  <ListItem
-                    href="/docs/primitives/typography"
-                    title="Why We Pray"
-                  >
+                  <ListItem href="/why-we-pray" title="Why We Pray">
                     A fresh approach to political involvement.
                   </ListItem>
                 </ul>

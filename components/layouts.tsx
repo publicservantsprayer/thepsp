@@ -23,15 +23,17 @@ export function LandingPageLayout({ children }: Props) {
 
 export function DefaultLayout({ children }: Props) {
   return (
-    <>
+    <div className="">
       <NavBar />
       <div className="flex min-h-dvh flex-col">
         <HeroBackground>
           <PspTitleLogo />
         </HeroBackground>
-        {children}
+        <div className="font-lato flex flex-col items-center gap-4 pt-8">
+          <div className="">{children}</div>
+        </div>
         <Footer />
       </div>
-    </>
+    </div>
   )
 }

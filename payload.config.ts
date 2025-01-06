@@ -11,6 +11,8 @@ import { Pages } from '@/payload/collections/Pages'
 import { Posts } from '@/payload/collections/Posts'
 import { plugins } from '@/payload/plugins'
 import { Categories } from '@/payload/collections/Categories'
+import { Footer } from '@/payload/globals/Footer/config'
+import { Header } from '@/payload/globals/Header/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -21,17 +23,18 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     components: {
-      header: [
-        {
-          path: '@/payload/components/nav-bar#NavBar',
-        },
-      ],
+      // header: [
+      //   {
+      //     path: '@/payload/components/nav-bar#NavBar',
+      //   },
+      // ],
       // views: {
       //   beforeLogin:
       // },
     },
   },
   collections: [Users, Media, Pages, Posts, Categories],
+  globals: [Header, Footer],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

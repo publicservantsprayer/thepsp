@@ -1,5 +1,6 @@
 import type { Config } from 'tailwindcss'
 import tailwindAnimate from 'tailwindcss-animate'
+import tailwindTypography from '@tailwindcss/typography'
 
 export default {
   darkMode: ['selector', '[data-theme="dark"]'],
@@ -8,8 +9,44 @@ export default {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  safelist: [
+    'lg:col-span-4',
+    'lg:col-span-6',
+    'lg:col-span-8',
+    'lg:col-span-12',
+    'border-border',
+    'bg-card',
+    'border-error',
+    'bg-error/30',
+    'border-success',
+    'bg-success/30',
+    'border-warning',
+    'bg-warning/30',
+  ],
   theme: {
+    container: {
+      center: true,
+      padding: {
+        '2xl': '2rem',
+        DEFAULT: '1rem',
+        lg: '2rem',
+        md: '2rem',
+        sm: '1rem',
+        xl: '2rem',
+      },
+      // screens: {
+      //   '2xl': '86rem',
+      //   lg: '64rem',
+      //   md: '48rem',
+      //   sm: '40rem',
+      //   xl: '80rem',
+      // },
+    },
     extend: {
+      gridTemplateColumns: {
+        // Simple 16 column grid
+        '16': 'repeat(16, minmax(0, 1fr))',
+      },
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
@@ -66,10 +103,52 @@ export default {
       fontFamily: {
         psp: ['var(--font-psp)'],
         roboto: ['var(--font-roboto)'],
+        lato: ['var(--font-lato)'],
+        // sans: ['var(--font-roboto)'],
+        // serif: ['var(--font-lato)'],
+      },
+      typography: {
+        DEFAULT: {
+          css: [
+            {
+              '--tw-prose-body': 'var(--text)',
+              '--tw-prose-headings': 'var(--text)',
+              h1: {
+                fontWeight: 'normal',
+                marginBottom: '0.25em',
+              },
+            },
+          ],
+        },
+        base: {
+          css: [
+            {
+              h1: {
+                fontSize: '2.5rem',
+              },
+              h2: {
+                fontSize: '1.25rem',
+                fontWeight: 600,
+              },
+            },
+          ],
+        },
+        md: {
+          css: [
+            {
+              h1: {
+                fontSize: '3.5rem',
+              },
+              h2: {
+                fontSize: '1.5rem',
+              },
+            },
+          ],
+        },
       },
     },
   },
-  plugins: [tailwindAnimate],
+  plugins: [tailwindAnimate, tailwindTypography],
   corePlugins: {
     preflight: true,
   },

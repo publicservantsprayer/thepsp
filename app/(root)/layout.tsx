@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import type { Theme, SxProps } from '@mui/material/styles'
-import { Roboto, Frank_Ruhl_Libre } from 'next/font/google'
+import { Roboto, Frank_Ruhl_Libre, Lato } from 'next/font/google'
+
 import { UsaStateProvider } from '@/hooks/use-usa-state'
 import { NextThemeProvider } from '@/components/next-theme-provider'
+import { cn } from '@/lib/utils'
+import { Providers } from '@/payload/providers'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -40,6 +43,13 @@ const frank = Frank_Ruhl_Libre({
   variable: '--font-psp',
 })
 
+const lato = Lato({
+  weight: ['300', '400', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-lato',
+})
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -47,14 +57,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${roboto.variable} ${frank.variable}`}>
+      <body
+        className={cn(
+          roboto.variable,
+          frank.variable,
+          lato.variable,
+          'font-roboto',
+        )}
+      >
         <NextThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <UsaStateProvider>{children}</UsaStateProvider>
+          <UsaStateProvider>
+            <Providers>{children}</Providers>
+          </UsaStateProvider>
         </NextThemeProvider>
       </body>
     </html>

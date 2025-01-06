@@ -30,7 +30,8 @@ import { SlugComponent as SlugComponent_2f7cb6d15a7be4cbd9d669ac9f96d997 } from 
 import { BlocksFeatureClient as BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { LinkToDoc as LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloadcms/plugin-search/client'
 import { ReindexButton as ReindexButton_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloadcms/plugin-search/client'
-import { NavBar as NavBar_22015ee717b745a6b3880cca14a2d8fe } from '@/payload/components/nav-bar'
+import { RowLabel as RowLabel_19e8a9033e6a2d5d6a04b3762ec81d80 } from '@/payload/globals/Header/RowLabel'
+import { RowLabel as RowLabel_d2aff3abcb7b90b04c6a0836d1455041 } from '@/payload/globals/Footer/RowLabel'
 
 export const importMap = {
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -65,5 +66,6 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BlocksFeatureClient": BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/plugin-search/client#LinkToDoc": LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634,
   "@payloadcms/plugin-search/client#ReindexButton": ReindexButton_aead06e4cbf6b2620c5c51c9ab283634,
-  "@/payload/components/nav-bar#NavBar": NavBar_22015ee717b745a6b3880cca14a2d8fe
+  "@/payload/globals/Header/RowLabel#RowLabel": RowLabel_19e8a9033e6a2d5d6a04b3762ec81d80,
+  "@/payload/globals/Footer/RowLabel#RowLabel": RowLabel_d2aff3abcb7b90b04c6a0836d1455041
 }

@@ -8,7 +8,8 @@ import React from 'react'
 
 import { importMap } from './admin/importMap.js'
 import './custom.scss'
-import '../(root)/globals.css'
+// I'd like to bring in tailwind from the root, but currently not stable
+// import '../(root)/globals.css'
 
 type Args = {
   children: React.ReactNode

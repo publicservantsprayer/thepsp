@@ -41,28 +41,28 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
   return (
     <div className="width-full mx-auto mb-12 max-w-[900px]">
       <Tabs defaultValue="today" className="grid gap-2">
-        <TabsList className="grid w-full grid-cols-4 rounded-t-lg bg-psp-primary text-accent-foreground">
+        <TabsList className="grid w-full grid-cols-4 rounded-t-lg bg-accent text-accent-foreground">
           <TabsTrigger
             value="today"
-            className="gap-2 data-[state=active]:text-psp-primary-foreground"
+            className="gap-2 data-[state=active]:text-accent-foreground"
           >
             Today
           </TabsTrigger>
           <TabsTrigger
             value="email"
-            className="gap-2 data-[state=active]:text-psp-primary-foreground"
+            className="gap-2 data-[state=active]:text-accent-foreground"
           >
             <MdEmail /> Email
           </TabsTrigger>
           <TabsTrigger
             value="facebook"
-            className="h-8 gap-2 data-[state=active]:text-psp-primary-foreground"
+            className="h-8 gap-2 data-[state=active]:text-accent-foreground"
           >
             <SiFacebook />
           </TabsTrigger>
           <TabsTrigger
             value="x"
-            className="h-8 gap-2 data-[state=active]:text-psp-primary-foreground"
+            className="h-8 gap-2 data-[state=active]:text-accent-foreground"
           >
             <SiX />
           </TabsTrigger>
@@ -93,7 +93,7 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
             </div>
           </div>
 
-          <div className="col-span-4 rounded-r-lg bg-secondary p-2 text-secondary-foreground">
+          <div className="col-span-4 rounded-r-lg bg-card p-2 text-card-foreground">
             <StateMessage stateCode={stateCode} />
           </div>
         </div>
@@ -184,7 +184,7 @@ export function StateMessage({ stateCode }: { stateCode: StateCode }) {
         <Link href="/find-your-state" className="underline">
           find your state
         </Link>{' '}
-        and then follow on Facebook, or get on the mailing list.
+        and then follow on X, Facebook, or get on the mailing list.
       </p>
 
       <p>

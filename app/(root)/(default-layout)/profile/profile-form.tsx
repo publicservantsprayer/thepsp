@@ -22,11 +22,11 @@ export function ProfileForm({ initialUser }: { initialUser: User }) {
   }
 
   return (
-    <div className="flex w-full items-center justify-center p-6 outline md:p-10">
+    <div className="flex w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
         {/* <ProfileForm user={user} /> */}
-        {user.displayName}
-        {user.email}
+        <div>{user.displayName}</div>
+        <div>{user.email}</div>
       </div>
     </div>
   )

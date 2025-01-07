@@ -27,41 +27,80 @@ import { User } from 'firebase/auth'
 import { validateStateCode } from '@/lib/get-state-info'
 import { cookies } from 'next/headers'
 
-const components: { title: string; href: string; description: string }[] = [
+const resources: { title: string; href: string; description: string }[] = [
   {
-    title: 'Alert Dialog',
-    href: '/docs/primitives/alert-dialog',
+    title: 'Articles',
+    href: '#',
     description:
-      'A modal dialog that interrupts the user with important content and expects a response.',
+      'Explore insightful articles on the impact of prayer in politics and spiritual leadership.',
   },
   {
-    title: 'Hover Card',
-    href: '/docs/primitives/hover-card',
+    title: 'Events',
+    href: '#',
     description:
-      'For sighted users to preview content available behind a link.',
+      "Join us at upcoming events where we gather to pray for our nation's leaders..",
   },
   {
-    title: 'Progress',
-    href: '/docs/primitives/progress',
+    title: "Matt's Updates",
+    href: '#',
     description:
-      'Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.',
+      "Read Matt's personal reflections and updates on our journey towards a more prayerful political climate.",
   },
   {
-    title: 'Scroll-area',
-    href: '/docs/primitives/scroll-area',
-    description: 'Visually or semantically separates content.',
+    title: "Women's Ministry",
+    href: '#',
+    description:
+      "Engage with our Women's Ministry dedicated to empowering female voices in prayer leadership.",
   },
   {
-    title: 'Tabs',
-    href: '/docs/primitives/tabs',
+    title: 'Give Support',
+    href: '#',
     description:
-      'A set of layered sections of content—known as tab panels—that are displayed one at a time.',
+      'Support our mission financially to expand our reach and deepen our impact.',
   },
   {
-    title: 'Tooltip',
-    href: '/docs/primitives/tooltip',
+    title: 'Volunteer',
+    href: '#',
     description:
-      'A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.',
+      'Volunteer with us to help spread the message of prayer across the nation.',
+  },
+]
+
+const learnMore: { title: string; href: string; description: string }[] = [
+  {
+    title: 'Why We Pray',
+    href: '#',
+    description:
+      'Discover the driving force behind our commitment to pray for political leaders.',
+  },
+  {
+    title: 'Prayer Resources',
+    href: '#',
+    description:
+      'Access tools and guides tailored for praying for those in public service.',
+  },
+  {
+    title: 'Testimonies',
+    href: '#',
+    description:
+      'Be inspired by real-life stories of how prayer has touched our leaders and communities.',
+  },
+  {
+    title: 'Frequently Asked Questions (FAQ)',
+    href: '#',
+    description: 'Get answers to common questions about our prayer initiative.',
+  },
+  {
+    title: 'Our History',
+    href: '#',
+    description:
+      "Trace the journey of Public Servants' Prayer from its inception to now.",
+  },
+  {
+    title: 'Impact Stories',
+    href: '#',
+    description:
+      'Read about the tangible effects prayer has had in the political arena.',
   },
 ]
 
@@ -91,7 +130,7 @@ export async function NavBar() {
             <SheetHeader>
               <SheetTitle className="text-lg font-medium">Menu</SheetTitle>
             </SheetHeader>
-            <div className="mt-4 space-y-2">
+            {/* <div className="mt-4 space-y-2">
               <Link href="/">
                 <span className="block hover:underline">Home</span>
               </Link>
@@ -101,7 +140,7 @@ export async function NavBar() {
               <Link href="/contact">
                 <span className="block hover:underline">Contact</span>
               </Link>
-            </div>
+            </div> */}
           </SheetContent>
         </Sheet>
 
@@ -124,12 +163,12 @@ export async function NavBar() {
                     >
                       <NavigationMenuLink>
                         {/* <Icons.logo className="h-6 w-6" /> */}
-                        <div className="mb-2 mt-4 font-psp text-2xl">
-                          PSP <StateName />
+                        <div className="mb-2 mt-4 text-2xl">
+                          <span className="font-psp">PSP</span> <StateName />
                         </div>
                         <p className="text-sm leading-tight text-muted-foreground">
                           Praying for our leaders. Recognizing their humanity
-                          and challenges. This strengthens our nation by seeking
+                          and challenges and strengthening our nation by seeking
                           God&rsquo;s guidance and support for them.
                         </p>
                       </NavigationMenuLink>
@@ -142,7 +181,7 @@ export async function NavBar() {
                   <ListItem href="/what-we-do" title="What We Do">
                     Every day we pray for three leaders in our state.
                   </ListItem>
-                  <ListItem href="/why-we-pray" title="Why We Pray">
+                  <ListItem href="#" title="Why We Pray">
                     A fresh approach to political involvement.
                   </ListItem>
                 </ul>
@@ -152,7 +191,7 @@ export async function NavBar() {
               <NavigationMenuTrigger>Resources</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                  {components.map((component) => (
+                  {resources.map((component) => (
                     <ListItem
                       key={component.title}
                       title={component.title}
@@ -168,7 +207,7 @@ export async function NavBar() {
               <NavigationMenuTrigger>Learn More</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                  {components.map((component) => (
+                  {learnMore.map((component) => (
                     <ListItem
                       key={component.title}
                       title={component.title}

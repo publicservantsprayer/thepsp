@@ -20,8 +20,6 @@ import { useUserSession } from './use-user-session'
 export function UserMenu({ initialUser }: { initialUser: User }) {
   const user = useUserSession(initialUser)
 
-  // console.log('user', user)
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -38,11 +36,10 @@ export function UserMenu({ initialUser }: { initialUser: User }) {
         </DropdownMenuLabel>
 
         <DropdownMenuSeparator />
+
         <LoggedOutUserMenu user={user} />
-        <DropdownMenuSeparator />
         <LoggedInUserMenu user={user} />
         <AdminUserMenu user={user} />
-        <DropdownMenuSeparator />
         <SignOutMenuItem user={user} />
       </DropdownMenuContent>
     </DropdownMenu>
@@ -63,9 +60,9 @@ function LoggedInUserMenu({ user }: { user: User | null }) {
   if (!user) return null
 
   return (
-    <DropdownMenuItemLink asChild>
-      <Link href="/profile">Profile</Link>
-    </DropdownMenuItemLink>
+    <Link href="/profile">
+      <DropdownMenuItemLink>Profile</DropdownMenuItemLink>
+    </Link>
   )
 }
 
@@ -75,15 +72,16 @@ function AdminUserMenu({ user }: { user: User | null }) {
   return (
     <>
       <DropdownMenuSeparator />
-      <DropdownMenuItemLink>
-        <Link href="/admin">Content</Link>
-      </DropdownMenuItemLink>
-      <DropdownMenuItemLink asChild>
-        <Link href="/x-accounts">X Accounts</Link>
-      </DropdownMenuItemLink>
-      <DropdownMenuItemLink asChild>
-        <Link href="/">Data Import</Link>
-      </DropdownMenuItemLink>
+
+      <Link href="/admin">
+        <DropdownMenuItemLink>Content</DropdownMenuItemLink>
+      </Link>
+      <Link href="#">
+        <DropdownMenuItemLink disabled={true}>X Accounts</DropdownMenuItemLink>
+      </Link>
+      <Link href="#">
+        <DropdownMenuItemLink disabled={true}>Data Import</DropdownMenuItemLink>
+      </Link>
     </>
   )
 }
@@ -97,8 +95,11 @@ function SignOutMenuItem({ user }: { user: User | null }) {
   }
 
   return (
-    <DropdownMenuItemLink onClick={handleSignOut}>
-      Sign Out
-    </DropdownMenuItemLink>
+    <>
+      <DropdownMenuSeparator />
+      <DropdownMenuItemLink onClick={handleSignOut}>
+        Sign Out
+      </DropdownMenuItemLink>
+    </>
   )
 }

@@ -5,7 +5,7 @@ import React from 'react'
 
 import type { Footer } from '@/payload-types'
 
-import { ThemeSelector } from '@/payload/providers/Theme/ThemeSelector'
+// import { ThemeSelector } from '@/payload/providers/Theme/ThemeSelector'
 import { CMSLink } from '@/payload/components/Link'
 
 export async function Footer() {
@@ -18,7 +18,7 @@ export async function Footer() {
       <div className="container flex flex-col gap-8 py-8 md:flex-row md:justify-between">
         <Link className="flex items-center" href="/">
           <Image
-            className="h-auto w-64"
+            className="h-auto max-w-52"
             width={1500}
             height={351}
             src="/images/public-servants-prayer.png"
@@ -27,7 +27,7 @@ export async function Footer() {
         </Link>
 
         <div className="flex flex-col-reverse items-start gap-4 md:flex-row md:items-center">
-          <ThemeSelector />
+          {/* <ThemeSelector /> */}
           <nav className="flex flex-col gap-4 md:flex-row">
             {navItems.map(({ link }, i) => {
               return <CMSLink className="text-white" key={i} {...link} />

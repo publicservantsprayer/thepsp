@@ -11,7 +11,7 @@ export default function DetectPage() {
     <div className="container mx-auto">
       <h1 className="text-3xl">State Detection</h1>
 
-      <div className="prose">
+      <div className="prose dark:prose-invert">
         <ul>
           <li>Geo State Code: {geoStateCode}</li>
           <li>Latitude: {lat}</li>

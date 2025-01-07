@@ -1,7 +1,7 @@
 import { PspTitleLogo } from '@/components/psp-title-logo'
 import { HeroBackground } from '@/components/hero-background'
 import { NavBar } from '@/components/nav-bar'
-import Footer from '@/components/footer'
+import { Footer } from '@/payload/globals/Footer/Component'
 
 interface Props {
   children: React.ReactNode
@@ -23,17 +23,15 @@ export function LandingPageLayout({ children }: Props) {
 
 export function DefaultLayout({ children }: Props) {
   return (
-    <div className="">
+    <>
       <NavBar />
-      <div className="flex min-h-dvh flex-col">
-        <HeroBackground>
-          <PspTitleLogo />
-        </HeroBackground>
-        <div className="font-lato flex flex-col items-center gap-4 pt-8">
-          <div className="">{children}</div>
-        </div>
-        <Footer />
+      <HeroBackground>
+        <PspTitleLogo />
+      </HeroBackground>
+      <div className="flex flex-col items-center gap-4 pt-8 font-lato">
+        <div className="">{children}</div>
       </div>
-    </div>
+      <Footer />
+    </>
   )
 }

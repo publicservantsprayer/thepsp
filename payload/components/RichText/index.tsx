@@ -60,14 +60,12 @@ export default function RichText(props: Props) {
   return (
     <RichTextWithoutBlocks
       // TODO: Fix this type
-      // @ts-ignore
+      // @ts-expect-error - Imported from Payload
       converters={jsxConverters}
       className={cn(
-        {
-          container: enableGutter,
-          'max-w-none': !enableGutter,
-          'prose md:prose-md dark:prose-invert mx-auto': enableProse,
-        },
+        enableGutter && 'container',
+        !enableGutter && 'max-w-none',
+        enableProse && 'n8 prose mx-auto md:prose-md dark:prose-invert',
         className,
       )}
       {...rest}

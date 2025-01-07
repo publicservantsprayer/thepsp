@@ -3,7 +3,8 @@ import tailwindAnimate from 'tailwindcss-animate'
 import tailwindTypography from '@tailwindcss/typography'
 
 export default {
-  darkMode: ['selector', '[data-theme="dark"]'],
+  // darkMode: ['selector', '[data-theme="dark"]'],
+  darkMode: 'class',
   content: [
     './payload/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -101,8 +102,8 @@ export default {
         DEFAULT: {
           css: [
             {
-              '--tw-prose-body': 'var(--text)',
-              '--tw-prose-headings': 'var(--text)',
+              // '--tw-prose-body': 'var(--text)',
+              // '--tw-prose-headings': 'var(--text)',
               h1: {
                 fontWeight: 'normal',
                 marginBottom: '0.25em',

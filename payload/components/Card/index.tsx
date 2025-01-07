@@ -79,7 +79,7 @@ export const Card: React.FC<{
           </div>
         )}
         {titleToUse && (
-          <div className="prose">
+          <div className="prose dark:prose-invert">
             <h3>
               <Link className="not-prose" href={href} ref={link.ref}>
                 {titleToUse}

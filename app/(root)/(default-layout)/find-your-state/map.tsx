@@ -5,14 +5,13 @@ import { useSpring, animated, SpringRef, ElementType } from '@react-spring/web'
 import svgPanZoom from 'svg-pan-zoom'
 
 import statePaths from './state-paths'
-import { theme } from '@/utilities/theme'
 import { panZoomEventsHandler } from './panZoomEventsHandler'
 import { stateCodes } from '@/data/states'
 import { useRouter } from 'next/navigation'
 import { StateCode } from '@/lib/types'
 
-const stateColor = theme.palette.primary.main
-const stateColorOver = theme.palette.primary.dark
+const stateColor = 'hsl(var(--psp-primary))'
+const stateColorOver = 'hsl(var(--secondary))'
 
 const mapAspectRatio = 450 / 700
 

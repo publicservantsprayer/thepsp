@@ -1,19 +1,24 @@
 'use client'
 
-import React, { useState } from 'react'
-
-import MuiAccordion from '@mui/material/Accordion'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
-import Typography from '@mui/material/Typography'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import MuiTableRow from '@mui/material/TableRow'
-import Skeleton from '@mui/material/Skeleton'
 import moment from 'moment'
-import { Leader } from '@/lib/types'
+import { Leader, Post } from '@/lib/types'
+
+import {
+  Table,
+  TableBody,
+  // TableCaption,
+  TableCell,
+  // TableFooter,
+  // TableHead,
+  // TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 
 interface Props {
   leader: Leader
@@ -41,50 +46,57 @@ const Address = ({ leader }: Props) => {
   )
 }
 
-function TableRow({ name, data }: { name: string; data: React.ReactNode }) {
+function TableRowCell({ name, data }: { name: string; data: React.ReactNode }) {
   if (!data) return null
 
   return (
-    <MuiTableRow>
+    <TableRow>
       <TableCell>{name}</TableCell>
       <TableCell>{data}</TableCell>
-    </MuiTableRow>
+    </TableRow>
   )
 }
 
 const LeaderName = ({ leader }: Props) => {
   return leader.PID ? (
-    <Typography>
+    <div>
       {leader.Prefix} {leader.NickName} {leader.LastName}
-    </Typography>
+    </div>
   ) : (
-    <Skeleton width={300} height={6} style={{ margin: 0 }} />
+    <div>no leader?</div>
   )
 }
 
-export function Accordion({ leader }: { leader: Leader }) {
-  const [expanded, setExpanded] = useState(false)
+export function LeaderAccordion({ post }: { post: Post }) {
+  const { leader1, leader2, leader3 } = post
 
   return (
-    <MuiAccordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <LeaderName leader={leader} />
-      </AccordionSummary>
-      <AccordionDetails>
-        <Table size="small">
-          <TableBody>
-            <TableRow name="Title" data={leader.Title} />
-            <TableRow name="District:" data={leader.District} />
-            <TableRow name="In Office Since:" data={leader.ElectDate} />
-            <TableRow name="Religion:" data={leader.Religion} />
-            <TableRow name="Spouse:" data={leader.Spouse} />
-            <TableRow name="Family:" data={leader.Family} />
-            <TableRow name="Birthday" data={birthday(leader)} />
-            <TableRow name="Address:" data={<Address leader={leader} />} />
-            <TableRow name="Email:" data={leader.Email} />
-          </TableBody>
-        </Table>
-      </AccordionDetails>
-    </MuiAccordion>
+    <Accordion type="single" collapsible className="w-full">
+      {[leader1, leader2, leader3].map((leader) => (
+        <AccordionItem value={leader.PID} key={leader.PID}>
+          <AccordionTrigger>
+            <LeaderName leader={leader} />
+          </AccordionTrigger>
+          <AccordionContent>
+            <Table>
+              <TableBody>
+                <TableRowCell name="Title" data={leader.Title} />
+                <TableRowCell name="District:" data={leader.District} />
+                <TableRowCell name="In Office Since:" data={leader.ElectDate} />
+                <TableRowCell name="Religion:" data={leader.Religion} />
+                <TableRowCell name="Spouse:" data={leader.Spouse} />
+                <TableRowCell name="Family:" data={leader.Family} />
+                <TableRowCell name="Birthday" data={birthday(leader)} />
+                <TableRowCell
+                  name="Address:"
+                  data={<Address leader={leader} />}
+                />
+                <TableRowCell name="Email:" data={leader.Email} />
+              </TableBody>
+            </Table>
+          </AccordionContent>
+        </AccordionItem>
+      ))}
+    </Accordion>
   )
 }

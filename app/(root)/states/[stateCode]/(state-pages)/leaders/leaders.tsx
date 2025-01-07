@@ -1,11 +1,8 @@
 import React from 'react'
-import Typography from '@mui/material/Typography'
-import Avatar from '@mui/material/Avatar'
-import Paper from '@mui/material/Paper'
-
 import { leaderPhoto, leaderUrl } from '@/lib/leader'
 import { Leader } from '@/lib/types'
 import { Link } from '@/components/ui/link'
+import Image from 'next/image'
 
 interface Props {
   leaders: Leader[]
@@ -37,25 +34,22 @@ export const Leaders = ({ leaders, chamber, legType }: Props) => {
       {leaders.map((leader) => (
         <div key={leader.PID} className="m-1">
           <Link href={leaderUrl(leader)}>
-            <Paper>
+            <div>
               <div className="p-1">
                 <div className="flex min-w-[145px] justify-center">
-                  <Avatar
+                  <Image
                     alt={leader.PhotoFile}
                     src={leaderPhoto(leader)}
+                    width={108}
+                    height={148}
                     className="m-[10px] h-[60px] w-[60px]"
                   />
                 </div>
-                <Typography
-                  variant="body2"
-                  component="div"
-                  align="center"
-                  noWrap
-                >
+                <div className="text-center text-sm">
                   {leader.NickName} {leader.LastName}
-                </Typography>
+                </div>
               </div>
-            </Paper>
+            </div>
           </Link>
         </div>
       ))}

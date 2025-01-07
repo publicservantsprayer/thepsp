@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import type { Theme, SxProps } from '@mui/material/styles'
 import { Roboto, Frank_Ruhl_Libre, Lato } from 'next/font/google'
 
 import { UsaStateProvider } from '@/hooks/use-usa-state'
@@ -8,25 +7,9 @@ import { NextThemeProvider } from '@/components/next-theme-provider'
 import { cn } from '@/lib/utils'
 import { Providers } from '@/payload/providers'
 
-declare module 'react' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface HTMLAttributes<T> {
-    sx?: SxProps<Theme>
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface SVGProps<T> {
-    sx?: SxProps<Theme>
-  }
-}
-declare module '@mui/material-pigment-css' {
-  interface ThemeArgs {
-    theme: Theme
-  }
-}
-
 export const metadata: Metadata = {
   title: "Public Servants' Prayer",
-  description: 'what description?',
+  description: 'Prayer can change the course of history.',
 }
 
 const roboto = Roboto({

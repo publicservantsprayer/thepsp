@@ -13,8 +13,7 @@ import { getHistoricalPost, getLatestPost } from '@/lib/firebase/firestore'
 import { Link } from '@/components/ui/link'
 import Image from 'next/image'
 import { leaderPhoto } from '@/lib/leader'
-import { Skeleton } from '@mui/material'
-import { Accordion } from './accordion'
+import { LeaderAccordion } from './accordion'
 import { Separator } from '@/components/ui/separator'
 import { getStateInfo } from '@/lib/get-state-info'
 
@@ -85,9 +84,7 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
                 </div>
 
                 <div className="my-2">
-                  <Accordion leader={post.leader1} />
-                  <Accordion leader={post.leader2} />
-                  <Accordion leader={post.leader3} />
+                  <LeaderAccordion post={post} />
                 </div>
               </TabsContent>
             </div>
@@ -103,20 +100,18 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
 }
 
 function LeaderPhoto({ leader }: { leader: Leader }) {
+  if (!leader) return null
+
   return (
     <div className="m-1 h-[148px] w-full max-w-[108px]">
       <Link href={`/leader/${leader.permaLink}`}>
-        {!leader.PID ? (
-          <Skeleton height={148} width={108} />
-        ) : (
-          <Image
-            height={148}
-            width={108}
-            src={leaderPhoto(leader)}
-            alt="Leader"
-            className="rounded-lg"
-          />
-        )}
+        <Image
+          height={148}
+          width={108}
+          src={leaderPhoto(leader)}
+          alt="Leader"
+          className="rounded-lg"
+        />
       </Link>
     </div>
   )

@@ -9,7 +9,7 @@ export default async function ProfilePage() {
   const initialUser: User = currentUser?.toJSON() as User
 
   return (
-    <div className="flex w-full items-center justify-center p-6 outline md:p-10">
+    <div className="flex w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
         <ProfileForm initialUser={initialUser} />
       </div>

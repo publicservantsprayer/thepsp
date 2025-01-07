@@ -36,15 +36,15 @@ export async function generateStaticParams() {
   return params
 }
 
-type Args = {
+type Props = {
   params: Promise<{
     slug?: string
   }>
 }
 
-export default async function Page({ params: paramsPromise }: Args) {
+export default async function Page({ params }: Props) {
   const { isEnabled: draft } = await draftMode()
-  const { slug = 'home' } = await paramsPromise
+  const { slug = 'home' } = await params
   const url = '/' + slug
 
   const page = await queryPageBySlug({
@@ -58,7 +58,7 @@ export default async function Page({ params: paramsPromise }: Args) {
   const { hero, layout } = page
 
   return (
-    <article className="px-4 pb-24 pt-8">
+    <article className="pb-24 pt-16">
       <PageClient />
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
@@ -71,12 +71,8 @@ export default async function Page({ params: paramsPromise }: Args) {
   )
 }
 
-export async function generateMetadata({
-  params: paramsPromise,
-}: {
-  params: { slug: string }
-}): Promise<Metadata> {
-  const { slug = 'home' } = await paramsPromise
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug = 'home' } = await params
   const page = await queryPageBySlug({
     slug,
   })

@@ -33,6 +33,9 @@
     --psp-primary: 240 4.8% 95.9%;
     /* yellow */
     --psp-primary-foreground: 240 5.9% 10%;
+    overflow-y: overlay;
+    padding-right: 0;
+    width: 100vw;
   }
 
   .dark {
@@ -66,13 +69,62 @@
     --psp-primary-foreground: 58 97% 75%;
     /* --psp-primary-foreground: 45 100% 75%; */
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
   body {
     @apply flex min-h-[100vh] flex-col bg-background text-foreground;
+  }
+
+  /** Scrollbar Styling
+
+Just to break down what made it successful for future reference:
+
+1. Using `overflow-x: hidden` and `overflow-y: scroll` on the HTML element
+2. Setting explicit widths with `width: 100vw` on root and `width: calc(100vw - 0px)` on html
+3. Controlling the body with `position: relative` and `max-width: 100%`
+4. Combining both WebKit and Firefox scrollbar styling
+5. Using a thinner scrollbar (8px) with content-box clipping
+6. Proper transparency and hover states for better UX
+
+This solution successfully prevents layout shift while maintaining a modern, overlay-style scrollbar across different browsers.
+*/
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(155, 155, 155, 0.3) transparent;
+  }
+  html {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    width: calc(100vw - 0px);
+  }
+
+  body {
+    position: relative;
+    max-width: 100%;
+  }
+
+  /* Webkit scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    background: transparent;
+    position: absolute;
+    right: 0;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(155, 155, 155, 0.3);
+    border: 2px solid transparent;
+    background-clip: content-box;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(155, 155, 155, 0.5);
   }
 }

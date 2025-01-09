@@ -1,11 +1,11 @@
 import React from 'react'
 
 import { User } from 'firebase/auth'
-import { getAuthenticatedAppForUser } from '@/lib/firebase/server-app'
 import { ProfileForm } from './profile-form'
+import { getCurrentUser } from '@/lib/firebase/server/auth'
 
 export default async function ProfilePage() {
-  const { currentUser } = await getAuthenticatedAppForUser()
+  const currentUser = await getCurrentUser()
   const initialUser: User = currentUser?.toJSON() as User
 
   return (

@@ -4,7 +4,7 @@ import React, { Dispatch, SetStateAction } from 'react'
 
 import { ModalDrawer } from '@/components/modal-drawer'
 import { Button } from '@/components/ui/button'
-import { auth } from '@/lib/firebase/clientApp'
+import { auth } from '@/lib/firebase/client/client-app'
 import { isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

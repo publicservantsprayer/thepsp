@@ -22,10 +22,10 @@ import {
 import { Menu } from 'lucide-react'
 import { StateName } from '@/components/state-name'
 import { UserMenu } from './user-menu'
-import { getAuthenticatedAppForUser } from '@/lib/firebase/server-app'
 import { User } from 'firebase/auth'
 import { validateStateCode } from '@/lib/get-state-info'
 import { cookies } from 'next/headers'
+import { getCurrentUser } from '@/lib/firebase/server/auth'
 
 const resources: { title: string; href: string; description: string }[] = [
   {
@@ -105,7 +105,7 @@ const learnMore: { title: string; href: string; description: string }[] = [
 ]
 
 export async function NavBar() {
-  const { currentUser } = await getAuthenticatedAppForUser()
+  const currentUser = await getCurrentUser()
   const initialUser: User = currentUser?.toJSON() as User
   const cookieStore = await cookies()
   const cookieStateCode = cookieStore.get('stateCode')?.value

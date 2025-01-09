@@ -5,7 +5,7 @@ import * as React from 'react'
 import Link from 'next/link'
 import { User } from 'firebase/auth'
 
-import { signOut } from '@/lib/firebase/auth'
+import { signOut } from '@/lib/firebase/client/auth'
 import { CircleUser } from 'lucide-react'
 import {
   DropdownMenu,

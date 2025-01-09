@@ -2,7 +2,7 @@ import {
   QueryDocumentSnapshot,
   FirestoreDataConverter,
 } from 'firebase-admin/firestore'
-import { db } from '@/lib/firebase/firebase-admin'
+import { db } from '@/lib/firebase/server/admin-app'
 
 import type {
   StateCode,

@@ -15,9 +15,9 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ModalDrawer } from '@/components/modal-drawer'
-import { auth } from '@/lib/firebase/clientApp'
+import { auth } from '@/lib/firebase/client/client-app'
 import { useRouter } from 'next/navigation'
-import { signInWithGoogle } from '@/lib/firebase/auth'
+import { signInWithGoogle } from '@/lib/firebase/client/auth'
 import { useUserSession } from '@/components/nav-bar/use-user-session'
 
 export function LoginForm({

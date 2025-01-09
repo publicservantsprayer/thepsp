@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label'
 import { ModalDrawer } from '@/components/modal-drawer'
 import { auth } from '@/lib/firebase/client/client-app'
 import { useRouter } from 'next/navigation'
-import { signInWithGoogle } from '@/lib/firebase/client/auth'
+import { setSessionCookie, signInWithGoogle } from '@/lib/firebase/client/auth'
 import { useUserSession } from '@/components/nav-bar/use-user-session'
 
 export function LoginForm({
@@ -31,12 +31,13 @@ export function LoginForm({
 }) {
   const router = useRouter()
   const [email, setEmail] = React.useState('')
+  const [signInError, setSignInError] = React.useState(false)
   const [messageSentOpen, setMessageSentOpen] = React.useState(false)
-  const [messageEmailErrorOpen, setMessageEmailErrorOpen] =
-    React.useState(false)
+  const [emailError, setEmailError] = React.useState(false)
   const [disabled, setDisabled] = React.useState(false)
+  const [googleSpinner, setGoogleSpinner] = React.useState(false)
+  const [emailSpinner, setEmailSpinner] = React.useState(false)
   const handleMessageSentClose = () => setMessageSentOpen(false)
-  const handleMessageEmailErrorClose = () => setMessageEmailErrorOpen(false)
   const handleEmailChange: React.ChangeEventHandler<HTMLInputElement> = (
     event,
   ) => setEmail(event.target.value)
@@ -44,30 +45,41 @@ export function LoginForm({
 
   React.useEffect(() => {
     if (user) {
-      router.push(signedInRedirectPath || '/profile')
+      console.log('User signed in', user)
+      setDisabled(true)
+      const finishSignIn = async () => {
+        const { ok, success } = await setSessionCookie(await user.getIdToken())
+        if (ok && success) {
+          router.push(signedInRedirectPath || '/profile')
+        } else {
+          setSignInError(true)
+        }
+      }
+      finishSignIn()
     }
   }, [router, user, signedInRedirectPath])
 
   const handleSendLink = async () => {
     setDisabled(true)
+    setEmailSpinner(true)
     try {
       await sendSignInLinkToEmail(auth, email, {
         url: `${window.location.origin}/sign-in/email-link-landing`,
         handleCodeInApp: true,
       })
       window.localStorage.setItem('emailForSignIn', email)
-      setDisabled(true)
       setMessageSentOpen(true)
-      router.push('/profile')
     } catch (error) {
       console.error('Error sending sign in link', error)
       setDisabled(false)
-      setMessageEmailErrorOpen(true)
+      setEmailError(true)
     }
   }
   const handleSignInWithGoogle: MouseEventHandler<HTMLButtonElement> = (
     event,
   ) => {
+    setDisabled(true)
+    setGoogleSpinner(true)
     event.preventDefault()
     signInWithGoogle()
   }
@@ -92,6 +104,7 @@ export function LoginForm({
                 value={email}
                 onChange={handleEmailChange}
                 required
+                disabled={disabled}
               />
             </div>
             <Button
@@ -99,6 +112,7 @@ export function LoginForm({
               className="w-full"
               onClick={handleSendLink}
               disabled={disabled}
+              loading={emailSpinner}
             >
               Sign in without a password
             </Button>
@@ -106,6 +120,8 @@ export function LoginForm({
               variant="outline"
               className="w-full"
               onClick={handleSignInWithGoogle}
+              disabled={disabled}
+              loading={googleSpinner}
             >
               Sign in with Google
             </Button>
@@ -123,11 +139,19 @@ export function LoginForm({
       </ModalDrawer>
 
       <ModalDrawer
-        setOpen={handleMessageEmailErrorClose}
-        open={messageEmailErrorOpen}
-        title="Error sending email"
+        setOpen={setEmailError}
+        open={emailError}
+        title="Sign In Email Error"
       >
-        There was an error sending you an email. Please try again.
+        There was an error sending sign in link. Please try again.
+      </ModalDrawer>
+
+      <ModalDrawer
+        setOpen={setSignInError}
+        open={signInError}
+        title="Sign In Error"
+      >
+        There was an error signing you in. Please try again.
       </ModalDrawer>
     </div>
   )

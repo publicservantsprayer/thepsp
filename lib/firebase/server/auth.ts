@@ -127,7 +127,7 @@ async function verifySession(session: string | undefined = undefined) {
     const isRevoked = !(await auth.verifySessionCookie(_session, true))
     return !isRevoked
   } catch (error) {
-    console.error(error)
+    console.warn(error)
     return false
   }
 }

@@ -99,7 +99,7 @@ This solution successfully prevents layout shift while maintaining a modern, ove
   }
 
   body {
-    @apply relative max-w-full;
+    @apply relative min-w-full max-w-full;
   }
 
   /* Webkit scrollbar styling */

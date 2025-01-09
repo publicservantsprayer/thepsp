@@ -16,13 +16,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useUserSession } from './use-user-session'
+import { useRouter } from 'next/navigation'
 
 export function UserMenu({ initialUser }: { initialUser: User }) {
   const user = useUserSession(initialUser)
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger className="mr-1">
         <CircleUser />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -87,11 +88,13 @@ function AdminUserMenu({ user }: { user: User | null }) {
 }
 
 function SignOutMenuItem({ user }: { user: User | null }) {
+  const router = useRouter()
   if (!user) return null
 
-  const handleSignOut: React.MouseEventHandler<HTMLDivElement> = (event) => {
-    event.preventDefault()
-    signOut()
+  const handleSignOut = async () => {
+    if (await signOut()) {
+      router.push('/sign-in')
+    }
   }
 
   return (

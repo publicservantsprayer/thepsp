@@ -7,6 +7,7 @@ import {
   createUserWithEmailAndPassword as firebaseCreateUserWithEmailAndPassword,
   signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword,
   updateProfile,
+  signInWithEmailLink as firebaseSignInWithEmailLink,
 } from 'firebase/auth'
 import { initializeApp, getApps } from 'firebase/app'
 import { firebaseConfig } from '@/lib/firebase/config'
@@ -24,8 +25,8 @@ export async function signInWithGoogle() {
   const provider = new GoogleAuthProvider()
 
   try {
-    const result = await signInWithPopup(firebaseAuth, provider)
-    const idToken = await result.user.getIdToken()
+    const userCredential = await signInWithPopup(firebaseAuth, provider)
+    const idToken = await userCredential.user.getIdToken()
 
     const { ok, success } = await _postIdToken(idToken, '/api/auth/sign-in')
     return ok && success
@@ -34,6 +35,26 @@ export async function signInWithGoogle() {
   }
 }
 
+export async function signInWithEmailLink(email: string, href: string) {
+  try {
+    const userCredential = await firebaseSignInWithEmailLink(
+      firebaseAuth,
+      email,
+      href,
+    )
+    const idToken = await userCredential.user.getIdToken()
+
+    const { ok, success } = await _postIdToken(idToken, '/api/auth/sign-in')
+
+    return ok && success
+  } catch (error) {
+    console.error('Error signing in with Google', error)
+  }
+}
+
+/**
+ * Not in use yet
+ */
 export const createUserWithEmailAndPassword = async (
   email: string,
   password: string,
@@ -61,6 +82,9 @@ export const createUserWithEmailAndPassword = async (
   }
 }
 
+/**
+ * Not in use yet
+ */
 export const signInWithEmailAndPassword = async (
   email: string,
   password: string,
@@ -133,6 +157,10 @@ export const updateUserData = async ({
   }
 
   return { success: true }
+}
+
+export const setSessionCookie = async (idToken: string) => {
+  return _postIdToken(idToken, '/api/auth/sign-in')
 }
 
 async function _postIdToken(idToken: string, endpoint: string) {

@@ -5,11 +5,12 @@ import React, { Dispatch, SetStateAction } from 'react'
 import { ModalDrawer } from '@/components/modal-drawer'
 import { Button } from '@/components/ui/button'
 import { auth } from '@/lib/firebase/client/client-app'
-import { isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth'
+import { isSignInWithEmailLink } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { signInWithEmailLink } from '@/lib/firebase/client/auth'
 
 export default function EmailLinkLanding() {
   const router = useRouter()
@@ -47,7 +48,7 @@ export default function EmailLinkLanding() {
   const sendEmailConfirmation = React.useCallback(
     async (email: string) => {
       try {
-        await signInWithEmailLink(auth, email, window.location.href)
+        await signInWithEmailLink(email, window.location.href)
         window.localStorage.removeItem('emailForSignIn')
         router.push('/profile')
       } catch (error: unknown) {

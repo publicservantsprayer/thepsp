@@ -15,15 +15,14 @@ import {
 import { searchFields } from '@/payload/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/payload/search/beforeSync'
 import { gcsStorage } from '@payloadcms/storage-gcs'
-import { Media } from '@/payload/collections/Media'
 
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/payload/utilities/getURL'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
   return doc?.title
-    ? `${doc.title} | Payload Website Template`
-    : 'Payload Website Template'
+    ? `${doc.title} | Public Servants's Prayer`
+    : `Public Servants' Prayer`
 }
 
 const generateURL: GenerateURL<Post | Page> = ({ doc }) => {

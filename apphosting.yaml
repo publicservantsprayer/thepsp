@@ -19,7 +19,6 @@ env:
   - variable: PAYLOAD_SECRET
     secret: payloadSecret
 
-  # Google Cloud Storage for gcsStorage Payload plugin
   - variable: GCS_BUCKET
     value: gs://repsp123-content-uploads
   - variable: GCS_ENDPOINT

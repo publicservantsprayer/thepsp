@@ -13,13 +13,18 @@ import { plugins } from '@/payload/plugins'
 import { Categories } from '@/payload/collections/Categories'
 import { Footer } from '@/payload/globals/Footer/config'
 import { Header } from '@/payload/globals/Header/config'
+import { getURL } from '@/payload/utilities/getURL'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
 export default buildConfig({
-  serverURL: process.env.SERVER_URL || '',
+  serverURL: getURL(),
   admin: {
     user: Users.slug,
+    livePreview: {
+      url: 'https://livePreviewConfig.com',
+    },
     importMap: {
       baseDir: path.resolve(dirname),
     },

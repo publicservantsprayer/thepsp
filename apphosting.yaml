@@ -8,10 +8,25 @@ runConfig:
 
 # Environment variables and secrets
 env:
-  - variable: NEXT_PUBLIC_SERVER_URL
-    value: https://thepsp-staging--repsp123.us-central1.hosted.app
+  # The public URL of the website
+  # This is used to generate the canonical URL for the website
+  # in the production environment
+  - variable: NEXT_PUBLIC_PRODUCTION_DOMAIN_NAME
+    value: thepsp.org
 
-  # Firebase
+  # Firebase App Hosting (cloud run) sets the backend id
+  # automatically as the K_CONFIGURATION environment variable
+  # The app compares this to figure out if it's running in production
+  - variable: NEXT_PUBLIC_PRODUCTION_BACKEND_ID
+    value: thepsp-production
+
+  # Used to generate the server url for the app
+  # in hosted environments other than production (e.g. staging)
+  # and when NEXT_PUBLIC_IS_LOCAL is not set (don't set that here)
+  - variable: NEXT_PUBLIC_APP_HOSTING_DOMAIN_SUFFIX
+    value: us-central1.hosted.app
+
+  # Public Firebase configuration
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
     value: AIzaSyDkNntvsqQbav7oNwvF1M8hxdVvZAVXTeQ
   - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN

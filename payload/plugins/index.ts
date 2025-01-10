@@ -7,15 +7,23 @@ import { searchPlugin } from '@payloadcms/plugin-search'
 import { Plugin } from 'payload'
 import { revalidateRedirects } from '@/payload/hooks/revalidateRedirects'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
-import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
+import {
+  FixedToolbarFeature,
+  HeadingFeature,
+  lexicalEditor,
+} from '@payloadcms/richtext-lexical'
 import { searchFields } from '@/payload/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/payload/search/beforeSync'
+import { gcsStorage } from '@payloadcms/storage-gcs'
+import { Media } from '@/payload/collections/Media'
 
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/payload/utilities/getURL'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
-  return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
+  return doc?.title
+    ? `${doc.title} | Payload Website Template`
+    : 'Payload Website Template'
 }
 
 const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
@@ -35,7 +43,8 @@ export const plugins: Plugin[] = [
             return {
               ...field,
               admin: {
-                description: 'You will need to rebuild the website when changing this field.',
+                description:
+                  'You will need to rebuild the website when changing this field.',
               },
             }
           }
@@ -69,7 +78,9 @@ export const plugins: Plugin[] = [
                   return [
                     ...rootFeatures,
                     FixedToolbarFeature(),
-                    HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
+                    HeadingFeature({
+                      enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'],
+                    }),
                   ]
                 },
               }),
@@ -87,6 +98,16 @@ export const plugins: Plugin[] = [
       fields: ({ defaultFields }) => {
         return [...defaultFields, ...searchFields]
       },
+    },
+  }),
+  gcsStorage({
+    collections: {
+      media: true,
+    },
+    bucket: process.env.GCS_BUCKET as string,
+    options: {
+      apiEndpoint: process.env.GCS_ENDPOINT,
+      projectId: process.env.GCS_PROJECT_ID,
     },
   }),
   payloadCloudPlugin(),

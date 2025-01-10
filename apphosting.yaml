@@ -6,7 +6,7 @@ env:
   - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
     value: repsp123
   - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-    value:
+    value: ''
   - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
     value: 1081890506539
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
@@ -19,6 +19,7 @@ env:
   - variable: PAYLOAD_SECRET
     secret: payloadSecret
 
+  # Google Cloud Storage for gcsStorage Payload plugin
   - variable: GCS_BUCKET
     value: gs://repsp123-content-uploads
   - variable: GCS_ENDPOINT

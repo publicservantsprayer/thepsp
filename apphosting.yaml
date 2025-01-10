@@ -8,6 +8,10 @@ runConfig:
 
 # Environment variables and secrets
 env:
+  - variable: NEXT_PUBLIC_SERVER_URL
+    value: https://thepsp-staging--repsp123.us-central1.hosted.app
+
+  # Firebase
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
     value: AIzaSyDkNntvsqQbav7oNwvF1M8hxdVvZAVXTeQ
   - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
@@ -19,6 +23,7 @@ env:
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
     value: 1:1081890506539:web:65bc9128b23f175426276e
 
+  # MongoDB
   - variable: MONGODB_DATABASE_URI
     secret: mongodbDatabaseUri
   - variable: MONGODB_DATABASE_NAME

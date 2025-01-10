@@ -127,7 +127,7 @@ export const Pages: CollectionConfig<'pages'> = {
     beforeChange: [populatePublishedAt],
 
     // TODO: Fix this type
-    // @ts-ignore
+    // @ts-expect-error - expected error..
     beforeDelete: [revalidateDelete],
   },
   versions: {

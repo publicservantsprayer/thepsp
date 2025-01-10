@@ -12,7 +12,7 @@ const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
 
   if (image && typeof image === 'object' && 'url' in image) {
     // TODO: Fix this type
-    // @ts-ignore
+    // @ts-expect-error - Property 'sizes' does not exist on type 'Media'.ts(2339)
     const ogUrl = image.sizes?.og?.url
 
     url = ogUrl ? serverUrl + ogUrl : serverUrl + image.url

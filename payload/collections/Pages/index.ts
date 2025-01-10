@@ -127,7 +127,13 @@ export const Pages: CollectionConfig<'pages'> = {
     beforeChange: [populatePublishedAt],
 
     // TODO: Fix this type
-    // @ts-expect-error - expected error..
+    // @ts-expect-error - Type 'AfterDeleteHook<Page>' is not assignable to type
+    // 'BeforeDeleteHook'.
+    // Types of parameters 'args' and 'args' are incompatible.
+    // Property 'doc' is missing in type '{ collection: SanitizedCollectionConfig;
+    // context: RequestContext; id: string | number; req: PayloadRequest; }' but
+    // required in type '{ collection: SanitizedCollectionConfig; context:
+    // RequestContext; doc: Page; id: string | number; req: PayloadRequest; }'.ts(2322)
     beforeDelete: [revalidateDelete],
   },
   versions: {

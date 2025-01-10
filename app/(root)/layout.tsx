@@ -58,6 +58,10 @@ export default function RootLayout({
             <Providers>{children}</Providers>
           </UsaStateProvider>
         </NextThemeProvider>
+        <div>K_REVISION_URL: {process.env.K_REVISION_URL}</div>
+        <div>K_CONFIGURATION: {process.env.K_CONFIGURATION}</div>
+        <div>K_REVISION_NAME: {process.env.K_REVISION_NAME}</div>
+        <div>NEXT_PUBLIC_SERVER_URL: {process.env.NEXT_PUBLIC_SERVER_URL}</div>
       </body>
     </html>
   )

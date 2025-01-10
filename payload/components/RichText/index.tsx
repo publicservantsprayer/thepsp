@@ -59,13 +59,11 @@ export default function RichText(props: Props) {
   const { className, enableProse = true, enableGutter = true, ...rest } = props
   return (
     <RichTextWithoutBlocks
-      // TODO: Fix this type
-      // @ts-expect-error - Imported from Payload
       converters={jsxConverters}
       className={cn(
         enableGutter && 'container',
         !enableGutter && 'max-w-none',
-        enableProse && 'n8 prose mx-auto md:prose-md dark:prose-invert',
+        enableProse && 'n8 prose mx-auto dark:prose-invert md:prose-md',
         className,
       )}
       {...rest}

@@ -1,6 +1,7 @@
 import type { Block, Field } from 'payload'
 
 import {
+  BlocksFeature,
   FixedToolbarFeature,
   HeadingFeature,
   InlineToolbarFeature,
@@ -8,6 +9,9 @@ import {
 } from '@payloadcms/richtext-lexical'
 
 import { link } from '@/payload/fields/link'
+import { Banner } from '../Banner/config'
+import { Code } from '../Code/config'
+import { MediaBlock } from '../MediaBlock/config'
 
 const columnFields: Field[] = [
   {
@@ -38,9 +42,20 @@ const columnFields: Field[] = [
     type: 'richText',
     editor: lexicalEditor({
       features: ({ rootFeatures }) => {
+        // Remove the upload feature (replaced by MediaBlock)
+        // TODO: Remove 'upload' feature when removed
+        // from actual content block
+        // rootFeatures = rootFeatures.filter((feature) => {
+        //   console.log(feature.key)
+        //   return feature.key !== 'upload'
+        // })
         return [
           ...rootFeatures,
           HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+          BlocksFeature({
+            blocks: [Banner, Code, MediaBlock],
+            inlineBlocks: [],
+          }),
           FixedToolbarFeature(),
           InlineToolbarFeature(),
         ]

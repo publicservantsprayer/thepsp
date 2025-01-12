@@ -89,6 +89,10 @@ export const Posts: CollectionConfig<'posts'> = {
               type: 'richText',
               editor: lexicalEditor({
                 features: ({ rootFeatures }) => {
+                  // Remove the upload feature (replaced by MediaBlock)
+                  rootFeatures = rootFeatures.filter((feature) => {
+                    return feature.key !== 'upload'
+                  })
                   return [
                     ...rootFeatures,
                     HeadingFeature({

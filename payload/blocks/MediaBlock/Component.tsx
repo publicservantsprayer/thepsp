@@ -32,7 +32,7 @@ export const MediaBlock: React.FC<Props> = (props) => {
   let caption
 
   // TODO: Fix this type
-  // @ts-ignore
+  // @ts-expect-error - Property 'caption' does not exist on type 'Media'.ts(2339)
   if (media && typeof media === 'object') caption = media.caption
 
   return (

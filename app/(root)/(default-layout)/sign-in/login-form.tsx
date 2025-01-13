@@ -45,7 +45,6 @@ export function LoginForm({
 
   React.useEffect(() => {
     if (user) {
-      console.log('User signed in', user)
       setDisabled(true)
       const finishSignIn = async () => {
         const { ok, success } = await setSessionCookie(await user.getIdToken())

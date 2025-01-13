@@ -23,7 +23,6 @@ export const SimpleContent: Block = {
         features: ({ rootFeatures }) => {
           // Remove the upload feature (replaced by MediaBlock)
           rootFeatures = rootFeatures.filter((feature) => {
-            console.log(feature.key)
             return feature.key !== 'upload'
           })
           return [

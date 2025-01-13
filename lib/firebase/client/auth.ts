@@ -89,7 +89,6 @@ export const signInWithEmailAndPassword = async (
   email: string,
   password: string,
 ) => {
-  console.log({ email, password })
   try {
     const userCredential = await firebaseSignInWithEmailAndPassword(
       firebaseAuth,
@@ -98,11 +97,7 @@ export const signInWithEmailAndPassword = async (
     )
     const user = userCredential.user
 
-    console.log({ user })
-
     const idToken = await user.getIdToken()
-
-    console.log({ idToken })
 
     const { ok, success } = await _postIdToken(idToken, '/api/auth/sign-in')
 

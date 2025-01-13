@@ -14,7 +14,6 @@ export const Users: CollectionConfig = {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         authenticate: async ({ payload, headers }) => {
           const currentUser = await getCurrentUser()
-          // console.log('currentUser', currentUser)
 
           if (!currentUser) return { user: null }
 

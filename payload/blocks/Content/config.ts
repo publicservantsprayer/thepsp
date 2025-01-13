@@ -47,7 +47,6 @@ const columnFields: Field[] = [
         // TODO: Remove 'upload' feature when removed
         // from actual content block
         // rootFeatures = rootFeatures.filter((feature) => {
-        //   console.log(feature.key)
         //   return feature.key !== 'upload'
         // })
         return [

@@ -12,6 +12,7 @@ import { link } from '@/payload/fields/link'
 import { Banner } from '../Banner/config'
 import { Code } from '../Code/config'
 import { MediaBlock } from '../MediaBlock/config'
+import { Muted } from '../Muted/config'
 
 const columnFields: Field[] = [
   {
@@ -71,7 +72,7 @@ const columnFields: Field[] = [
     overrides: {
       admin: {
         // TODO: Fix this
-        // @ts-ignore
+        // @ts-expect-error - Binding element 'enableLink' implicitly has an 'any' type.ts(7031)
         condition: (_, { enableLink }) => Boolean(enableLink),
       },
     },

@@ -21,6 +21,7 @@ import {
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
 import { Code } from '@/payload/blocks/Code/config'
+import { SimpleContent } from '@/payload/blocks/SimpleContent/config'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -83,6 +84,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 Archive,
                 FormBlock,
                 Code,
+                SimpleContent,
               ],
               required: true,
               admin: {

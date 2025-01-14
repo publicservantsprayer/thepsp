@@ -7,6 +7,7 @@ import type { Page } from '@/payload-types'
 import { CMSLink } from '@/payload/components/Link'
 import { Media } from '@/payload/components/Media'
 import RichText from '@/payload/components/RichText'
+import { cn } from '@/lib/utils'
 
 export const HighImpactHero: React.FC<Page['hero']> = ({
   links,
@@ -19,15 +20,24 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
     setHeaderTheme('dark')
   })
 
+  const hasHeroImage = media && typeof media === 'object'
+
   return (
     <div
-      className="relative -mt-[10.4rem] flex items-center justify-center text-white"
+      className={cn(
+        'container relative flex w-screen items-end justify-center text-white',
+        hasHeroImage && 'aspect-[16/9]',
+      )}
       data-theme="dark"
     >
-      <div className="container relative z-10 mb-8 flex items-center justify-center">
-        <div className="max-w-[36.5rem] md:text-center">
+      <div className="container z-10 mb-8 flex justify-center">
+        <div className="">
           {richText && (
-            <RichText className="mb-6" data={richText} enableGutter={false} />
+            <RichText
+              className="mb-6 ![text-shadow:_0_5px_0_var(--background)]"
+              data={richText}
+              enableGutter={false}
+            />
           )}
           {Array.isArray(links) && links.length > 0 && (
             <ul className="flex gap-4 md:justify-center">
@@ -42,14 +52,17 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
           )}
         </div>
       </div>
-      <div className="min-h-[80vh] select-none">
+      <div className="select-none">
         {media && typeof media === 'object' && (
-          <Media
-            fill
-            imgClassName="-z-10 object-cover"
-            priority
-            resource={media}
-          />
+          <div className="select-none">
+            <Media
+              fill
+              imgClassName="-z-10 object-cover"
+              priority
+              resource={media}
+            />
+            <div className="pointer-events-none absolute bottom-0 left-0 h-1/2 w-full bg-gradient-to-t from-black via-transparent/70 to-90%" />
+          </div>
         )}
       </div>
     </div>

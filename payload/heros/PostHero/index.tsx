@@ -100,13 +100,20 @@ const postHeroImage = (post: Post) => {
   if (typeof post.heroImage === 'object' && post.heroImage?.sizes?.hero?.url) {
     return post.heroImage
   }
+  if (
+    typeof post.heroImage === 'object' &&
+    post.heroImage?.sizes?.hero2x?.url
+  ) {
+    return post.heroImage
+  }
   if (typeof post.heroImage === 'object' && post.heroImage?.url) {
     return post.heroImage
   }
 }
 
 const heroImageFromContent = (post: Post) => {
-  const contentChildren = post.content.root.children
+  const contentChildren = post.content?.root?.children
+  if (!Array.isArray(contentChildren)) return
 
   const mediaBlocks = findMediaBlocks(contentChildren)
 
@@ -114,11 +121,16 @@ const heroImageFromContent = (post: Post) => {
     (block) => block.fields?.media?.sizes?.hero?.url,
   )
 
-  return heroMediaBlock?.fields?.media
+  const hero2xMediaBlock = mediaBlocks.find(
+    (block) => block.fields?.media?.sizes?.hero2x?.url,
+  )
+
+  return hero2xMediaBlock?.fields?.media || heroMediaBlock?.fields?.media
 }
 
 const firstImageFromContent = (post: Post) => {
-  const contentChildren = post.content.root.children
+  const contentChildren = post.content?.root?.children
+  if (!Array.isArray(contentChildren)) return
 
   const mediaBlocks = findMediaBlocks(contentChildren)
 
@@ -129,7 +141,9 @@ const firstImageFromContent = (post: Post) => {
   return firstMediaBlockWithImage?.fields?.media
 }
 
-const findMediaBlocks = (children: any[]): any[] => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const findMediaBlocks = (children: any[]) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mediaBlocks: any[] = []
 
   children.forEach((child) => {

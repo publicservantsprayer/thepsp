@@ -1,14 +1,12 @@
 'use client'
 
-import type { StaticImageData } from 'next/image'
-
 import { cn } from '@/payload/utilities/cn'
 import NextImage from 'next/image'
 import React from 'react'
 
 import { cssVariables } from '@/payload/cssVariables'
 
-import type { ElementType, Ref } from 'react'
+import type { ElementType } from 'react'
 
 import type { Media } from '@/payload-types'
 
@@ -64,9 +62,8 @@ export const ImageMedia = ({
       <NextImage
         alt={alt}
         className={cn(imgClassName)}
-        // fill={fill}
-        fill
-        // height={height!}
+        fill={fill}
+        height={height!}
         placeholder="blur"
         blurDataURL={placeholderBlur}
         priority={priority}
@@ -74,7 +71,7 @@ export const ImageMedia = ({
         loading="eager"
         sizes={sizes}
         src={url!}
-        // width={width!}
+        width={width!}
       />
     </picture>
   )

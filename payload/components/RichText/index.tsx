@@ -61,9 +61,11 @@ export default function RichText(props: Props) {
     <RichTextWithoutBlocks
       converters={jsxConverters}
       className={cn(
+        'font-garamond',
         enableGutter && 'container',
         !enableGutter && 'max-w-none',
-        enableProse && 'n8 prose mx-auto dark:prose-invert md:prose-md',
+        enableProse &&
+          'prose mx-auto dark:prose-invert md:prose-md lg:prose-lg xl:prose-xl 2xl:prose-2xl',
         className,
       )}
       {...rest}

@@ -28,12 +28,12 @@ export default {
     container: {
       center: true,
       padding: {
-        '2xl': '2rem',
         DEFAULT: '1rem',
-        lg: '2rem',
-        md: '2rem',
         sm: '1rem',
+        md: '2rem',
+        lg: '2rem',
         xl: '2rem',
+        '2xl': '2rem',
       },
     },
     extend: {
@@ -97,6 +97,7 @@ export default {
         psp: ['var(--font-psp)'],
         roboto: ['var(--font-roboto)'],
         lato: ['var(--font-lato)'],
+        garamond: ['var(--font-garamond)'],
       },
       typography: {
         DEFAULT: {
@@ -107,6 +108,7 @@ export default {
               h1: {
                 fontWeight: 'normal',
                 marginBottom: '0.25em',
+                fontFamily: 'var(--font-psp)',
               },
             },
           ],

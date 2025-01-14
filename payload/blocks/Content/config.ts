@@ -12,7 +12,6 @@ import { link } from '@/payload/fields/link'
 import { Banner } from '../Banner/config'
 import { Code } from '../Code/config'
 import { MediaBlock } from '../MediaBlock/config'
-import { Muted } from '../Muted/config'
 
 const columnFields: Field[] = [
   {

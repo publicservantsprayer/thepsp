@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { Roboto, Frank_Ruhl_Libre, Lato } from 'next/font/google'
+import { Roboto, Frank_Ruhl_Libre, Lato, EB_Garamond } from 'next/font/google'
 
 import { UsaStateProvider } from '@/hooks/use-usa-state'
 import { NextThemeProvider } from '@/components/next-theme-provider'
@@ -26,6 +26,13 @@ const frank = Frank_Ruhl_Libre({
   variable: '--font-psp',
 })
 
+const garamond = EB_Garamond({
+  // weight: ['300', '400', '500', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-garamond',
+})
+
 const lato = Lato({
   weight: ['300', '400', '700'],
   subsets: ['latin'],
@@ -45,6 +52,7 @@ export default function RootLayout({
           roboto.variable,
           frank.variable,
           lato.variable,
+          garamond.variable,
           'font-roboto',
         )}
       >

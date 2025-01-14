@@ -17,13 +17,15 @@ export const Media: CollectionConfig = {
         position: 'centre',
       },
       {
-        name: 'tablet',
+        name: 'square',
         width: 1024,
-        // By specifying `undefined` or leaving a height undefined,
-        // the image will be sized to a certain width,
-        // but it will retain its original aspect ratio
-        // and calculate a height automatically.
-        height: undefined,
+        height: 1024,
+        position: 'centre',
+      },
+      {
+        name: 'hero',
+        width: 1600,
+        height: 900,
         position: 'centre',
       },
     ],

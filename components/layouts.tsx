@@ -29,7 +29,7 @@ export function DefaultLayout({ children }: Props) {
         <PspTitleLogo />
       </HeroBackground>
       <div className="flex flex-col items-center gap-4 pt-8 font-lato">
-        <div className="">{children}</div>
+        {children}
       </div>
       <Footer />
     </>

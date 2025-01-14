@@ -19,7 +19,7 @@ const placeholderBlur =
 export const ImageMedia: React.FC<MediaProps> = (props) => {
   const {
     alt: altFromProps,
-    fill,
+    // fill,
     imgClassName,
     priority,
     resource,
@@ -36,7 +36,7 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
   if (!src && resource && typeof resource === 'object') {
     const {
       alt: altFromResource,
-      filename: fullFilename,
+      // filename: fullFilename,
       height: fullHeight,
       url,
       width: fullWidth,
@@ -64,8 +64,9 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
     <NextImage
       alt={alt || ''}
       className={cn('not-prose', imgClassName)}
-      fill={fill}
-      height={!fill ? height : undefined}
+      // fill={fill}
+      // height={!fill ? height : undefined}
+      height={height}
       placeholder="blur"
       blurDataURL={placeholderBlur}
       priority={priority}
@@ -73,7 +74,8 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
       loading={loading}
       sizes={sizes}
       src={src}
-      width={!fill ? width : undefined}
+      // width={!fill ? width : undefined}
+      width={width}
     />
   )
 }

@@ -181,7 +181,7 @@ export async function NavBar() {
                   <ListItem href="/what-we-do" title="What We Do">
                     Every day we pray for three leaders in our state.
                   </ListItem>
-                  <ListItem href="#" title="Why We Pray">
+                  <ListItem href="/why-we-pray" title="Why We Pray">
                     A fresh approach to political involvement.
                   </ListItem>
                 </ul>

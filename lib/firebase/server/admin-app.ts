@@ -1,4 +1,5 @@
-import 'server-only'
+// This prevents type generation.  Consider adding them back
+// import 'server-only'
 
 import {
   initializeApp,

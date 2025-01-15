@@ -44,9 +44,6 @@ export default buildConfig({
         },
       ],
     },
-    // livePreview: {
-    //   url: 'https://livePreviewConfig.com',
-    // },
     importMap: {
       baseDir: path.resolve(dirname),
     },
@@ -56,9 +53,13 @@ export default buildConfig({
       //     path: '@/payload/components/nav-bar#NavBar',
       //   },
       // ],
-      // views: {
-      //   beforeLogin:
-      // },
+      afterNavLinks: ['@/payload/admin-views/after-nav-links#AfterNavLinks'],
+      views: {
+        LeadersView: {
+          Component: '@/payload/admin-views/leaders#LeadersView',
+          path: '/leaders',
+        },
+      },
     },
   },
   collections: [Users, Media, Pages, Posts, Categories],

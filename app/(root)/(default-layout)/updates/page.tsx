@@ -3,24 +3,12 @@ import type { Metadata } from 'next/types'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
-import PostCategory from './post-category'
+import PostCategory from '../posts/post-category'
 
 export const dynamic = 'force-static'
 export const revalidate = 600
 
 export default async function Page() {
-  const posts = await getPosts()
-
-  return <PostCategory posts={posts} categoryName="Posts" />
-}
-
-export function generateMetadata(): Metadata {
-  return {
-    title: `Public Servants' Prayer Posts`,
-  }
-}
-
-const getPosts = async () => {
   const payload = await getPayload({ config: configPromise })
 
   const posts = await payload.find({
@@ -34,9 +22,18 @@ const getPosts = async () => {
       categories: true,
       meta: true,
     },
+    where: {
+      'categories.path': {
+        equals: 'updates',
+      },
+    },
   })
 
-  return posts
+  return <PostCategory posts={posts} categoryName="Matt's Updates" />
 }
 
-export type Posts = Awaited<ReturnType<typeof getPosts>>
+export function generateMetadata(): Metadata {
+  return {
+    title: `Public Servants' Prayer Updates`,
+  }
+}

@@ -20,5 +20,15 @@ export const Categories: CollectionConfig = {
       type: 'text',
       required: true,
     },
+    {
+      name: 'path',
+      type: 'text',
+      required: true,
+      access: {
+        create: () => true,
+        read: () => true,
+        update: () => false,
+      },
+    },
   ],
 }

@@ -34,7 +34,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
         <div className="">
           {richText && (
             <RichText
-              className="mb-6 ![text-shadow:_0_5px_0_var(--background)]"
+              className="prose-h1:text-bold mb-0 prose-h1:text-3xl prose-h1:[text-shadow:_0_1px_0_var(--background)] sm:prose-h1:text-4xl md:mb-6 md:prose-h1:text-5xl lg:mb-8 lg:prose-h1:text-6xl xl:prose-h1:text-7xl"
               data={richText}
               enableGutter={false}
             />

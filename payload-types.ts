@@ -292,6 +292,7 @@ export interface Post {
 export interface Category {
   id: string;
   title: string;
+  path: string;
   parent?: (string | null) | Category;
   breadcrumbs?:
     | {
@@ -1142,6 +1143,7 @@ export interface PostsSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
   title?: T;
+  path?: T;
   parent?: T;
   breadcrumbs?:
     | T

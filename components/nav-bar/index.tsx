@@ -29,78 +29,84 @@ import { getCurrentUser } from '@/lib/firebase/server/auth'
 
 const resources: { title: string; href: string; description: string }[] = [
   {
-    title: 'Articles',
-    href: '#',
-    description:
-      'Explore insightful articles on the impact of prayer in politics and spiritual leadership.',
-  },
-  {
-    title: 'Events',
-    href: '#',
-    description:
-      "Join us at upcoming events where we gather to pray for our nation's leaders..",
-  },
-  {
     title: "Matt's Updates",
-    href: '#',
+    href: '/updates',
     description:
       "Read Matt's personal reflections and updates on our journey towards a more prayerful political climate.",
   },
   {
     title: "Women's Ministry",
-    href: '#',
+    href: '/womens-ministry',
     description:
       "Engage with our Women's Ministry dedicated to empowering female voices in prayer leadership.",
   },
   {
-    title: 'Give Support',
-    href: '#',
+    title: 'Articles',
+    href: '/articles',
     description:
-      'Support our mission financially to expand our reach and deepen our impact.',
+      'Explore insightful articles on the impact of prayer in politics and spiritual leadership.',
   },
   {
-    title: 'Volunteer',
-    href: '#',
+    title: 'Events',
+    href: '/events',
     description:
-      'Volunteer with us to help spread the message of prayer across the nation.',
+      "Join us at upcoming events where we gather to pray for our nation's leaders..",
+  },
+  {
+    title: 'Newsletters',
+    href: '/newsletters',
+    description:
+      'Quarterly newsletters with updates on our work and the impact of prayer in politics.',
+  },
+  {
+    title: 'Prayer Resources',
+    href: '/prayer-resources',
+    description:
+      'Access tools and guides tailored for praying for those in public service.',
   },
 ]
 
 const learnMore: { title: string; href: string; description: string }[] = [
   {
     title: 'Why We Pray',
-    href: '#',
+    href: '/why-we-pray',
     description:
       'Discover the driving force behind our commitment to pray for political leaders.',
   },
   {
-    title: 'Prayer Resources',
-    href: '#',
-    description:
-      'Access tools and guides tailored for praying for those in public service.',
-  },
-  {
     title: 'Testimonies',
-    href: '#',
+    href: '/testimonies',
     description:
       'Be inspired by real-life stories of how prayer has touched our leaders and communities.',
   },
   {
     title: 'Frequently Asked Questions (FAQ)',
-    href: '#',
+    href: '/faq',
     description: 'Get answers to common questions about our prayer initiative.',
   },
   {
     title: 'Our History',
-    href: '#',
+    href: '/our-history',
     description:
       "Trace the journey of Public Servants' Prayer from its inception to now.",
   },
   {
     title: 'Impact Stories',
-    href: '#',
+    href: '/impact-stories',
     description:
       'Read about the tangible effects prayer has had in the political arena.',
+  },
+  {
+    title: 'Give Support',
+    href: 'give-support',
+    description:
+      'Support our mission financially to expand our reach and deepen our impact.',
+  },
+  {
+    title: 'Volunteer',
+    href: '/volunteer',
+    description:
+      'Volunteer with us to help spread the message of prayer across the nation.',
   },
 ]
 

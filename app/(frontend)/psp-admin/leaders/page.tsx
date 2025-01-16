@@ -48,9 +48,9 @@ export default async function LeadersPage() {
             <CardTitle>Check Leader Photos</CardTitle>
             <CardDescription>
               Check all current leaders for every state (regardless of the{' '}
-              <code className="text-code">hasPhoto</code> value), to see if a
+              <span className="text-code">hasPhoto</span> value), to see if a
               photo actually exists. Update the{' '}
-              <code className="text-code">hasPhoto</code> value in the database.
+              <span className="text-code">hasPhoto</span> value in the database.
             </CardDescription>
           </CardHeader>
           <CardContent>

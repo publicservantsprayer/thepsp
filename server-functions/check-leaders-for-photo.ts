@@ -10,7 +10,6 @@ import type { StateCode } from '@/lib/types'
 export const checkLeadersForPhoto = async (stateCode: StateCode) => {
   const bucket = storage.bucket('repsp123-leaders')
   const result: string[] = []
-  let leadersUpdated = 0
 
   const leaders = await getLeaders({ stateCode })
 
@@ -20,7 +19,6 @@ export const checkLeadersForPhoto = async (stateCode: StateCode) => {
       stateCode,
       data: { hasPhoto: false },
     })
-    leadersUpdated++
   }
 
   await Promise.all(
@@ -49,8 +47,6 @@ export const checkLeadersForPhoto = async (stateCode: StateCode) => {
       }
     }),
   )
-
-  result.push(`Updated ${leadersUpdated} leaders.`)
 
   return result
 }

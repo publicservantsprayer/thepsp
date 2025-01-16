@@ -71,7 +71,7 @@
   }
 
   .text-code {
-    @apply rounded border bg-accent px-0.5 text-xs;
+    @apply rounded border bg-accent px-0.5;
   }
 
   * {

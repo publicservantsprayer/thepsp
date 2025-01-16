@@ -9,11 +9,13 @@ const defaultOpenGraph: Metadata['openGraph'] = {
       url: `${getServerSideURL()}/website-template-OG.webp`,
     },
   ],
-  siteName: 'Payload Website Template',
-  title: 'Payload Website Template',
+  siteName: "Public Servants' Prayer",
+  title: "Public Servants' Prayer",
 }
 
-export const mergeOpenGraph = (og?: Metadata['openGraph']): Metadata['openGraph'] => {
+export const mergeOpenGraph = (
+  og?: Metadata['openGraph'],
+): Metadata['openGraph'] => {
   return {
     ...defaultOpenGraph,
     ...og,

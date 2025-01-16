@@ -42,7 +42,10 @@ export function CheckLeadersForPhotoButton() {
           </div>
           <div>Updated {results.length} leaders.</div>
           {results.length === 0 && (
-            <div>All leader "hasPhoto" fields are correct.</div>
+            <div>
+              All leader <code className="text-code">hasPhoto</code> fields are
+              correct.
+            </div>
           )}
         </div>
       )}

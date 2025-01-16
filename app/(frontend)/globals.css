@@ -70,6 +70,10 @@
     /* --psp-primary-foreground: 45 100% 75%; */
   }
 
+  .text-code {
+    @apply rounded border bg-accent px-0.5 text-xs;
+  }
+
   * {
     @apply border-border;
   }

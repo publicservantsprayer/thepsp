@@ -1,16 +1,11 @@
 'use server'
 
-import { stateCodes } from '@/data/states'
 import {
-  getCollectionGroupLeaderByPermaLink,
   getLeaders,
-  getRootLeaderById,
   mergeUpdateStateLeaderById,
 } from '@/lib/firebase/firestore'
 import { storage } from '@/lib/firebase/server/admin-app'
-import { makeValidStateCode } from '@/lib/get-state-info'
 import type { StateCode } from '@/lib/types'
-import { getDownloadURL } from 'firebase-admin/storage'
 
 export const checkLeadersForPhoto = async (stateCode: StateCode) => {
   const bucket = storage.bucket('repsp123-leaders')
@@ -52,6 +47,7 @@ export const checkLeadersForPhoto = async (stateCode: StateCode) => {
           }
         }
       }
+      result.push(`Updated ${leadersUpdated} leaders.`)
     }),
   )
 

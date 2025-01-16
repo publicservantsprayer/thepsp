@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { Button } from '@/components/ui/button'
-import { checkLeadersForPhoto } from '@/server-functions/check-leaders-for-photo'
 import { NavBar } from '@/components/nav-bar'
 import Footer from '@/components/footer'
 

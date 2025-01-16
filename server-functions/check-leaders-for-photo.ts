@@ -47,9 +47,10 @@ export const checkLeadersForPhoto = async (stateCode: StateCode) => {
           }
         }
       }
-      result.push(`Updated ${leadersUpdated} leaders.`)
     }),
   )
+
+  result.push(`Updated ${leadersUpdated} leaders.`)
 
   return result
 }

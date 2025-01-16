@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { LeaderProfile } from './leader-profile'
-import { getLeader } from '@/lib/firebase/firestore'
+import { getCollectionGroupLeaderByPermaLink } from '@/lib/firebase/firestore'
 
 interface Props {
   params: Promise<{
@@ -12,10 +12,10 @@ interface Props {
 export default async function Leader({ params }: Props) {
   const { id } = await params
 
-  const leader = await getLeader(id)
+  const leader = await getCollectionGroupLeaderByPermaLink(id)
 
   return (
-    <div className="flex-grow text-center justify-center">
+    <div className="flex-grow justify-center text-center">
       {leader && <LeaderProfile leader={leader} />}
     </div>
   )

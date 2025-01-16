@@ -43,12 +43,48 @@ export const getLeaders: GetLeaders = async ({ stateCode }) => {
   return querySnapshot.docs.map((doc) => doc.data())
 }
 
-export const getLeader = async (id: string) => {
+export const getLeadersWithoutPhoto = async (stateCode: StateCode) => {
+  const collectionRef = db
+    .collection('states')
+    .doc(stateCode)
+    .collection('leaders')
+    .withConverter(LeaderConverter)
+    .where('hasPhoto', '==', false)
+  const querySnapshot = await collectionRef.withConverter(LeaderConverter).get()
+  if (querySnapshot.empty) {
+    return []
+  }
+
+  return querySnapshot.docs.map((doc) => doc.data())
+}
+
+export const getCollectionGroupLeaderByPermaLink = async (
+  permaLink: string,
+) => {
   const doc = await db
     .collectionGroup('leaders')
-    .where('permaLink', '==', id)
+    .withConverter(LeaderConverter)
+    .where('permaLink', '==', permaLink)
     .get()
-  return doc.docs[0].data() as Leader
+  if (doc.empty) {
+    throw new Error(
+      'No collectionGroup leader exists with permaLink: ' + permaLink,
+    )
+  }
+  return doc.docs[0].data()
+}
+
+export const getRootLeaderById = async (id: string) => {
+  const doc = await db
+    .collection('leaders')
+    .withConverter(LeaderConverter)
+    .doc(id)
+    .get()
+  if (doc.exists) {
+    // throw new Error('No root leader exists with id: ' + id)
+    console.error('No root leader exists with id: ' + id)
+  }
+  return doc.data()
 }
 
 const PostConverter: FirestoreDataConverter<Post> = {

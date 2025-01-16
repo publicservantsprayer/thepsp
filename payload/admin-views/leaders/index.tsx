@@ -3,12 +3,25 @@ import type { AdminViewProps } from 'payload'
 import { DefaultTemplate } from '@payloadcms/next/templates'
 import { Gutter } from '@payloadcms/ui'
 import React from 'react'
+import { stateCodes } from '@/data/states'
+import { getLeadersWithoutPhoto } from '@/lib/firebase/firestore'
+import { Leader, StateCode } from '@/lib/types'
+import { getStateInfo } from '@/lib/get-state-info'
+import { CheckLeadersForPhotoButton } from './check-leader-images'
 
-export const LeadersView: React.FC<AdminViewProps> = ({
+export async function LeadersView({
   initPageResult,
   params,
   searchParams,
-}) => {
+}: AdminViewProps) {
+  const stateLeaders = {} as Record<StateCode, Leader[]>
+
+  await Promise.all(
+    stateCodes.map(async (stateCode) => {
+      stateLeaders[stateCode] = await getLeadersWithoutPhoto(stateCode)
+    }),
+  )
+
   return (
     <DefaultTemplate
       i18n={initPageResult.req.i18n}
@@ -22,8 +35,23 @@ export const LeadersView: React.FC<AdminViewProps> = ({
     >
       <Gutter>
         <h1>Leaders</h1>
-        <br />
-        <p>{initPageResult.req.user?.email}</p>
+        <div>
+          {stateCodes.map((stateCode) => (
+            <div key={stateCode}>
+              <h2 className="!text-sm">{getStateInfo(stateCode).stateName}</h2>
+              <ul>
+                {stateLeaders[stateCode].map((leader) => (
+                  <li key={leader.id} className="text-xs">
+                    {leader.FirstName} {leader.LastName} {leader.PhotoFile}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div>
+          <CheckLeadersForPhotoButton />
+        </div>
       </Gutter>
     </DefaultTemplate>
   )

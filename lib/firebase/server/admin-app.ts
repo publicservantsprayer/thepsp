@@ -15,6 +15,7 @@ import {
 } from 'firebase-admin/auth'
 import { firebaseConfig } from '@/lib/firebase/config'
 import { getFirestore } from 'firebase-admin/firestore'
+import { getStorage } from 'firebase-admin/storage'
 
 // Check if the app is already initialized
 let adminApp: App
@@ -31,3 +32,5 @@ if (!getApps().length) {
 export const auth: Auth = getAuth(adminApp)
 
 export const db: FirebaseFirestore.Firestore = getFirestore(adminApp)
+
+export const storage = getStorage(adminApp)

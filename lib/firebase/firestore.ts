@@ -81,10 +81,26 @@ export const getRootLeaderById = async (id: string) => {
     .doc(id)
     .get()
   if (doc.exists) {
-    // throw new Error('No root leader exists with id: ' + id)
-    console.error('No root leader exists with id: ' + id)
+    throw new Error('No root leader exists with id: ' + id)
   }
   return doc.data()
+}
+
+export const mergeUpdateStateLeaderById = async ({
+  id,
+  stateCode,
+  data,
+}: {
+  id: string
+  stateCode: StateCode
+  data: Partial<Leader>
+}) => {
+  const doc = db
+    .collection('states')
+    .doc(stateCode)
+    .collection('leaders')
+    .doc(id)
+  await doc.set(data, { merge: true })
 }
 
 const PostConverter: FirestoreDataConverter<Post> = {

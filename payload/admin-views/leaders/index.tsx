@@ -7,7 +7,7 @@ import { stateCodes } from '@/data/states'
 import { getLeadersWithoutPhoto } from '@/lib/firebase/firestore'
 import { Leader, StateCode } from '@/lib/types'
 import { getStateInfo } from '@/lib/get-state-info'
-import { CheckLeadersForPhotoButton } from './check-leader-images'
+import { CheckLeadersForPhotoButton } from '../../../app/(frontend)/psp-admin/leaders/check-leader-images'
 
 export async function LeadersView({
   initPageResult,

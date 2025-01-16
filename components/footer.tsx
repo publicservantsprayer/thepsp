@@ -1,3 +1,5 @@
+import { Footer as PayloadFooter } from '@/payload/globals/Footer/Component'
+
 export default function Footer() {
-  return <div>Footer goes here</div>
+  return <PayloadFooter />
 }

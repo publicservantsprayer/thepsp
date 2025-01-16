@@ -5,73 +5,55 @@ import {
   getCollectionGroupLeaderByPermaLink,
   getLeaders,
   getRootLeaderById,
+  mergeUpdateStateLeaderById,
 } from '@/lib/firebase/firestore'
 import { storage } from '@/lib/firebase/server/admin-app'
 import { makeValidStateCode } from '@/lib/get-state-info'
 import type { StateCode } from '@/lib/types'
 import { getDownloadURL } from 'firebase-admin/storage'
 
-export const checkLeadersForPhoto = async () => {
+export const checkLeadersForPhoto = async (stateCode: StateCode) => {
   const bucket = storage.bucket('repsp123-leaders')
+  const result: string[] = []
+  let leadersUpdated = 0
+
+  const leaders = await getLeaders({ stateCode })
+
+  const setLeaderHasPhotoFalse = async (id: string) => {
+    await mergeUpdateStateLeaderById({
+      id,
+      stateCode,
+      data: { hasPhoto: false },
+    })
+    leadersUpdated++
+  }
+
   await Promise.all(
-    stateCodes.map(async (stateCode) => {
-      // Get leaders without a photo
-      const leaders = await getLeaders({ stateCode })
-      await Promise.all(
-        leaders.map(async (leader) => {
-          if (!leader.PhotoFile) {
-            console.log(
-              `Leader ${leader.FirstName} ${leader.LastName} in ${stateCode} does not have a PhotoFile`,
-            )
-          } else {
-            const fileRef = bucket.file(`${leader.PhotoFile}`)
-            const [exists] = await fileRef.exists()
-            if (exists) {
-              // console.log(
-              //   `Leader ${leader.FirstName} ${leader.LastName} in ${stateCode} has a photo`,
-              // )
-              // const downloadURL = await getDownloadURL(fileRef)
-              // console.log(downloadURL)
-            } else {
-              const rootLeader = await getRootLeaderById(leader.id)
-              if (rootLeader) {
-                if (rootLeader.PhotoFile !== leader.PhotoFile) {
-                  console.log(
-                    'PhotoFile does not match, rootLeader: ',
-                    rootLeader.PhotoFile,
-                    'leader: ',
-                    leader.PhotoFile,
-                  )
-                } else {
-                  // console.log(
-                  //   `!!Leader ${leader.FirstName} ${leader.LastName} in ${stateCode} has a PhotoFile and matches root, but no photo`,
-                  // )
-                }
-              } else {
-                console.log('No root leader')
-              }
-            }
+    leaders.map(async (leader) => {
+      // PhotoFile is a string like 'firstName-lastName-839238'
+      // hasPhoto is a boolean
+      if (!leader.PhotoFile) {
+        if (leader.hasPhoto) {
+          await setLeaderHasPhotoFalse(leader.id)
+
+          result.push(
+            `${stateCode} ${leader.permaLink} | without photoFile updated`,
+          )
+        }
+      } else {
+        // leader does have photoFile, check if it actually exists
+        const fileRef = bucket.file(`${leader.PhotoFile}`)
+        const [photoExists] = await fileRef.exists()
+
+        if (!photoExists) {
+          if (leader.hasPhoto) {
+            await setLeaderHasPhotoFalse(leader.id)
+            result.push(`${stateCode} | ${leader.permaLink} updated`)
           }
-        }),
-      )
+        }
+      }
     }),
   )
-  console.log('done')
-  // const file = 'McCoy_Tennille_839238'
 
-  // const fileRef = bucket.file(`${file}`)
-  // const [exists] = await fileRef.exists()
-  // if (exists) {
-  //   console.log('it exists!!!')
-  //   // console.log(
-  //   //   `Leader ${leader.FirstName} ${leader.LastName} in ${stateCode} has a photo`,
-  //   // )
-  //   const downloadURL = await getDownloadURL(fileRef)
-  //   console.log(downloadURL)
-  // } else {
-  //   console.log(
-  //     // `!!Leader ${leader.FirstName} ${leader.LastName} in ${stateCode} has a PhotoFile but no photo`,
-  //     'nope',
-  //   )
-  // }
+  return result
 }

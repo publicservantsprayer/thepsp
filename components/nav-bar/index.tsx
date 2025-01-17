@@ -79,35 +79,35 @@ const learnMore: { title: string; href: string; description: string }[] = [
     description:
       'Be inspired by real-life stories of how prayer has touched our leaders and communities.',
   },
-  {
-    title: 'Frequently Asked Questions (FAQ)',
-    href: '/faq',
-    description: 'Get answers to common questions about our prayer initiative.',
-  },
-  {
-    title: 'Our History',
-    href: '/our-history',
-    description:
-      "Trace the journey of Public Servants' Prayer from its inception to now.",
-  },
-  {
-    title: 'Impact Stories',
-    href: '/impact-stories',
-    description:
-      'Read about the tangible effects prayer has had in the political arena.',
-  },
-  {
-    title: 'Give Support',
-    href: 'give-support',
-    description:
-      'Support our mission financially to expand our reach and deepen our impact.',
-  },
-  {
-    title: 'Volunteer',
-    href: '/volunteer',
-    description:
-      'Volunteer with us to help spread the message of prayer across the nation.',
-  },
+  // {
+  //   title: 'Frequently Asked Questions (FAQ)',
+  //   href: '/faq',
+  //   description: 'Get answers to common questions about our prayer initiative.',
+  // },
+  // {
+  //   title: 'Our History',
+  //   href: '/our-history',
+  //   description:
+  //     "Trace the journey of Public Servants' Prayer from its inception to now.",
+  // },
+  // {
+  //   title: 'Impact Stories',
+  //   href: '/impact-stories',
+  //   description:
+  //     'Read about the tangible effects prayer has had in the political arena.',
+  // },
+  // {
+  //   title: 'Give Support',
+  //   href: 'give-support',
+  //   description:
+  //     'Support our mission financially to expand our reach and deepen our impact.',
+  // },
+  // {
+  //   title: 'Volunteer',
+  //   href: '/volunteer',
+  //   description:
+  //     'Volunteer with us to help spread the message of prayer across the nation.',
+  // },
 ]
 
 export async function NavBar() {

@@ -5,7 +5,9 @@ import React from 'react'
 import { Button } from '@/components/ui/button'
 import { checkLeadersForPhoto } from '@/server-functions/check-leaders-for-photo'
 import { stateCodes } from '@/data/states'
+import { revalidatePath } from '@/server-functions/revalidate-path'
 
+// TODO: add mustGetAdminUser
 export function CheckLeadersForPhotoButton() {
   const [loading, startTransition] = React.useTransition()
   const [results, setResults] = React.useState<string[]>([])
@@ -20,6 +22,7 @@ export function CheckLeadersForPhotoButton() {
           setResults((prev) => [...prev, ...stateResults])
         }),
       )
+      revalidatePath('/psp-admin/leaders')
       setShowResults(true)
     })
   }

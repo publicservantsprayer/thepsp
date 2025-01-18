@@ -5,7 +5,7 @@ import React from 'react'
 
 import { cookies } from 'next/headers'
 import { auth, db } from '@/lib/firebase/server/admin-app'
-import { SessionCookieOptions, UserRecord } from 'firebase-admin/auth'
+import { SessionCookieOptions } from 'firebase-admin/auth'
 import { User } from 'firebase/auth'
 
 export interface CurrentUser {

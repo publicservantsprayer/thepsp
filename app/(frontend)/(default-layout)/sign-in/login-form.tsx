@@ -2,7 +2,7 @@
 
 import React, { MouseEventHandler } from 'react'
 
-import { sendSignInLinkToEmail, User } from 'firebase/auth'
+import { sendSignInLinkToEmail } from 'firebase/auth'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,6 +19,7 @@ import { auth } from '@/lib/firebase/client/client-app'
 import { useRouter } from 'next/navigation'
 import { setSessionCookie, signInWithGoogle } from '@/lib/firebase/client/auth'
 import { useUserSession } from '@/components/nav-bar/use-user-session'
+import { CurrentUser } from '@/lib/firebase/server/auth'
 
 export function LoginForm({
   className,
@@ -26,7 +27,7 @@ export function LoginForm({
   signedInRedirectPath,
   ...props
 }: React.ComponentPropsWithoutRef<'div'> & {
-  initialUser: User | null
+  initialUser: CurrentUser | null
   signedInRedirectPath?: string
 }) {
   const router = useRouter()
@@ -41,13 +42,20 @@ export function LoginForm({
   const handleEmailChange: React.ChangeEventHandler<HTMLInputElement> = (
     event,
   ) => setEmail(event.target.value)
-  const user = useUserSession(initialUser)
+  const currentUser = useUserSession(initialUser)
 
   React.useEffect(() => {
-    if (user) {
+    if (currentUser) {
       setDisabled(true)
       const finishSignIn = async () => {
-        const { ok, success } = await setSessionCookie(await user.getIdToken())
+        if (!currentUser.authUser) {
+          console.error('No auth user found')
+          setSignInError(true)
+          return
+        }
+        const { ok, success } = await setSessionCookie(
+          await currentUser.authUser.getIdToken(),
+        )
         if (ok && success) {
           router.push(signedInRedirectPath || '/profile')
         } else {
@@ -56,7 +64,7 @@ export function LoginForm({
       }
       finishSignIn()
     }
-  }, [router, user, signedInRedirectPath])
+  }, [router, currentUser, signedInRedirectPath])
 
   const handleSendLink = async () => {
     setDisabled(true)

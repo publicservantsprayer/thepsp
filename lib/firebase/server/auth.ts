@@ -1,56 +1,29 @@
 // This prevents type generation.  Consider adding them back
-// import 'server-only'
+import 'server-only'
 
 import React from 'react'
 
 import { cookies } from 'next/headers'
-import { auth } from '@/lib/firebase/server/admin-app'
+import { auth, db } from '@/lib/firebase/server/admin-app'
 import { SessionCookieOptions, UserRecord } from 'firebase-admin/auth'
-// import { UserModel, UserRepository } from '@/lib/models/user'
+import { User } from 'firebase/auth'
 
-export type CurrentUser = Awaited<ReturnType<typeof mustGetCurrentUser>>
-export type CurrentUserDTO = Awaited<ReturnType<typeof mustGetCurrentUserDTO>>
-
-// type AuthUser = {
-//   uid: string
-//   email?: string
-//   displayName?: string
-//   photoURL?: string
-// }
-
-// export const mustGetCurrentUnEnabledUser = async () => {
-//   const currentUser = await getCurrentUser()
-
-//   if (!currentUser) {
-//     throw new Error('Not authenticated!')
-//   }
-
-//   return currentUser
-// }
-
-export const mustGetCurrentUser = async () => {
-  const currentUser = await getCurrentUser()
-
-  if (!currentUser) {
-    throw new Error('Not authenticated!')
+export interface CurrentUser {
+  authUser: User | null
+  // userRecordToJSON: ReturnType<UserRecord['toJSON']>
+  uid: string
+  email?: string
+  emailVerified: boolean
+  displayName?: string
+  photoURL?: string
+  profile: {
+    id?: string
+    dailyEmailStateCode?: string
+    sendDailyEmail?: boolean
   }
-
-  // if (!currentUser.isEnabled()) {
-  //   throw new Error('User has not yet been enabled.')
-  // }
-
-  return currentUser
+  isAdmin?: boolean
+  serverAuth?: boolean
 }
-
-// export const mustGetCurrentAdmin = async () => {
-//   const currentUser = await mustGetCurrentUser()
-
-//   if (!currentUser.isAdmin()) {
-//     throw new Error('Not an admin!')
-//   }
-
-//   return currentUser
-// }
 
 /**
  * Get the current user from the session cookie.
@@ -61,7 +34,7 @@ export const mustGetCurrentUser = async () => {
  * @returns The current user or null if not authenticated.
  */
 export const getCurrentUser = React.cache(
-  async (): Promise<UserRecord | null> => {
+  async (): Promise<CurrentUser | null> => {
     const session = await getSession()
 
     if (!(await verifySession(session))) {
@@ -71,53 +44,60 @@ export const getCurrentUser = React.cache(
     const decodedIdToken = await auth.verifySessionCookie(session!)
     const authUser = await auth.getUser(decodedIdToken.uid)
 
-    // const user = await new UserRepository().findById(authUser.uid)
+    const currentUser: CurrentUser = {
+      authUser: null,
+      uid: authUser.uid,
+      email: authUser.email,
+      emailVerified: authUser.emailVerified,
+      displayName: authUser.displayName,
+      photoURL: authUser.photoURL,
+      profile: {},
+      serverAuth: true,
+    }
 
-    // if (!user) {
-    //   throw new Error('User authenticated but not found in database')
-    // }
+    const userProfile = await db
+      .collection('userProfiles')
+      .where('email', '==', authUser.email)
+      .get()
 
-    // user.authUser = authUser
+    if (userProfile.empty) {
+      currentUser.profile = {}
+    } else {
+      const userProfileDoc = userProfile.docs[0]
+      currentUser.profile = userProfileDoc.data()
+    }
 
-    return authUser
+    const adminUserSnapshot = await db
+      .collection('adminUsers')
+      .where('email', '==', authUser.email)
+      .get()
+
+    if (!adminUserSnapshot.empty) {
+      currentUser.isAdmin = true
+    }
+
+    return currentUser
   },
 )
 
-/**
- * Get the current authUser from the session cookie, and check to see if
- * the user account has been created in firestore.
- *
- * @returns Current user or null if account has not been created.
- */
-// export const checkIfAccountCreatedForCurrentUser = async () => {
-//   const session = await getSession()
-
-//   if (!(await verifySession(session))) {
-//     console.error('Session not verified while waiting for account creation')
-//     return null
-//   }
-
-//   const decodedIdToken = await auth.verifySessionCookie(session!)
-//   const authUser = await auth.getUser(decodedIdToken.uid)
-//   const user = await new UserRepository().findById(authUser.uid)
-
-//   return !!user
-// }
-
-export const getCurrentUserDTO = async () => {
+export const mustGetCurrentUser = async () => {
   const currentUser = await getCurrentUser()
 
-  // return currentUser?.toDTO()
-  return currentUser?.toJSON()
-}
-
-export const mustGetCurrentUserDTO = async () => {
-  const currentUser = await getCurrentUser()
   if (!currentUser) {
     throw new Error('Not authenticated!')
   }
 
-  return currentUser?.toJSON()
+  return currentUser
+}
+
+export const mustGetCurrentAdmin = async () => {
+  const currentUser = await mustGetCurrentUser()
+
+  if (!currentUser.isAdmin) {
+    throw new Error('Not an admin!')
+  }
+
+  return currentUser
 }
 
 async function verifySession(session: string | undefined = undefined) {

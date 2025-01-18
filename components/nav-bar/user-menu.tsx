@@ -3,7 +3,7 @@
 import * as React from 'react'
 
 import Link from 'next/link'
-import { User } from 'firebase/auth'
+import type { CurrentUser } from '@/lib/firebase/server/auth'
 
 import { signOut } from '@/lib/firebase/client/auth'
 import { CircleUser } from 'lucide-react'
@@ -18,7 +18,7 @@ import {
 import { useUserSession } from './use-user-session'
 import { useRouter } from 'next/navigation'
 
-export function UserMenu({ initialUser }: { initialUser: User }) {
+export function UserMenu({ initialUser }: { initialUser: CurrentUser | null }) {
   const user = useUserSession(initialUser)
 
   return (
@@ -46,7 +46,7 @@ export function UserMenu({ initialUser }: { initialUser: User }) {
     </DropdownMenu>
   )
 
-  function LoggedOutUserMenu({ user }: { user: User | null }) {
+  function LoggedOutUserMenu({ user }: { user: CurrentUser | null }) {
     if (user) return null
 
     return (
@@ -57,7 +57,7 @@ export function UserMenu({ initialUser }: { initialUser: User }) {
   }
 }
 
-function LoggedInUserMenu({ user }: { user: User | null }) {
+function LoggedInUserMenu({ user }: { user: CurrentUser | null }) {
   if (!user) return null
 
   return (
@@ -67,8 +67,8 @@ function LoggedInUserMenu({ user }: { user: User | null }) {
   )
 }
 
-function AdminUserMenu({ user }: { user: User | null }) {
-  if (!user) return null
+function AdminUserMenu({ user }: { user: CurrentUser | null }) {
+  if (!user || !user.isAdmin) return null
 
   return (
     <>
@@ -87,7 +87,7 @@ function AdminUserMenu({ user }: { user: User | null }) {
   )
 }
 
-function SignOutMenuItem({ user }: { user: User | null }) {
+function SignOutMenuItem({ user }: { user: CurrentUser | null }) {
   const router = useRouter()
   if (!user) return null
 

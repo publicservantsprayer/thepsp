@@ -1,12 +1,10 @@
 import React from 'react'
 
-import { User } from 'firebase/auth'
 import { ProfileForm } from './profile-form'
 import { getCurrentUser } from '@/lib/firebase/server/auth'
 
 export default async function ProfilePage() {
-  const currentUser = await getCurrentUser()
-  const initialUser: User = currentUser?.toJSON() as User
+  const initialUser = await getCurrentUser()
 
   return (
     <div className="flex w-full items-center justify-center p-6 md:p-10">

@@ -57,15 +57,14 @@ const resources: { title: string; href: string; description: string }[] = [
     description:
       'Quarterly newsletters with updates on our work and the impact of prayer in politics.',
   },
-  {
-    title: 'Prayer Resources',
-    href: '/prayer-resources',
-    description:
-      'Access tools and guides tailored for praying for those in public service.',
-  },
 ]
 
 const learnMore: { title: string; href: string; description: string }[] = [
+  {
+    title: 'What We Do',
+    href: '/what-we-do',
+    description: 'Every day we pray for three leaders in our state..',
+  },
   {
     title: 'Why We Pray',
     href: '/why-we-pray',
@@ -78,6 +77,17 @@ const learnMore: { title: string; href: string; description: string }[] = [
     description:
       'Be inspired by real-life stories of how prayer has touched our leaders and communities.',
   },
+  {
+    title: 'Statement of Faith',
+    href: '/statement-of-faith',
+    description: 'Our Statement of Faith outlines our core beliefs.',
+  },
+  // {
+  //   title: 'Prayer Resources',
+  //   href: '/prayer-resources',
+  //   description:
+  //     'Access tools and guides tailored for praying for those in public service.',
+  // },
   // {
   //   title: 'Frequently Asked Questions (FAQ)',
   //   href: '/faq',

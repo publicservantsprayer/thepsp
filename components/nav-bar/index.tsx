@@ -25,7 +25,6 @@ import { UserMenu } from './user-menu'
 // import { validateStateCode } from '@/lib/get-state-info'
 // import { cookies } from 'next/headers'
 import { getCurrentUser } from '@/lib/firebase/server/auth'
-import { Separator } from '../ui/separator'
 
 const resources: { title: string; href: string; description: string }[] = [
   {

@@ -22,9 +22,10 @@ import {
 import { Menu } from 'lucide-react'
 import { StateName } from '@/components/state-name'
 import { UserMenu } from './user-menu'
-import { validateStateCode } from '@/lib/get-state-info'
-import { cookies } from 'next/headers'
+// import { validateStateCode } from '@/lib/get-state-info'
+// import { cookies } from 'next/headers'
 import { getCurrentUser } from '@/lib/firebase/server/auth'
+import { Separator } from '../ui/separator'
 
 const resources: { title: string; href: string; description: string }[] = [
   {
@@ -122,40 +123,63 @@ const learnMore: { title: string; href: string; description: string }[] = [
 export async function NavBar() {
   const currentUser = await getCurrentUser()
   // const initialUser = currentUser
-  const cookieStore = await cookies()
-  const cookieStateCode = cookieStore.get('stateCode')?.value
-  const verifiedStateCode = validateStateCode(cookieStateCode)
+  // const cookieStore = await cookies()
+  // const cookieStateCode = cookieStore.get('stateCode')?.value
+  // const verifiedStateCode = validateStateCode(cookieStateCode)
 
   return (
     <nav className="sticky top-0 z-50 bg-background shadow-2xl">
       <div className="flex items-center justify-between px-4 py-2">
         {/* Logo or brand name */}
         <Link href="/" className="hidden font-psp text-xl md:flex">
-          PSP <StateName />
+          {/* PSP <StateName /> */}
+          PSP
         </Link>
         {/* Hamburger menu on small screens */}
         <Sheet>
           <SheetTrigger asChild className="md:hidden">
             <Button variant="ghost" className="font-psp text-xl">
               <Menu />
-              PSP <StateName stateCode={verifiedStateCode} />
+              {/* PSP <StateName stateCode={verifiedStateCode} /> */}
+              PSP
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="p-4">
             <SheetHeader>
-              <SheetTitle className="text-lg font-medium">Menu</SheetTitle>
+              <Link href="/" className="text-muted-foreground">
+                <SheetTitle className="text-left font-psp text-xl font-medium">
+                  Public Servants&apos; Prayer
+                </SheetTitle>
+              </Link>
             </SheetHeader>
-            {/* <div className="mt-4 space-y-2">
-              <Link href="/">
-                <span className="block hover:underline">Home</span>
+            <div className="mt-6 grid gap-4">
+              <Link href="/" className="text-muted-foreground">
+                Home
               </Link>
-              <Link href="/about">
-                <span className="block hover:underline">About</span>
+              <Link href="/about" className="text-muted-foreground">
+                About
               </Link>
-              <Link href="/contact">
-                <span className="block hover:underline">Contact</span>
-              </Link>
-            </div> */}
+              <h2 className="mt-6">Resources</h2>
+              {resources.map((item) => (
+                <Link
+                  key={item.title}
+                  href={item.href}
+                  className="text-muted-foreground"
+                >
+                  {item.title}
+                </Link>
+              ))}
+              <h2 className="mt-6">Learn More</h2>
+              {learnMore.map((item) => (
+                <Link
+                  key={item.title}
+                  href={item.href}
+                  className="text-muted-foreground"
+                >
+                  {item.title}
+                </Link>
+              ))}
+            </div>
           </SheetContent>
         </Sheet>
 

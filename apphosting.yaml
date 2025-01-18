@@ -12,9 +12,7 @@ env:
   # This is used to generate the canonical URL for the website
   # in the production environment
   - variable: NEXT_PUBLIC_PRODUCTION_DOMAIN_NAME
-    value: thepsp-production--repsp123.us-central1.hosted.app
-    # Update this when new domain is added
-    # value: thepsp.org
+    value: thepsp.org
 
   # Firebase App Hosting (cloud run) sets the backend id
   # automatically as the K_CONFIGURATION environment variable

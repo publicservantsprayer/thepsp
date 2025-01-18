@@ -14,8 +14,11 @@ import {
 } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { unstable_cache } from 'next/cache'
+import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
 
 export default async function LeadersPage() {
+  await mustGetCurrentAdmin()
+
   const stateLeaders = await unstable_cache(async () => {
     const stateLeadersObj = {} as Record<
       StateCode,
@@ -47,7 +50,7 @@ export default async function LeadersPage() {
       <div className="grid grid-cols-[1fr_auto] gap-4">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
           {stateCodes.map((stateCode) => (
-            <Card key={stateCode} className="xxxmax-h-72 bg-card/40">
+            <Card key={stateCode} className="bg-card/40">
               <CardHeader>
                 <h2 className="my-2 text-sm">
                   {getStateInfo(stateCode).stateName}

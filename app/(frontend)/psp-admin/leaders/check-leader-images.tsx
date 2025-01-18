@@ -7,7 +7,6 @@ import { checkLeadersForPhoto } from '@/server-functions/check-leaders-for-photo
 import { stateCodes } from '@/data/states'
 import { revalidatePath } from '@/server-functions/revalidate-path'
 
-// TODO: add mustGetAdminUser
 export function CheckLeadersForPhotoButton() {
   const [loading, startTransition] = React.useTransition()
   const [results, setResults] = React.useState<string[]>([])

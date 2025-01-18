@@ -5,9 +5,12 @@ import {
   mergeUpdateStateLeaderById,
 } from '@/lib/firebase/firestore'
 import { storage } from '@/lib/firebase/server/admin-app'
+import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
 import type { StateCode } from '@/lib/types'
 
 export const checkLeadersForPhoto = async (stateCode: StateCode) => {
+  await mustGetCurrentAdmin()
+
   const bucket = storage.bucket('repsp123-leaders')
   const result: string[] = []
 

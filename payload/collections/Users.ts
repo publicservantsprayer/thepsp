@@ -1,4 +1,4 @@
-import { getCurrentUser } from '@/lib/firebase/server/auth'
+import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
 import type { CollectionConfig, User } from 'payload'
 
 export const Users: CollectionConfig = {
@@ -13,7 +13,7 @@ export const Users: CollectionConfig = {
         name: 'firebase-strategy',
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         authenticate: async ({ payload, headers }) => {
-          const currentUser = await getCurrentUser()
+          const currentUser = await mustGetCurrentAdmin()
 
           if (!currentUser) return { user: null }
 

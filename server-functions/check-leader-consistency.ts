@@ -7,11 +7,14 @@ import {
   getRootLeaderById,
 } from '@/lib/firebase/firestore'
 import { storage } from '@/lib/firebase/server/admin-app'
+import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
 import { makeValidStateCode } from '@/lib/get-state-info'
 import type { StateCode } from '@/lib/types'
 import { getDownloadURL } from 'firebase-admin/storage'
 
 export const checkLeadersForPhoto = async (stateCode: StateCode) => {
+  await mustGetCurrentAdmin()
+
   const bucket = storage.bucket('repsp123-leaders')
   let result = ''
 
@@ -58,7 +61,6 @@ export const checkLeadersForPhoto = async (stateCode: StateCode) => {
       )
     }),
   )
-  console.log('done')
   return result
   // const file = 'McCoy_Tennille_839238'
 

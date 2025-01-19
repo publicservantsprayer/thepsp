@@ -1,7 +1,6 @@
 import * as React from 'react'
 
-import Link, { LinkProps } from 'next/link'
-import { cn } from '@/lib/utils'
+import Link from 'next/link'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -16,6 +15,7 @@ import { UserMenu } from './user-menu'
 import { getCurrentUser } from '@/lib/firebase/server/auth'
 import { Nav } from './nav'
 import { HamburgerDrawer } from './hamburger-drawer'
+import { NavMenuItem } from './nav-menu-item'
 
 const resources: { title: string; href: string; description: string }[] = [
   {
@@ -160,16 +160,16 @@ export async function NavBar() {
                       </NavigationMenuLink>
                     </Link>
                   </li>
-                  <ListItem href="/find-your-state" title="Find Your State">
+                  <NavMenuItem href="/find-your-state" title="Find Your State">
                     If <StateName /> is not your state, use this map to find
                     yours.
-                  </ListItem>
-                  <ListItem href="/what-we-do" title="What We Do">
+                  </NavMenuItem>
+                  <NavMenuItem href="/what-we-do" title="What We Do">
                     Every day we pray for three leaders in our state.
-                  </ListItem>
-                  <ListItem href="/why-we-pray" title="Why We Pray">
+                  </NavMenuItem>
+                  <NavMenuItem href="/why-we-pray" title="Why We Pray">
                     A fresh approach to political involvement.
-                  </ListItem>
+                  </NavMenuItem>
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
@@ -178,13 +178,13 @@ export async function NavBar() {
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                   {resources.map((component) => (
-                    <ListItem
+                    <NavMenuItem
                       key={component.title}
                       title={component.title}
                       href={component.href}
                     >
                       {component.description}
-                    </ListItem>
+                    </NavMenuItem>
                   ))}
                 </ul>
               </NavigationMenuContent>
@@ -194,13 +194,13 @@ export async function NavBar() {
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                   {learnMore.map((component) => (
-                    <ListItem
+                    <NavMenuItem
                       key={component.title}
                       title={component.title}
                       href={component.href}
                     >
                       {component.description}
-                    </ListItem>
+                    </NavMenuItem>
                   ))}
                 </ul>
               </NavigationMenuContent>
@@ -211,38 +211,5 @@ export async function NavBar() {
         <UserMenu initialUser={currentUser} />
       </div>
     </Nav>
-  )
-}
-
-interface ListItemProps extends LinkProps {
-  className?: string
-  title: string
-  children: React.ReactNode
-  ref?: React.Ref<HTMLAnchorElement>
-}
-
-function ListItem({
-  className,
-  title,
-  children,
-  ref,
-  ...props
-}: ListItemProps) {
-  return (
-    <li>
-      <Link ref={ref} {...props} legacyBehavior passHref>
-        <NavigationMenuLink
-          className={cn(
-            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-            className,
-          )}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
-        </NavigationMenuLink>
-      </Link>
-    </li>
   )
 }

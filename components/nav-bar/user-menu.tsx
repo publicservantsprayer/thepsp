@@ -2,107 +2,111 @@
 
 import * as React from 'react'
 
-import Link from 'next/link'
+// import Link from 'next/link'
 import type { CurrentUser } from '@/lib/firebase/server/auth'
 
-import { signOut } from '@/lib/firebase/client/auth'
+// import { signOut } from '@/lib/firebase/client/auth'
 import { CircleUser } from 'lucide-react'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItemLink,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { useUserSession } from './use-user-session'
-import { useRouter } from 'next/navigation'
+  NavigationMenu,
+  // NavigationMenuContent,
+  NavigationMenuItem,
+  // NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuNextLink,
+  // NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu'
+// import { useUserSession } from './use-user-session'
+// import { useRouter } from 'next/navigation'
+// import { NavMenuItem } from './nav-menu-item'
 
 export function UserMenu({ initialUser }: { initialUser: CurrentUser | null }) {
-  const user = useUserSession(initialUser)
+  // const user = useUserSession(initialUser)
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="mr-1">
-        <CircleUser />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>
-          Account
-          {user && (
-            <div className="mt-1 text-xs text-muted-foreground">
-              {user.email}
-            </div>
-          )}
-        </DropdownMenuLabel>
+    <NavigationMenu>
+      <NavigationMenuList>
+        <NavigationMenuItem>
+          <NavigationMenuNextLink href="/sign-in">
+            <CircleUser />
+          </NavigationMenuNextLink>
+          {/* <NavigationMenuTrigger className="mr-1" hideArrow>
+            <CircleUser />
+          </NavigationMenuTrigger> */}
+          {/* <NavigationMenuContent className="outline">
+            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+              Account
+              {user && (
+                <div className="mt-1 text-xs text-muted-foreground">
+                  {user.email}
+                </div>
+              )}
 
-        <DropdownMenuSeparator />
-
-        <LoggedOutUserMenu user={user} />
-        <LoggedInUserMenu user={user} />
-        <AdminUserMenu user={user} />
-        <SignOutMenuItem user={user} />
-      </DropdownMenuContent>
-    </DropdownMenu>
+              <LoggedOutUserMenu user={user} />
+              <LoggedInUserMenu user={user} />
+              <AdminUserMenu user={user} />
+              <SignOutMenuItem user={user} />
+            </ul>
+          </NavigationMenuContent> */}
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
   )
 
-  function LoggedOutUserMenu({ user }: { user: CurrentUser | null }) {
-    if (user) return null
+  //   function LoggedOutUserMenu({ user }: { user: CurrentUser | null }) {
+  //     if (user) return null
 
-    return (
-      <DropdownMenuItemLink asChild>
-        <Link href="/sign-in">Sign In</Link>
-      </DropdownMenuItemLink>
-    )
-  }
-}
+  //     return (
+  //       <NavMenuItem href="/sign-in" title="Sign In" className="">
+  //         Log in to subscribe to get updates in your email.
+  //       </NavMenuItem>
+  //     )
+  //   }
+  // }
 
-function LoggedInUserMenu({ user }: { user: CurrentUser | null }) {
-  if (!user) return null
+  // function LoggedInUserMenu({ user }: { user: CurrentUser | null }) {
+  //   if (!user) return null
 
-  return (
-    <Link href="/profile">
-      <DropdownMenuItemLink>Profile</DropdownMenuItemLink>
-    </Link>
-  )
-}
+  //   return (
+  //     <Link href="/profile">
+  //       <NavigationMenuLink>Profile</NavigationMenuLink>
+  //     </Link>
+  //   )
+  // }
 
-function AdminUserMenu({ user }: { user: CurrentUser | null }) {
-  if (!user || !user.isAdmin) return null
+  // function AdminUserMenu({ user }: { user: CurrentUser | null }) {
+  //   if (!user || !user.isAdmin) return null
 
-  return (
-    <>
-      <DropdownMenuSeparator />
+  //   return (
+  //     <>
+  //       {/* <DropdownMenuSeparator /> */}
 
-      <Link href="/admin">
-        <DropdownMenuItemLink>Content</DropdownMenuItemLink>
-      </Link>
-      <Link href="#">
-        <DropdownMenuItemLink disabled={true}>X Accounts</DropdownMenuItemLink>
-      </Link>
-      <Link href="#">
-        <DropdownMenuItemLink disabled={true}>Data Import</DropdownMenuItemLink>
-      </Link>
-    </>
-  )
-}
+  //       <Link href="/admin">
+  //         <NavigationMenuLink>Content</NavigationMenuLink>
+  //       </Link>
+  //       {/* <Link href="#">
+  //         <NavigationMenuLink disabled={true}>X Accounts</NavigationMenuLink>
+  //       </Link>
+  //       <Link href="#">
+  //         <NavigationMenuLink disabled={true}>Data Import</NavigationMenuLink>
+  //       </Link> */}
+  //     </>
+  //   )
+  // }
 
-function SignOutMenuItem({ user }: { user: CurrentUser | null }) {
-  const router = useRouter()
-  if (!user) return null
+  // function SignOutMenuItem({ user }: { user: CurrentUser | null }) {
+  //   const router = useRouter()
+  //   if (!user) return null
 
-  const handleSignOut = async () => {
-    if (await signOut()) {
-      router.push('/sign-in')
-    }
-  }
+  //   const handleSignOut = async () => {
+  //     if (await signOut()) {
+  //       router.push('/sign-in')
+  //     }
+  //   }
 
-  return (
-    <>
-      <DropdownMenuSeparator />
-      <DropdownMenuItemLink onClick={handleSignOut}>
-        Sign Out
-      </DropdownMenuItemLink>
-    </>
-  )
+  //   return (
+  //     <>
+  //       <NavigationMenuLink onClick={handleSignOut}>Sign Out</NavigationMenuLink>
+  //     </>
+  //   )
 }

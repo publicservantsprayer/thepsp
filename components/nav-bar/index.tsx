@@ -120,7 +120,7 @@ export async function NavBar() {
   const currentUser = await getCurrentUser()
 
   return (
-    <Nav className="xxxxshadow-2xl sticky top-0 z-50 border-y border-primary/20 bg-background">
+    <Nav className="sticky top-0 z-50 border-y border-primary/20 bg-background">
       <div className="flex items-center justify-between px-4 py-2">
         {/* Hamburger menu on small screens */}
         <HamburgerDrawer resources={resources} learnMore={learnMore} />

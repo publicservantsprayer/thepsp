@@ -45,17 +45,23 @@ const resources: { title: string; href: string; description: string }[] = [
     description:
       'Explore insightful articles on the impact of prayer in politics and spiritual leadership.',
   },
-  // {
-  //   title: 'Events',
-  //   href: '/events',
-  //   description:
-  //     "Join us at upcoming events where we gather to pray for our nation's leaders..",
-  // },
+  {
+    title: 'Events',
+    href: '/events',
+    description:
+      "Join us at upcoming events where we gather to pray for our nation's leaders..",
+  },
   {
     title: 'Newsletters',
     href: '/newsletters',
     description:
       'Quarterly newsletters with updates on our work and the impact of prayer in politics.',
+  },
+  {
+    title: 'Beyond the Ballot',
+    href: '/beyond-the-ballot',
+    description:
+      'This study calls women to move beyond the ballot to effectively pray for their nation.',
   },
 ]
 

@@ -29,7 +29,13 @@ export default async function Page() {
     },
   })
 
-  return <PostCategory posts={posts} categoryName="Testimonies" />
+  return (
+    <PostCategory
+      posts={posts}
+      categoryName="Testimonies"
+      collectionLabels={{ plural: 'Testimonies', singular: 'Testimony' }}
+    />
+  )
 }
 
 export function generateMetadata(): Metadata {

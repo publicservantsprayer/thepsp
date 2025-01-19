@@ -11,8 +11,16 @@ export const revalidate = 600
 interface Props {
   posts: Posts
   categoryName: string
+  collectionLabels?: {
+    plural?: string
+    singular?: string
+  }
 }
-export default async function PostCategory({ posts, categoryName }: Props) {
+export default async function PostCategory({
+  posts,
+  categoryName,
+  collectionLabels,
+}: Props) {
   return (
     <div className="pb-24 pt-24">
       <PageClient />
@@ -28,6 +36,7 @@ export default async function PostCategory({ posts, categoryName }: Props) {
           currentPage={posts.page}
           limit={12}
           totalDocs={posts.totalDocs}
+          collectionLabels={collectionLabels}
         />
       </div>
 

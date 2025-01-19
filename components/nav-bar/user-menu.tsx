@@ -2,111 +2,124 @@
 
 import * as React from 'react'
 
-// import Link from 'next/link'
+import Link from 'next/link'
+import Image from 'next/image'
+import { signOut } from '@/lib/firebase/client/auth'
+import { CircleUser } from 'lucide-react'
+import { useUserSession } from './use-user-session'
+import { useRouter } from 'next/navigation'
 import type { CurrentUser } from '@/lib/firebase/server/auth'
 
-// import { signOut } from '@/lib/firebase/client/auth'
-import { CircleUser } from 'lucide-react'
 import {
-  NavigationMenu,
-  // NavigationMenuContent,
-  NavigationMenuItem,
-  // NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuNextLink,
-  // NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu'
-// import { useUserSession } from './use-user-session'
-// import { useRouter } from 'next/navigation'
-// import { NavMenuItem } from './nav-menu-item'
+  Menubar,
+  MenubarContent,
+  MenubarLabel,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarTrigger,
+} from '@/components/ui/menubar'
 
 export function UserMenu({ initialUser }: { initialUser: CurrentUser | null }) {
-  // const user = useUserSession(initialUser)
+  const user = useUserSession(initialUser)
 
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuNextLink href="/sign-in">
-            <CircleUser />
-          </NavigationMenuNextLink>
-          {/* <NavigationMenuTrigger className="mr-1" hideArrow>
-            <CircleUser />
-          </NavigationMenuTrigger> */}
-          {/* <NavigationMenuContent className="outline">
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+    <Menubar className="border-none">
+      <MenubarMenu>
+        <MenubarTrigger className="cursor-pointer rounded-lg">
+          <CircleUser />
+        </MenubarTrigger>
+        <MenubarContent>
+          <MenubarLabel className="flex flex-row items-center gap-4">
+            <div>
               Account
               {user && (
-                <div className="mt-1 text-xs text-muted-foreground">
+                <div className="pb-1 pt-1 text-xs font-normal text-muted-foreground">
                   {user.email}
                 </div>
               )}
+            </div>
+            {user?.photoURL && (
+              <div>
+                <Image
+                  src={user.photoURL}
+                  alt="Profile Picture"
+                  width={96}
+                  height={96}
+                  className="h-8 w-8 rounded-full"
+                />
+              </div>
+            )}
+          </MenubarLabel>
 
-              <LoggedOutUserMenu user={user} />
-              <LoggedInUserMenu user={user} />
-              <AdminUserMenu user={user} />
-              <SignOutMenuItem user={user} />
-            </ul>
-          </NavigationMenuContent> */}
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+          <MenubarSeparator />
+          <LoggedOutUserMenu user={user} />
+          <LoggedInUserMenu user={user} />
+          <AdminUserMenu user={user} />
+          <SignOutMenuItem user={user} />
+        </MenubarContent>
+      </MenubarMenu>
+    </Menubar>
   )
+}
 
-  //   function LoggedOutUserMenu({ user }: { user: CurrentUser | null }) {
-  //     if (user) return null
+function LoggedOutUserMenu({ user }: { user: CurrentUser | null }) {
+  if (user) return null
 
-  //     return (
-  //       <NavMenuItem href="/sign-in" title="Sign In" className="">
-  //         Log in to subscribe to get updates in your email.
-  //       </NavMenuItem>
-  //     )
-  //   }
-  // }
+  return (
+    <Link href="/sign-in">
+      <MenubarItem className="cursor-pointer">Sign In</MenubarItem>
+    </Link>
+  )
+}
 
-  // function LoggedInUserMenu({ user }: { user: CurrentUser | null }) {
-  //   if (!user) return null
+function LoggedInUserMenu({ user }: { user: CurrentUser | null }) {
+  if (!user) return null
 
-  //   return (
-  //     <Link href="/profile">
-  //       <NavigationMenuLink>Profile</NavigationMenuLink>
-  //     </Link>
-  //   )
-  // }
+  return (
+    <>
+      <Link href="/profile">
+        <MenubarItem className="cursor-pointer">Profile</MenubarItem>
+      </Link>
+      <MenubarItem disabled={true}>Daily Email Posts</MenubarItem>
+    </>
+  )
+}
 
-  // function AdminUserMenu({ user }: { user: CurrentUser | null }) {
-  //   if (!user || !user.isAdmin) return null
+function AdminUserMenu({ user }: { user: CurrentUser | null }) {
+  if (!user || !user.isAdmin) return null
 
-  //   return (
-  //     <>
-  //       {/* <DropdownMenuSeparator /> */}
+  return (
+    <>
+      {' '}
+      <Link href="/admin">
+        <MenubarItem className="cursor-pointer">Content</MenubarItem>
+      </Link>
+      <Link href="#">
+        <MenubarItem disabled={true}>X Accounts</MenubarItem>
+      </Link>
+      <Link href="#">
+        <MenubarItem disabled={true}>Data Import</MenubarItem>
+      </Link>
+    </>
+  )
+}
 
-  //       <Link href="/admin">
-  //         <NavigationMenuLink>Content</NavigationMenuLink>
-  //       </Link>
-  //       {/* <Link href="#">
-  //         <NavigationMenuLink disabled={true}>X Accounts</NavigationMenuLink>
-  //       </Link>
-  //       <Link href="#">
-  //         <NavigationMenuLink disabled={true}>Data Import</NavigationMenuLink>
-  //       </Link> */}
-  //     </>
-  //   )
-  // }
+function SignOutMenuItem({ user }: { user: CurrentUser | null }) {
+  const router = useRouter()
+  if (!user) return null
 
-  // function SignOutMenuItem({ user }: { user: CurrentUser | null }) {
-  //   const router = useRouter()
-  //   if (!user) return null
+  const handleSignOut = async () => {
+    if (await signOut()) {
+      router.push('/sign-in')
+    }
+  }
 
-  //   const handleSignOut = async () => {
-  //     if (await signOut()) {
-  //       router.push('/sign-in')
-  //     }
-  //   }
-
-  //   return (
-  //     <>
-  //       <NavigationMenuLink onClick={handleSignOut}>Sign Out</NavigationMenuLink>
-  //     </>
-  //   )
+  return (
+    <>
+      <MenubarItem onClick={handleSignOut} className="cursor-pointer">
+        Sign Out
+      </MenubarItem>
+    </>
+  )
 }

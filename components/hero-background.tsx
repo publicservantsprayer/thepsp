@@ -11,7 +11,7 @@ export async function HeroBackground({ children }: Props) {
       <div className="absolute top-0 -z-10">
         <div className="relative -translate-y-[4rem] sm:-translate-y-[8rem] md:-translate-y-[10rem] lg:-translate-y-[12rem] xl:-translate-y-[16rem] 2xl:-translate-y-[20rem]">
           <Image
-            alt="Mountains"
+            alt="US Capitol Building at night"
             src={capitol}
             placeholder="blur"
             quality={100}
@@ -20,7 +20,7 @@ export async function HeroBackground({ children }: Props) {
             sizes="100vw"
             className="w-[100vw]"
           />
-          <div className="absolute bottom-0 z-10 h-1/2 w-full bg-gradient-to-t from-background to-transparent outline-red-400" />
+          <div className="absolute bottom-0 z-10 h-1/2 w-full bg-gradient-to-t from-background to-transparent" />
         </div>
       </div>
     </div>

@@ -8,7 +8,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import {
   NavigationMenu,
@@ -25,6 +24,7 @@ import { UserMenu } from './user-menu'
 // import { validateStateCode } from '@/lib/get-state-info'
 // import { cookies } from 'next/headers'
 import { getCurrentUser } from '@/lib/firebase/server/auth'
+import { Nav } from './nav'
 
 const resources: { title: string; href: string; description: string }[] = [
   {
@@ -121,66 +121,17 @@ const learnMore: { title: string; href: string; description: string }[] = [
 
 export async function NavBar() {
   const currentUser = await getCurrentUser()
-  // const initialUser = currentUser
-  // const cookieStore = await cookies()
-  // const cookieStateCode = cookieStore.get('stateCode')?.value
-  // const verifiedStateCode = validateStateCode(cookieStateCode)
 
   return (
-    <nav className="sticky top-0 z-50 border-y bg-background shadow-2xl">
+    <Nav className="xxxxshadow-2xl sticky top-0 z-50 border-y border-primary/20 bg-background">
       <div className="flex items-center justify-between px-4 py-2">
-        {/* Logo or brand name */}
-        <Link href="/" className="hidden font-psp text-xl md:flex">
-          {/* PSP <StateName /> */}
-          PSP
-        </Link>
         {/* Hamburger menu on small screens */}
-        <Sheet>
-          <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" className="font-psp text-xl">
-              <Menu />
-              {/* PSP <StateName stateCode={verifiedStateCode} /> */}
-              PSP
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="p-4">
-            <SheetHeader>
-              <Link href="/" className="text-muted-foreground">
-                <SheetTitle className="text-left font-psp text-xl font-medium">
-                  Public Servants&apos; Prayer
-                </SheetTitle>
-              </Link>
-            </SheetHeader>
-            <div className="mt-6 grid gap-4">
-              <Link href="/" className="text-muted-foreground">
-                Home
-              </Link>
-              <Link href="/about" className="text-muted-foreground">
-                About
-              </Link>
-              <h2 className="mt-6">Resources</h2>
-              {resources.map((item) => (
-                <Link
-                  key={item.title}
-                  href={item.href}
-                  className="text-muted-foreground"
-                >
-                  {item.title}
-                </Link>
-              ))}
-              <h2 className="mt-6">Learn More</h2>
-              {learnMore.map((item) => (
-                <Link
-                  key={item.title}
-                  href={item.href}
-                  className="text-muted-foreground"
-                >
-                  {item.title}
-                </Link>
-              ))}
-            </div>
-          </SheetContent>
-        </Sheet>
+        <HamburgerMenu />
+
+        {/* Logo or brand name */}
+        <Link href="/" className="gap-x-6hidden font-psp uppercase md:flex">
+          PSP &middot; <StateName />
+        </Link>
 
         {/* Navigation - hidden below md breakpoint */}
         <NavigationMenu className="hidden md:flex">
@@ -262,7 +213,7 @@ export async function NavBar() {
 
         <UserMenu initialUser={currentUser} />
       </div>
-    </nav>
+    </Nav>
   )
 }
 
@@ -296,5 +247,52 @@ function ListItem({
         </NavigationMenuLink>
       </Link>
     </li>
+  )
+}
+
+function HamburgerMenu() {
+  return (
+    <Sheet>
+      <SheetTrigger className="md:hidden">
+        <Menu />
+      </SheetTrigger>
+      <SheetContent side="left" className="p-4">
+        <SheetHeader>
+          <Link href="/" className="text-muted-foreground">
+            <SheetTitle className="text-left font-psp text-xl font-medium">
+              Public Servants&apos; Prayer
+            </SheetTitle>
+          </Link>
+        </SheetHeader>
+        <div className="mt-6 grid gap-4">
+          <Link href="/" className="text-muted-foreground">
+            Home
+          </Link>
+          <Link href="/about" className="text-muted-foreground">
+            About
+          </Link>
+          <h2 className="mt-6">Resources</h2>
+          {resources.map((item) => (
+            <Link
+              key={item.title}
+              href={item.href}
+              className="text-muted-foreground"
+            >
+              {item.title}
+            </Link>
+          ))}
+          <h2 className="mt-6">Learn More</h2>
+          {learnMore.map((item) => (
+            <Link
+              key={item.title}
+              href={item.href}
+              className="text-muted-foreground"
+            >
+              {item.title}
+            </Link>
+          ))}
+        </div>
+      </SheetContent>
+    </Sheet>
   )
 }

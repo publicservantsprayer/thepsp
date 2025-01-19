@@ -25,9 +25,11 @@ export default async function StatePage({ params }: Props) {
   console.log({ paramStateCode, cookieStateCode, stateCode })
 
   return (
-    <div className="px-4 py-12">
+    <div className="px-4">
       <UpdateCookieStateCode paramStateCode={paramStateCode} />
-      <div className="flex flex-col items-center">
+
+      {/* Temporary Info */}
+      <div className="mb-4 mt-10 flex flex-col items-center">
         <div className="mb-4 flex max-w-[900px] flex-row gap-1 rounded-xl border border-psp-primary-foreground bg-card p-2 md:p-6">
           <div className="m-1 text-psp-primary-foreground">
             <Info />

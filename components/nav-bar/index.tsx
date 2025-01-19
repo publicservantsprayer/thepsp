@@ -127,7 +127,7 @@ export async function NavBar() {
   // const verifiedStateCode = validateStateCode(cookieStateCode)
 
   return (
-    <nav className="sticky top-0 z-50 bg-background shadow-2xl">
+    <nav className="sticky top-0 z-50 border-y bg-background shadow-2xl">
       <div className="flex items-center justify-between px-4 py-2">
         {/* Logo or brand name */}
         <Link href="/" className="hidden font-psp text-xl md:flex">

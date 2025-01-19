@@ -38,8 +38,8 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
   }
 
   return (
-    <div className="width-full mx-auto mb-12 max-w-[900px]">
-      <Tabs defaultValue="today" className="grid gap-2">
+    <div className="mx-auto mb-12 w-full max-w-[900px]">
+      <Tabs defaultValue="today" className="grid grid-cols-1 gap-2">
         <TabsList className="grid w-full grid-cols-4 rounded-t-lg bg-accent text-accent-foreground">
           <TabsTrigger
             value="today"
@@ -50,26 +50,29 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
           <TabsTrigger
             value="email"
             className="gap-2 data-[state=active]:text-accent-foreground"
+            disabled={true}
           >
             <MdEmail /> Email
           </TabsTrigger>
           <TabsTrigger
             value="facebook"
             className="h-8 gap-2 data-[state=active]:text-accent-foreground"
+            disabled={true}
           >
             <SiFacebook />
           </TabsTrigger>
           <TabsTrigger
             value="x"
             className="h-8 gap-2 data-[state=active]:text-accent-foreground"
+            disabled={true}
           >
             <SiX />
           </TabsTrigger>
         </TabsList>
 
-        <div className="grid rounded-lg bg-background md:grid-cols-10">
-          <div className="flex md:col-span-6">
-            <div className="mx-2 flex-grow rounded p-8">
+        <div className="grid grid-cols-1 gap-y-4 rounded-lg bg-background sm:grid-cols-10">
+          <div className="rounded-lg border border-card sm:col-span-6 sm:rounded-l-lg sm:rounded-r-none">
+            <div className="mx-2 rounded p-2 md:p-8">
               <TabsContent value="today" className="grid gap-4">
                 <div className="mb-0 text-center">
                   {moment(post.dateID).format('dddd, MMMM Do')}
@@ -90,7 +93,7 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
             </div>
           </div>
 
-          <div className="col-span-4 rounded-r-lg bg-card p-2 text-card-foreground">
+          <div className="col-span-4 rounded-lg bg-card p-2 text-card-foreground sm:rounded-l-none sm:rounded-r-lg">
             <StateMessage stateCode={stateCode} />
           </div>
         </div>
@@ -157,18 +160,21 @@ export function StateMessage({ stateCode }: { stateCode: StateCode }) {
         <TabsTrigger
           value="email"
           className="gap-2 data-[state=active]:bg-transparent"
+          disabled={true}
         >
           <MdEmail /> Email
         </TabsTrigger>
         <TabsTrigger
           value="facebook"
           className="gap-2 data-[state=active]:bg-transparent"
+          disabled={true}
         >
           <SiFacebook />
         </TabsTrigger>
         <TabsTrigger
           value="x"
           className="gap-2 data-[state=active]:bg-transparent"
+          disabled={true}
         >
           <SiX />
         </TabsTrigger>

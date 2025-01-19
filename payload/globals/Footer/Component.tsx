@@ -7,11 +7,14 @@ import type { Footer } from '@/payload-types'
 
 // import { ThemeSelector } from '@/payload/providers/Theme/ThemeSelector'
 import { CMSLink } from '@/payload/components/Link'
+import { getURL } from '@/payload/utilities/getURL'
 
 export async function Footer() {
   const footerData: Footer = await getCachedGlobal('footer', 1)()
 
   const navItems = footerData?.navItems || []
+
+  const showDebug = getURL().includes('localhost')
 
   return (
     <footer className="mt-auto border-t border-border bg-black text-muted-foreground">
@@ -35,6 +38,15 @@ export async function Footer() {
           </nav>
         </div>
       </div>
+      {showDebug && (
+        <div className="container flex justify-center gap-4 py-4 text-xs text-gray-400">
+          <div className="hidden sm:inline-block">sm</div>
+          <div className="hidden md:inline-block">md</div>
+          <div className="hidden lg:inline-block">lg</div>
+          <div className="hidden xl:inline-block">xl</div>
+          <div className="hidden 2xl:inline-block">2xl</div>
+        </div>
+      )}
     </footer>
   )
 }

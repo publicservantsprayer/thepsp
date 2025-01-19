@@ -1,13 +1,6 @@
 import * as React from 'react'
 
 import Link, { LinkProps } from 'next/link'
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 import {
   NavigationMenu,
@@ -18,13 +11,11 @@ import {
   NavigationMenuNextLink,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
-import { Menu } from 'lucide-react'
 import { StateName } from '@/components/state-name'
 import { UserMenu } from './user-menu'
-// import { validateStateCode } from '@/lib/get-state-info'
-// import { cookies } from 'next/headers'
 import { getCurrentUser } from '@/lib/firebase/server/auth'
 import { Nav } from './nav'
+import { HamburgerDrawer } from './hamburger-drawer'
 
 const resources: { title: string; href: string; description: string }[] = [
   {
@@ -132,10 +123,10 @@ export async function NavBar() {
     <Nav className="xxxxshadow-2xl sticky top-0 z-50 border-y border-primary/20 bg-background">
       <div className="flex items-center justify-between px-4 py-2">
         {/* Hamburger menu on small screens */}
-        <HamburgerMenu />
+        <HamburgerDrawer resources={resources} learnMore={learnMore} />
 
         {/* Logo or brand name */}
-        <Link href="/" className="gap-x-6hidden font-psp uppercase md:flex">
+        <Link href="/" className="font-psp uppercase md:flex">
           PSP &middot; <StateName />
         </Link>
 
@@ -253,52 +244,5 @@ function ListItem({
         </NavigationMenuLink>
       </Link>
     </li>
-  )
-}
-
-function HamburgerMenu() {
-  return (
-    <Sheet>
-      <SheetTrigger className="md:hidden">
-        <Menu />
-      </SheetTrigger>
-      <SheetContent side="left" className="p-4">
-        <SheetHeader>
-          <Link href="/" className="text-muted-foreground">
-            <SheetTitle className="text-left font-psp text-xl font-medium">
-              Public Servants&apos; Prayer
-            </SheetTitle>
-          </Link>
-        </SheetHeader>
-        <div className="mt-6 grid gap-4">
-          <Link href="/" className="text-muted-foreground">
-            Home
-          </Link>
-          <Link href="/about" className="text-muted-foreground">
-            About
-          </Link>
-          <h2 className="mt-6">Resources</h2>
-          {resources.map((item) => (
-            <Link
-              key={item.title}
-              href={item.href}
-              className="text-muted-foreground"
-            >
-              {item.title}
-            </Link>
-          ))}
-          <h2 className="mt-6">Learn More</h2>
-          {learnMore.map((item) => (
-            <Link
-              key={item.title}
-              href={item.href}
-              className="text-muted-foreground"
-            >
-              {item.title}
-            </Link>
-          ))}
-        </div>
-      </SheetContent>
-    </Sheet>
   )
 }

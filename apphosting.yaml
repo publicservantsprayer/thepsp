@@ -59,3 +59,7 @@ env:
     secret: googleCustomSearchApiKey
   - variable: GOOGLE_CUSTOM_SEARCH_ENGINE_ID
     secret: googleCustomSearchEngineId
+
+  # xAI API key
+  - variable: XAI_API_KEY
+    secret: n8sTmpPspDevXaiApiKey

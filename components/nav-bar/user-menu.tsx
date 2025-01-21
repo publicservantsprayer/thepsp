@@ -91,9 +91,11 @@ function AdminUserMenu({ user }: { user: CurrentUser | null }) {
 
   return (
     <>
-      {' '}
       <Link href="/admin">
         <MenubarItem className="cursor-pointer">Content</MenubarItem>
+      </Link>
+      <Link href="/psp-admin">
+        <MenubarItem className="cursor-pointer">PSP Admin</MenubarItem>
       </Link>
       <Link href="#">
         <MenubarItem disabled={true}>X Accounts</MenubarItem>

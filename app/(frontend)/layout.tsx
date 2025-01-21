@@ -6,6 +6,7 @@ import { UsaStateProvider } from '@/hooks/use-usa-state'
 import { NextThemeProvider } from '@/components/next-theme-provider'
 import { cn } from '@/lib/utils'
 import { Providers } from '@/payload/providers'
+import { Toaster } from '@/components/ui/toaster'
 
 export const metadata: Metadata = {
   title: "Public Servants' Prayer",
@@ -63,7 +64,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <UsaStateProvider>
-            <Providers>{children}</Providers>
+            <Providers>
+              {children}
+              <Toaster />
+            </Providers>
           </UsaStateProvider>
         </NextThemeProvider>
       </body>

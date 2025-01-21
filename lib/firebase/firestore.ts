@@ -59,7 +59,7 @@ export const getLeadersWithoutPhoto = async (stateCode: StateCode) => {
 }
 
 export const getOrderedLeadersForDailyPost = async (stateCode: StateCode) => {
-  console.log('getOrderedLeadersForDailyPost', stateCode)
+  // console.log('getOrderedLeadersForDailyPost', stateCode)
   const postSnapshot = await db
     .collection('states')
     .doc(stateCode)

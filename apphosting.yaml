@@ -63,3 +63,13 @@ env:
   # xAI API key
   - variable: XAI_API_KEY
     secret: n8sTmpPspDevXaiApiKey
+
+  # LangSmith Observability
+  - variable: LANGSMITH_TRACING
+    value: true
+  - variable: LANGSMITH_ENDPOINT
+    value: https://api.smith.langchain.com
+  - variable: LANGSMITH_API_KEY
+    secret: langsmithApiKey
+  - variable: LANGSMITH_PROJECT
+    value: PSP

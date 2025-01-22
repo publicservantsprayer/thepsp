@@ -1,5 +1,5 @@
 // This prevents type generation.  Consider adding them back
-// import 'server-only'
+import 'server-only'
 
 import {
   initializeApp,
@@ -13,16 +13,15 @@ import {
   // UserRecord,
   // SessionCookieOptions,
 } from 'firebase-admin/auth'
-import { firebaseConfig } from '@/lib/firebase/config'
 import { getFirestore } from 'firebase-admin/firestore'
 import { getStorage } from 'firebase-admin/storage'
+import { getURL } from '@/payload/utilities/getURL'
 
 // Check if the app is already initialized
 let adminApp: App
 if (!getApps().length) {
   adminApp = initializeApp({
     credential: applicationDefault(),
-    ...firebaseConfig,
   })
 } else {
   adminApp = getApps()[0]
@@ -31,6 +30,13 @@ if (!getApps().length) {
 // Initialize the Auth service with the app instance
 export const auth: Auth = getAuth(adminApp)
 
-export const db: FirebaseFirestore.Firestore = getFirestore(adminApp)
+// Check if we want to use the development database
+const devDatabaseId = process.env.FIREBASE_DEV_DATABASE_ID
+const useDev = devDatabaseId && getURL().includes('localhost')
+
+// Initialize the Firestore service
+export const db: FirebaseFirestore.Firestore = useDev
+  ? getFirestore(devDatabaseId)
+  : getFirestore()
 
 export const storage = getStorage(adminApp)

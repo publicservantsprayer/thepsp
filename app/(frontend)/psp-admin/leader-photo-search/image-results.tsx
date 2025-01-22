@@ -29,6 +29,7 @@ import {
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { LoadMoreLink } from './load-more-link'
+import { Title } from '@/components/psp-admin/title'
 
 export async function ImageResponse({
   query,
@@ -41,7 +42,7 @@ export async function ImageResponse({
 
   return (
     <div className="container">
-      <h1 className="mb-4 text-xl">Leader Photo Search</h1>
+      <Title>Leader Photo Search</Title>
 
       <div className="grid grid-cols-[1fr_auto] gap-6">
         <Tabs defaultValue="results" className="w-full">

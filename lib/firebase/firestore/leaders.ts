@@ -9,7 +9,7 @@ import { PostConverter } from './posts'
 
 type GetLeaders = (args: { stateCode: StateCode }) => Promise<Leader[]>
 
-const LeaderConverter: FirestoreDataConverter<Leader> = {
+export const LeaderConverter: FirestoreDataConverter<Leader> = {
   fromFirestore: (snapshot: QueryDocumentSnapshot<LeaderDbType>) => {
     const data = snapshot.data()
     return {

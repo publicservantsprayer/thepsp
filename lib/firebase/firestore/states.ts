@@ -3,19 +3,27 @@ import {
   FirestoreDataConverter,
 } from 'firebase-admin/firestore'
 import { db } from '@/lib/firebase/server/admin-app'
-import { State, StateDbType } from '@/lib/types'
+import { State, StateCode, StateDbType } from '@/lib/types'
 
 const StateConverter: FirestoreDataConverter<State> = {
   fromFirestore: (snapshot: QueryDocumentSnapshot<StateDbType>) => {
     const data = snapshot.data()
+    const dto = {
+      ...data,
+      id: snapshot.id as StateCode,
+      governorRef: data.governorRef?.path,
+      lieutenantGovernorRef: data.lieutenantGovernorRef?.path,
+      secretaryOfStateRef: data.secretaryOfStateRef?.path,
+    }
     return {
       ...data,
-      id: snapshot.id,
+      id: snapshot.id as StateCode,
+      dto,
     }
   },
-  toFirestore: (leader) => {
-    delete leader.id
-    return leader
+  toFirestore: (doc) => {
+    delete doc.id
+    return doc
   },
 }
 

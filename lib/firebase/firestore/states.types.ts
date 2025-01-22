@@ -1,60 +1,37 @@
+import { DocumentReference } from 'firebase-admin/firestore'
+import { LeaderDbType } from './leaders.types'
+import { z } from 'zod'
+import { StateCodeSchema } from './states.schema'
+
 export interface StateDbType {
   name: string
   region: string
+  governorRef?: DocumentReference<FirebaseFirestore.DocumentData, LeaderDbType>
+  hasLieutenantGovernor: boolean
+  lieutenantGovernorRef?: DocumentReference<
+    FirebaseFirestore.DocumentData,
+    LeaderDbType
+  >
+  hasSecretaryOfState: boolean
+  secretaryOfStateRef?: DocumentReference<
+    FirebaseFirestore.DocumentData,
+    LeaderDbType
+  >
 }
 
+export interface StateDto
+  extends Omit<
+    StateDbType,
+    'governorRef' | 'lieutenantGovernorRef' | 'secretaryOfStateRef'
+  > {
+  governorRef?: string
+  lieutenantGovernorRef?: string
+  secretaryOfStateRef?: string
+  id: StateCode
+}
 export interface State extends StateDbType {
-  id: string
+  id: StateCode
+  dto: StateDto
 }
 
-export type StateCode =
-  | 'AL'
-  | 'AK'
-  | 'AZ'
-  | 'AR'
-  | 'CA'
-  | 'CO'
-  | 'CT'
-  | 'DE'
-  | 'FL'
-  | 'GA'
-  | 'HI'
-  | 'ID'
-  | 'IL'
-  | 'IN'
-  | 'IA'
-  | 'KS'
-  | 'KY'
-  | 'LA'
-  | 'ME'
-  | 'MD'
-  | 'MA'
-  | 'MI'
-  | 'MN'
-  | 'MS'
-  | 'MO'
-  | 'MT'
-  | 'NE'
-  | 'NV'
-  | 'NH'
-  | 'NJ'
-  | 'NM'
-  | 'NY'
-  | 'NC'
-  | 'ND'
-  | 'OH'
-  | 'OK'
-  | 'OR'
-  | 'PA'
-  | 'RI'
-  | 'SC'
-  | 'SD'
-  | 'TN'
-  | 'TX'
-  | 'UT'
-  | 'VT'
-  | 'VA'
-  | 'WA'
-  | 'WV'
-  | 'WI'
-  | 'WY'
+export type StateCode = z.infer<typeof StateCodeSchema>

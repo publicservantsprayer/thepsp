@@ -35,13 +35,48 @@ describe('createPostForState with previous posts of same last name', () => {
   let db
 
   const data = {
-    'states/IN/leaders/1': { PID: '1', LastName: 'a', hasPhoto: true, lastImportDate },
-    'states/IN/leaders/2': { PID: '2', LastName: 'b', hasPhoto: true, lastImportDate },
-    'states/IN/leaders/3': { PID: '3', LastName: 'c', hasPhoto: true, lastImportDate },
-    'states/IN/leaders/4': { PID: '4', LastName: 'c', hasPhoto: true, lastImportDate },
-    'states/IN/leaders/5': { PID: '5', LastName: 'c', hasPhoto: true, lastImportDate },
-    'states/IN/leaders/6': { PID: '6', LastName: 'd', hasPhoto: true, lastImportDate },
-    'states/IN/leaders/7': { PID: '7', LastName: 'e', hasPhoto: true, lastImportDate },
+    'states/IN/leaders/1': {
+      PID: '1',
+      LastName: 'a',
+      hasPhoto: true,
+      lastImportDate,
+    },
+    'states/IN/leaders/2': {
+      PID: '2',
+      LastName: 'b',
+      hasPhoto: true,
+      lastImportDate,
+    },
+    'states/IN/leaders/3': {
+      PID: '3',
+      LastName: 'c',
+      hasPhoto: true,
+      lastImportDate,
+    },
+    'states/IN/leaders/4': {
+      PID: '4',
+      LastName: 'c',
+      hasPhoto: true,
+      lastImportDate,
+    },
+    'states/IN/leaders/5': {
+      PID: '5',
+      LastName: 'c',
+      hasPhoto: true,
+      lastImportDate,
+    },
+    'states/IN/leaders/6': {
+      PID: '6',
+      LastName: 'd',
+      hasPhoto: true,
+      lastImportDate,
+    },
+    'states/IN/leaders/7': {
+      PID: '7',
+      LastName: 'e',
+      hasPhoto: true,
+      lastImportDate,
+    },
     'states/IN/posts/2019-01-01': {
       leader1: { PID: '1', LastName: 'a', hasPhoto: true, lastImportDate },
       leader2: { PID: '2', LastName: 'b', hasPhoto: true, lastImportDate },
@@ -67,13 +102,48 @@ describe('createPostForState with previous posts that wraps around', () => {
   let db
 
   const data = {
-    'states/IN/leaders/1': { PID: '1', LastName: 'a', hasPhoto: true, lastImportDate },
-    'states/IN/leaders/2': { PID: '2', LastName: 'b', hasPhoto: true, lastImportDate },
-    'states/IN/leaders/3': { PID: '3', LastName: 'c', hasPhoto: true, lastImportDate },
-    'states/IN/leaders/4': { PID: '4', LastName: 'd', hasPhoto: true, lastImportDate },
-    'states/IN/leaders/5': { PID: '5', LastName: 'e', hasPhoto: true, lastImportDate },
-    'states/IN/leaders/6': { PID: '6', LastName: 'f', hasPhoto: true, lastImportDate },
-    'states/IN/leaders/7': { PID: '7', LastName: 'g', hasPhoto: true, lastImportDate },
+    'states/IN/leaders/1': {
+      PID: '1',
+      LastName: 'a',
+      hasPhoto: true,
+      lastImportDate,
+    },
+    'states/IN/leaders/2': {
+      PID: '2',
+      LastName: 'b',
+      hasPhoto: true,
+      lastImportDate,
+    },
+    'states/IN/leaders/3': {
+      PID: '3',
+      LastName: 'c',
+      hasPhoto: true,
+      lastImportDate,
+    },
+    'states/IN/leaders/4': {
+      PID: '4',
+      LastName: 'd',
+      hasPhoto: true,
+      lastImportDate,
+    },
+    'states/IN/leaders/5': {
+      PID: '5',
+      LastName: 'e',
+      hasPhoto: true,
+      lastImportDate,
+    },
+    'states/IN/leaders/6': {
+      PID: '6',
+      LastName: 'f',
+      hasPhoto: true,
+      lastImportDate,
+    },
+    'states/IN/leaders/7': {
+      PID: '7',
+      LastName: 'g',
+      hasPhoto: true,
+      lastImportDate,
+    },
     'states/IN/posts/2019-01-01': {
       leader1: { PID: '4', LastName: 'd' },
       leader2: { PID: '5', LastName: 'e' },

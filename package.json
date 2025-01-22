@@ -10,7 +10,8 @@
     "generate-importmap": "payload generate:importmap",
     "start": "next start",
     "lint": "next lint && tsc --noEmit",
-    "tsc-watch": "tsc --noEmit --watch"
+    "tsc-watch": "tsc --noEmit --watch",
+    "firestore-save-indexes": "firebase firestore:indexes > firestore.indexes.json"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",

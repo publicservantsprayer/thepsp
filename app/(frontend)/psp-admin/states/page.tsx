@@ -1,24 +1,25 @@
 import { Title } from '@/components/psp-admin/title'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { getStates, LeaderConverter } from '@/lib/firebase/firestore'
+import {
+  getStates,
+  LeaderConverter,
+  // updateAllStates,
+} from '@/lib/firebase/firestore'
 import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
 import { State } from '@/lib/types'
 
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ScrollAreaWithHorizontal } from '@/components/ui/scroll-area'
-import { Code } from '@/payload/blocks/Code/Component.client'
 import { Button } from '@/components/ui/button'
-import { UpdateExecutiveBranchForm } from './update-executive-branch-form'
+import { QueryExecutiveBranchForm } from './query-executive-branch-form'
 
 export default async function PspAdminStatesPage() {
   await mustGetCurrentAdmin()
@@ -95,7 +96,7 @@ function BranchUpdateDialog({
           {state.name} {branch} Branch
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent size="xl">
         <DialogHeader>
           <DialogTitle className="capitalize">
             Update {state.name} {branch} Branch
@@ -104,7 +105,7 @@ function BranchUpdateDialog({
             This will submit an AI request for updated information
           </DialogDescription>
         </DialogHeader>
-        <UpdateExecutiveBranchForm state={state.dto} />
+        <QueryExecutiveBranchForm stateDto={state.dto} />
       </DialogContent>
     </Dialog>
   )

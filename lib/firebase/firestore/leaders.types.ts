@@ -1,7 +1,21 @@
 import { Timestamp } from 'firebase-admin/firestore'
 import { z } from 'zod'
+import {
+  leaderSchema,
+  leaderDbSchema,
+  leaderAiQuerySchema,
+  newLeaderSchema,
+} from './leaders.schema'
 
-export interface LeaderDbType {
+export type Leader = z.infer<typeof leaderSchema>
+export type LeaderDb = z.infer<typeof leaderDbSchema>
+export type NewLeader = z.infer<typeof newLeaderSchema>
+export type LeaderAiQuery = z.infer<typeof leaderAiQuerySchema>
+
+/**
+ * @deprecated
+ */
+export interface OldLeaderDbType {
   BirthDate: string
   BirthMonth: string
   BirthPlace: string
@@ -53,9 +67,4 @@ export interface LeaderDbType {
   hasPhoto: boolean
   lastImportDate: Timestamp
   permaLink: string
-}
-
-export interface Leader extends Omit<LeaderDbType, 'lastImportDate'> {
-  id: string
-  lastImportDate: Date
 }

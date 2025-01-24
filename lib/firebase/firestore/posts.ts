@@ -16,9 +16,10 @@ export const PostConverter: FirestoreDataConverter<Post> = {
       id: snapshot.id,
     }
   },
-  toFirestore: (post) => {
-    delete post.id
-    return post
+  toFirestore: (doc) => {
+    delete doc.id
+    // delete doc.dto
+    return doc
   },
 }
 

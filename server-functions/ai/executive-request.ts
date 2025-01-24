@@ -4,8 +4,8 @@ import { ChatXAI } from '@langchain/xai'
 import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
 import { z } from 'zod'
 import { saveAiRequest } from '@/lib/firebase/firestore/ai-requests'
-import { leaderSchema } from '@/lib/firebase/firestore/leaders.types'
 import { StateCode } from '@/lib/types'
+import { leaderAiQuerySchema } from '@/lib/firebase/firestore/leaders.schema'
 
 export async function executiveRequest(query: string, stateCode: StateCode) {
   mustGetCurrentAdmin()
@@ -36,11 +36,12 @@ export async function executiveRequest(query: string, stateCode: StateCode) {
 }
 
 const executiveStructure = z.object({
-  governor: leaderSchema,
-  lieutenantGovernor: leaderSchema.optional(),
-  secretaryOfState: leaderSchema.optional(),
-  hasLieutenantGovernor: z.boolean(),
-  hasSecretaryOfState: z.boolean(),
+  executiveBranchDescription: z
+    .string()
+    .describe('One paragraph description of the executive branch of the state'),
+  governor: leaderAiQuerySchema,
+  lieutenantGovernor: leaderAiQuerySchema.optional(),
+  secretaryOfState: leaderAiQuerySchema.optional(),
 })
 
 export type ExecutiveStructure = z.infer<typeof executiveStructure>

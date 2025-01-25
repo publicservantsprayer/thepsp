@@ -30,7 +30,7 @@ export const checkLeadersForPhoto = async (stateCode: StateCode) => {
       // hasPhoto is a boolean
       if (!leader.PhotoFile) {
         if (leader.hasPhoto) {
-          await setLeaderHasPhotoFalse(leader.id)
+          await setLeaderHasPhotoFalse(leader.ref.id)
 
           result.push(
             `${stateCode} ${leader.permaLink} | without photoFile updated`,
@@ -43,7 +43,7 @@ export const checkLeadersForPhoto = async (stateCode: StateCode) => {
 
         if (!photoExists) {
           if (leader.hasPhoto) {
-            await setLeaderHasPhotoFalse(leader.id)
+            await setLeaderHasPhotoFalse(leader.ref.id)
             result.push(`${stateCode} | ${leader.permaLink} updated`)
           }
         }

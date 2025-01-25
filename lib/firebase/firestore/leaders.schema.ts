@@ -5,6 +5,9 @@ import {
 } from './zod-firestore-schemas'
 import { stateCodeSchema } from './states.schema'
 
+// List of fields indexed
+// permaLink,lastImportDate,hasPhoto,stateCode,FirstName,LastName,LegalName,NickName,BirthDate,BirthMonth,BirthYear,BirthPlace,Gender,Marital,Spouse,Family,Residence,ElectDate,Party,Religion,TwitterHandle,Facebook,Website,Email,jurisdiction,branch,federalExecutiveOffice,stateExecutiveOffice,legislativeChamber,Title,stateCode,photoFile
+
 export const leaderUtilitySchema = z.object({
   permaLink: z
     .string()
@@ -17,9 +20,15 @@ export const leaderUtilitySchema = z.object({
     .boolean()
     .describe('Whether the public official has a photo or not'),
   photoFile: z.string().optional().describe('The file name of the photo'),
-  stateCode: stateCodeSchema.describe(
+  StateCode: stateCodeSchema.describe(
     'The uppercase, two digit state code where the public official serves',
   ),
+  PhotoFile: z.string().optional(),
+  District: z.string().optional(),
+  DistrictID: z.string().optional(),
+  Chamber: z.string().optional(),
+  LegType: z.string().optional(),
+  // PID: z.string().optional(),  // replace with leader.ref.id
 })
 
 // These need default values for controlled form fields
@@ -38,10 +47,15 @@ const leaderPersonalSchema = z.object({
     .string()
     .default('')
     .describe('The full legal name of the public official'),
+  MidName: z
+    .string()
+    .default('')
+    .describe('The middle name of the public official'),
   NickName: z
     .string()
     .default('')
     .describe('The nickname of the public official'),
+  Prefix: z.string().default('').describe('The prefix of the public official'),
   BirthDate: z
     .string()
     .default('')
@@ -162,7 +176,7 @@ export const leaderAuthoritySchema = z.object({
   ),
   federalExecutiveOffice: federalExecutiveOfficeSchema.optional(),
   stateExecutiveOffice: stateExecutiveOfficeSchema.optional(),
-  legislativeChamberSchema: legislativeChamberSchema.optional(),
+  legislativeChamber: legislativeChamberSchema.optional(),
 })
 
 /**
@@ -182,7 +196,7 @@ export const leaderDbSchema = z
  *
  * Used for removing non-database fields in the FirestoreDataConverter.
  */
-export const leaderDbParser = leaderDbSchema.superRefine(superRefine)
+export const leaderDbParser = leaderDbSchema.strip().superRefine(superRefine)
 
 /**
  * Includes fields in the database as well as fields added

@@ -98,7 +98,7 @@ export default async function LeadersPage() {
                   <ul>
                     {stateLeaders[stateCode]?.map(({ leader, daysAway }) => (
                       <li
-                        key={leader.id}
+                        key={leader.ref.id}
                         className={cn('flex flex-row justify-between text-sm', [
                           daysAway < 4 && 'text-red-600',
                           daysAway > 3 && daysAway < 8 && 'text-yellow-500',

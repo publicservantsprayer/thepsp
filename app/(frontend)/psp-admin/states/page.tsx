@@ -1,6 +1,6 @@
 import { Title } from '@/components/psp-admin/title'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { mustGetLeader, getStates, getLeader } from '@/lib/firebase/firestore'
+import { getStates, getLeader } from '@/lib/firebase/firestore'
 import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
 import { Branch, Jurisdiction, LeaderAiQuery, State } from '@/lib/types'
 import { formatDistanceToNowStrict } from 'date-fns'

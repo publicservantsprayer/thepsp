@@ -35,16 +35,16 @@ const birthday = (leader: Leader) => {
   return birthdate.format('MMMM Do')
 }
 
-const Address = ({ leader }: Props) => {
-  return (
-    <>
-      {leader.MailAddr1 && <div>{leader.MailAddr1}</div>}
-      {leader.MailAddr2 && <div>{leader.MailAddr2}</div>}
-      {leader.MailAddr3 && <div>{leader.MailAddr3}</div>}
-      {leader.MailAddr5 && <div>{leader.MailAddr5}</div>}
-    </>
-  )
-}
+// const Address = ({ leader }: Props) => {
+//   return (
+//     <>
+//       {leader.MailAddr1 && <div>{leader.MailAddr1}</div>}
+//       {leader.MailAddr2 && <div>{leader.MailAddr2}</div>}
+//       {leader.MailAddr3 && <div>{leader.MailAddr3}</div>}
+//       {leader.MailAddr5 && <div>{leader.MailAddr5}</div>}
+//     </>
+//   )
+// }
 
 function TableRowCell({ name, data }: { name: string; data: React.ReactNode }) {
   if (!data) return null
@@ -58,7 +58,7 @@ function TableRowCell({ name, data }: { name: string; data: React.ReactNode }) {
 }
 
 const LeaderName = ({ leader }: Props) => {
-  return leader.PID ? (
+  return leader.ref.id ? (
     <div>
       {leader.Prefix} {leader.NickName} {leader.LastName}
     </div>
@@ -73,7 +73,7 @@ export function LeaderAccordion({ post }: { post: Post }) {
   return (
     <Accordion type="single" collapsible className="w-full">
       {[leader1, leader2, leader3].map((leader) => (
-        <AccordionItem value={leader.PID} key={leader.PID}>
+        <AccordionItem value={leader.ref.id} key={leader.ref.id}>
           <AccordionTrigger>
             <LeaderName leader={leader} />
           </AccordionTrigger>
@@ -87,10 +87,10 @@ export function LeaderAccordion({ post }: { post: Post }) {
                 <TableRowCell name="Spouse:" data={leader.Spouse} />
                 <TableRowCell name="Family:" data={leader.Family} />
                 <TableRowCell name="Birthday" data={birthday(leader)} />
-                <TableRowCell
+                {/* <TableRowCell
                   name="Address:"
                   data={<Address leader={leader} />}
-                />
+                /> */}
                 <TableRowCell name="Email:" data={leader.Email} />
               </TableBody>
             </Table>

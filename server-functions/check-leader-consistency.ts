@@ -12,11 +12,11 @@ import { makeValidStateCode } from '@/lib/get-state-info'
 import type { StateCode } from '@/lib/types'
 import { getDownloadURL } from 'firebase-admin/storage'
 
+// TODO: This is a one time script
 export const checkLeadersForPhoto = async (stateCode: StateCode) => {
   await mustGetCurrentAdmin()
 
   const bucket = storage.bucket('repsp123-leaders')
-  let result = ''
 
   await Promise.all(
     stateCodes.map(async (stateCode) => {
@@ -38,7 +38,7 @@ export const checkLeadersForPhoto = async (stateCode: StateCode) => {
               // const downloadURL = await getDownloadURL(fileRef)
               // console.log(downloadURL)
             } else {
-              const rootLeader = await getRootLeaderById(leader.id)
+              const rootLeader = await getRootLeaderById(leader.ref.id)
               if (rootLeader) {
                 if (rootLeader.PhotoFile !== leader.PhotoFile) {
                   console.log(
@@ -61,7 +61,8 @@ export const checkLeadersForPhoto = async (stateCode: StateCode) => {
       )
     }),
   )
-  return result
+  // return result
+
   // const file = 'McCoy_Tennille_839238'
 
   // const fileRef = bucket.file(`${file}`)

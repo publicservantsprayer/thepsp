@@ -32,13 +32,13 @@ export const Leaders = ({ leaders, chamber, legType }: Props) => {
   return (
     <>
       {leaders.map((leader) => (
-        <div key={leader.PID} className="m-1">
+        <div key={leader.ref.id} className="m-1">
           <Link href={leaderUrl(leader)}>
             <div>
               <div className="p-1">
                 <div className="flex min-w-[145px] justify-center">
                   <Image
-                    alt={leader.PhotoFile}
+                    alt={leader.fullname}
                     src={leaderPhoto(leader)}
                     width={108}
                     height={148}

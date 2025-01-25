@@ -22,7 +22,6 @@ import {
 import {
   Branch,
   Jurisdiction,
-  Leader,
   LeaderAiQuery,
   State,
   StateExecutiveOffice,
@@ -199,7 +198,7 @@ function LeaderForm({
         branch,
         jurisdiction,
         stateExecutiveOffice,
-        stateCode: state.ref.id,
+        StateCode: state.ref.id,
         lastImportDate: new Date(),
         hasPhoto: false,
       },

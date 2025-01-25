@@ -61,13 +61,13 @@ export function LeaderProfile({ leader }: Props) {
             <Table>
               <TableBody>
                 <Row field="Title:" value={leader.Title} />
-                <Row field="District:" value={leader.District} />
+                {/* <Row field="District:" value={leader.District} /> */}
                 <Row field="In Office Since:" value={leader.ElectDate} />
                 <Row field="Religion:" value={leader.Religion} />
                 <Row field="Spouse:" value={leader.Spouse} />
                 <Row field="Family:" value={leader.Family} />
                 <Row field="Birthday" value={birthday(leader)} />
-                <Row field="Address:" value={<Address leader={leader} />} />
+                {/* <Row field="Address:" value={<Address leader={leader} />} /> */}
                 <Row field="Email:" value={leader.Email} />
               </TableBody>
             </Table>
@@ -85,11 +85,11 @@ export function LeaderProfile({ leader }: Props) {
               <SiFacebook />
             </Link>
           </Button>
-          <Button asChild>
+          {/* <Button asChild>
             <Link href={leader.Twitter}>
               <SiX />
             </Link>
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>
@@ -122,13 +122,13 @@ const Row = ({
   )
 }
 
-const Address = ({ leader }: Props) => {
-  return (
-    <>
-      {leader.MailAddr1 && <div>{leader.MailAddr1}</div>}
-      {leader.MailAddr2 && <div>{leader.MailAddr2}</div>}
-      {leader.MailAddr3 && <div>{leader.MailAddr3}</div>}
-      {leader.MailAddr5 && <div>{leader.MailAddr5}</div>}
-    </>
-  )
-}
+// const Address = ({ leader }: Props) => {
+//   return (
+//     <>
+//       {leader.MailAddr1 && <div>{leader.MailAddr1}</div>}
+//       {leader.MailAddr2 && <div>{leader.MailAddr2}</div>}
+//       {leader.MailAddr3 && <div>{leader.MailAddr3}</div>}
+//       {leader.MailAddr5 && <div>{leader.MailAddr5}</div>}
+//     </>
+//   )
+// }

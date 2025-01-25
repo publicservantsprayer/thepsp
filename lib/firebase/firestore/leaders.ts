@@ -77,7 +77,7 @@ export const saveNewLeaderToStateCollection = async (leader: NewLeader) => {
   // console.log('savedLeader', savedLeader)
   await db
     .collection('states')
-    .doc(savedLeader.stateCode)
+    .doc(savedLeader.StateCode)
     .collection('leaders')
     .withConverter(LeaderConverter)
     .doc(savedLeader.ref.id)
@@ -226,4 +226,46 @@ export const mergeUpdateStateLeaderById = async ({
     .collection('leaders')
     .doc(id)
   await doc.set(data, { merge: true })
+}
+
+// get all leaders in baches of 250
+// update each leader with the normalized data
+// return the number of leaders updated
+export const normalizeAllLeaders = async () => {
+  const normalizeLeader = (leader: Leader): Leader => {
+    // change something
+    return leader
+  }
+
+  const batchSize = 250
+  let lastDoc: QueryDocumentSnapshot | undefined = undefined
+  let count = 0
+
+  while (true) {
+    let query = db
+      .collection('leaders')
+      .withConverter(LeaderConverter)
+      .limit(batchSize)
+    if (lastDoc) {
+      query = query.startAfter(lastDoc)
+    }
+
+    const snapshot = await query.get()
+    if (snapshot.empty) {
+      break
+    }
+
+    const batch = db.batch()
+    snapshot.docs.forEach((doc) => {
+      const data = doc.data()
+      const normalizedData = normalizeLeader(data)
+      batch.set(doc.ref, normalizedData)
+      count++
+    })
+
+    await batch.commit()
+    lastDoc = snapshot.docs[snapshot.docs.length - 1]
+  }
+
+  return count
 }

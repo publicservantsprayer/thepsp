@@ -76,7 +76,7 @@ export function QueryExecutiveBranchForm({
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      query: `Please provide detailed information about the executive branch of the U.S. State of ${state.name}, including the names of the leaders and their offices. Include only information about the ${leadersToInclude}.  Include important public information for each of the fields requested. Be sure to include optional fields if they are available.  Also, give a brief description of the executive branch of the state, mentioning the names of any of these three positions (if they exist) and when they were last elected.`,
+      query: `Please provide detailed information about the executive branch of the U.S. State of ${state.name}, including the names of the leaders and their offices. Include only information about the current ${leadersToInclude} as of the November 2024 general election.  Include important public information for each of the fields requested. Be sure to include optional fields if they are available. Please provide the information in a structured format that is easy to parse and understand.`,
     },
   })
 
@@ -105,7 +105,7 @@ export function QueryExecutiveBranchForm({
 
         <TabsContent
           value="query"
-          className="h-[calc(100vh-300px)] [container-type:size]"
+          className="h-[calc(100vh-300px)] pt-4 [container-type:size]"
         >
           <Form {...form}>
             <form
@@ -117,9 +117,9 @@ export function QueryExecutiveBranchForm({
                 name="query"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>AI Request</FormLabel>
+                    <FormLabel className="text-lg">AI Request</FormLabel>
                     <FormControl>
-                      <Textarea className="h-32" {...field} />
+                      <Textarea className="h-96 md:text-xl" {...field} />
                     </FormControl>
                     <FormDescription>
                       The request for information.
@@ -130,13 +130,18 @@ export function QueryExecutiveBranchForm({
               />
               <div className="flex space-x-4">
                 <DialogClose asChild>
-                  <Button variant="secondary" className="w-full">
+                  <Button
+                    size="lg"
+                    variant="secondary"
+                    className="w-full text-lg"
+                  >
                     Close
                   </Button>
                 </DialogClose>
                 <Button
                   type="submit"
-                  className="w-full"
+                  size="lg"
+                  className="w-full text-lg"
                   loading={form.formState.isSubmitting}
                   disabled={form.formState.isSubmitting}
                 >
@@ -145,13 +150,15 @@ export function QueryExecutiveBranchForm({
               </div>
             </form>
           </Form>
+          <div className="flex h-[calc(100cqh-32rem)] items-center justify-center text-3xl text-muted-foreground">
+            {/* <ThinkingMessage show={form.formState.isSubmitting} /> */}
+          </div>
         </TabsContent>
 
         <TabsContent
           value="results"
           className="-mr-5 h-[calc(100vh-300px)] [container-type:size]"
         >
-          {/* {result && ( */}
           <ScrollArea className="h-[100cqh] w-[100cqw]">
             <UpdateExecutiveBranchForm
               state={state}
@@ -161,7 +168,6 @@ export function QueryExecutiveBranchForm({
               jurisdiction={jurisdiction}
             />
           </ScrollArea>
-          {/* // )} */}
         </TabsContent>
 
         <TabsContent
@@ -175,4 +181,58 @@ export function QueryExecutiveBranchForm({
       </Tabs>
     </>
   )
+
+  function ThinkingMessage({ show }: { show: boolean }) {
+    if (!show) {
+      return null
+    }
+
+    const initialMessages = [
+      'Thinking...',
+      'Analyzing...',
+      'Processing...',
+      'Computing...',
+      'Evaluating...',
+      'Calculating...',
+      'Deciding...',
+      'Judging...',
+      'Concluding...',
+      'Determining...',
+      'Reasoning...',
+      'Inferring...',
+      'Speculating...',
+    ]
+    const [message, setMessage] = React.useState(initialMessages[0])
+    const [availableMessages, setAvailableMessages] = React.useState([
+      ...initialMessages.slice(1),
+    ])
+
+    React.useEffect(() => {
+      const interval = setInterval(() => {
+        setAvailableMessages((messages) => {
+          if (messages.length === 0) {
+            const newMessages = [...initialMessages]
+            const nextIndex = Math.floor(Math.random() * newMessages.length)
+            const nextMessage = newMessages[nextIndex]
+            setMessage(nextMessage)
+            return newMessages.filter((_, i) => i !== nextIndex)
+          }
+
+          // Pick random message from remaining pool
+          const index = Math.floor(Math.random() * messages.length)
+          const nextMessage = messages[index]
+          setMessage(nextMessage)
+          return messages.filter((_, i) => i !== index)
+        })
+      }, 3000)
+
+      return () => clearInterval(interval)
+    }, [])
+
+    return (
+      <div className="flex h-[calc(100cqh-32rem)] items-center justify-center text-3xl text-muted-foreground">
+        {message}
+      </div>
+    )
+  }
 }

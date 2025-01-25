@@ -127,10 +127,10 @@ export const leaderAiQuerySchema = z
  */
 
 export const stateExecutiveStructureSchema = z.object({
-  executiveBranchDescription: z
-    .string()
-    .optional()
-    .describe('One paragraph description of the executive branch of the state'),
+  // executiveBranchDescription: z
+  //   .string()
+  //   .optional()
+  //   .describe('One paragraph description of the executive branch of the state'),
   governor: leaderAiQuerySchema.optional(),
   lieutenantGovernor: leaderAiQuerySchema.optional(),
   secretaryOfState: leaderAiQuerySchema.optional(),

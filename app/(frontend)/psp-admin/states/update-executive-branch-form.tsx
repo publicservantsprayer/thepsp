@@ -22,16 +22,19 @@ import {
 import {
   Branch,
   Jurisdiction,
+  Leader,
   LeaderAiQuery,
   State,
   StateExecutiveOffice,
   StateExecutiveStructure,
 } from '@/lib/types'
+
 import { Input } from '@/components/ui/input'
 // import { leaderAiQuerySchema } from '@/lib/firebase/firestore/leaders.schema'
 import { saveNewExecutiveStateLeader } from '@/server-functions/new-leaders/executive'
 import { z } from 'zod'
 import React from 'react'
+import Link from 'next/link'
 
 interface Props {
   state: State
@@ -271,7 +274,9 @@ function FieldInput({ name, form, disabled }: FormFieldProps) {
       render={({ field }) => (
         <FormItem className="grid grid-cols-[auto,1fr] items-baseline gap-2">
           <FormLabel className="w-24 text-right text-xs text-muted-foreground">
-            {name}
+            <LinkToSocialMedia name={name} form={form}>
+              {name}
+            </LinkToSocialMedia>
           </FormLabel>
           <div className="flex flex-col">
             <FormControl>
@@ -286,6 +291,37 @@ function FieldInput({ name, form, disabled }: FormFieldProps) {
         </FormItem>
       )}
     />
+  )
+}
+
+function LinkToSocialMedia({
+  children,
+  name,
+  form,
+}: {
+  children: React.ReactNode
+  name: keyof LeaderAiQuery
+  form: UseFormType
+}) {
+  const value = form.getValues(name)
+  let href: string
+  if (name === 'TwitterHandle') {
+    const handle = value?.replace('@', '')
+    href = `https://x.com/${handle}`
+  } else if (name === 'Facebook' || name === 'Website') {
+    href = value
+  } else {
+    return <>{children}</>
+  }
+
+  return (
+    <Link
+      href={href}
+      target="_blank"
+      className="hover:text-foreground hover:underline"
+    >
+      {children}
+    </Link>
   )
 }
 

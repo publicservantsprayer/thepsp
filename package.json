@@ -50,6 +50,7 @@
     "@radix-ui/react-tooltip": "^1.1.7",
     "@react-spring/web": "^9.7.5",
     "@tailwindcss/typography": "^0.5.15",
+    "algoliasearch": "^5.20.0",
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

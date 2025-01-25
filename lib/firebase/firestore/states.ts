@@ -4,27 +4,46 @@ import {
 } from 'firebase-admin/firestore'
 import { db } from '@/lib/firebase/server/admin-app'
 import { State, StateCode, StateDb } from '@/lib/types'
-import { stateDbParser, stateDbSchema, stateSchema } from './states.schema'
+import { stateDbParser } from './states.schema'
 
-const StateConverter: FirestoreDataConverter<State> = {
+const StateConverter: FirestoreDataConverter<State, StateDb> = {
   fromFirestore: (snapshot: QueryDocumentSnapshot<StateDb>) => {
     const data = snapshot.data()
-    const dto = {
-      ...data,
-      id: snapshot.id as StateCode,
-      governorRef: data.governorRef?.path,
-      lieutenantGovernorRef: data.lieutenantGovernorRef?.path,
-      secretaryOfStateRef: data.secretaryOfStateRef?.path,
-    }
     return {
       ...data,
-      id: snapshot.id as StateCode,
-      dto,
-      ref: snapshot.ref,
+      ref: {
+        id: snapshot.id as StateCode,
+        path: snapshot.ref.path,
+      },
+      governorRef: data.governorRef && {
+        id: data.governorRef.id,
+        path: data.governorRef.path,
+      },
+      lieutenantGovernorRef: data.lieutenantGovernorRef && {
+        id: data.lieutenantGovernorRef.id,
+        path: data.lieutenantGovernorRef.path,
+      },
+      secretaryOfStateRef: data.secretaryOfStateRef && {
+        id: data.secretaryOfStateRef.id,
+        path: data.secretaryOfStateRef.path,
+      },
     }
   },
-  toFirestore: (doc) => {
-    return stateDbParser.parse(doc)
+  toFirestore: (state: State) => {
+    if (state.governorRef) {
+      state.governorRef = db.collection('leaders').doc(state.governorRef.id)
+    }
+    if (state.lieutenantGovernorRef) {
+      state.lieutenantGovernorRef = db
+        .collection('leaders')
+        .doc(state.lieutenantGovernorRef.id)
+    }
+    if (state.secretaryOfStateRef) {
+      state.secretaryOfStateRef = db
+        .collection('leaders')
+        .doc(state.secretaryOfStateRef.id)
+    }
+    return stateDbParser.parse(state)
   },
 }
 
@@ -50,15 +69,15 @@ export const getStateByStateCode = async (stateCode: StateCode) => {
   return state
 }
 
-export const updateState = async (state: State) => {
-  const updatedState = stateSchema.parse(state)
-
+export const updateState = async (state: State, data: Partial<State>) => {
   return db
     .collection('states')
+    .doc(state.ref.id)
     .withConverter(StateConverter)
-    .doc(state.id)
-    .set(updatedState, { merge: true })
+    .update(data)
 }
+
+// Use this to update all states
 
 // export const updateAllStates = async () => {
 //   const states = await getStates()

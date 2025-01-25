@@ -1,8 +1,7 @@
 import { z } from 'zod'
 import {
-  zodFirestoreDocumentId,
-  zodFirestoreDocumentReference,
   zodFirestoreTimestamp,
+  zodSimpleDocumentRef,
 } from './zod-firestore-schemas'
 import { stateCodeSchema } from './states.schema'
 
@@ -11,9 +10,9 @@ export const leaderUtilitySchema = z.object({
     .string()
     .optional()
     .describe('The permanent link of made up of the name and id'),
-  lastImportDate: zodFirestoreTimestamp.describe(
-    'The date the data was last imported',
-  ),
+  lastImportDate: zodFirestoreTimestamp
+    .or(z.date())
+    .describe('The date the data was last imported'),
   hasPhoto: z
     .boolean()
     .describe('Whether the public official has a photo or not'),
@@ -23,101 +22,148 @@ export const leaderUtilitySchema = z.object({
   ),
 })
 
-export const leaderPersonalSchema = z.object({
+// These need default values for controlled form fields
+// !!! For now keep this manually in sync with the schema in the frontend
+const leaderPersonalSchema = z.object({
   // Personal Information
-  FirstName: z.string().describe('The first name of the public official'),
-  LastName: z.string().describe('The last name of the public official'),
-  LegalName: z.string().describe('The full legal name of the public official'),
+  FirstName: z
+    .string()
+    .default('')
+    .describe('The first name of the public official'),
+  LastName: z
+    .string()
+    .default('')
+    .describe('The last name of the public official'),
+  LegalName: z
+    .string()
+    .default('')
+    .describe('The full legal name of the public official'),
   NickName: z
     .string()
-    .optional()
+    .default('')
     .describe('The nickname of the public official'),
   BirthDate: z
     .string()
+    .default('')
     .describe('The numeric birth day of the month of the public official'),
   BirthMonth: z
     .string()
+    .default('')
     .describe('The numeric birth month of the year of the public official'),
   BirthYear: z
     .string()
+    .default('')
     .describe('The numeric birth year of the public official'),
   BirthPlace: z
     .string()
+    .default('')
     .describe('The city and state of the birthplace of the public official'),
   Gender: z
-    .enum(['M', 'F'])
+    .enum(['', 'M', 'F'])
+    .default('')
     .describe('The biological sex of the public official'),
-
   // Family and Residence
   Marital: z
     .string()
-    .optional()
+    .default('')
     .describe('The marital status of the public official'),
   Spouse: z
     .string()
-    .optional()
+    .default('')
     .describe('The name of the spouse of the public official'),
   Family: z
     .string()
+    .default('')
     .describe('How many children the public official has, if any'),
   Residence: z
     .string()
+    .default('')
     .describe('The city and state of the residence of the public official'),
-
   // Office and Beliefs
-  Title: z.string().describe('The title of the public official'),
-  ElectDate: z.string().describe('The date the public official was elected'),
-  Party: z.string().describe('The political party of the public official'),
+  Title: z.string().default('').describe('The title of the public official'),
+  ElectDate: z
+    .string()
+    .default('')
+    .describe('The date the public official was elected'),
+  Party: z
+    .string()
+    .default('')
+    .describe('The political party of the public official'),
   Religion: z
     .string()
+    .default('')
     .describe('The religious affiliation of the public official'),
-
   // Social Media and Contact
   TwitterHandle: z
     .string()
-    .optional()
+    .default('')
     .describe(
       'The official X (Twitter) platform handle of the public official',
     ),
   Facebook: z
     .string()
-    .optional()
+    .default('')
     .describe('The official Facebook page (URL) of the public official'),
   Website: z
     .string()
-    .optional()
+    .default('')
     .describe('The official website of the public official'),
   Email: z
     .string()
-    .optional()
+    .default('')
     .describe('The official email address of the public official'),
-})
-
-export const leaderAuthoritySchema = z.object({
-  jurisdiction: z
-    .enum(['federal', 'state'])
-    .describe('The jurisdiction (state or federal) of the public official'),
-  branch: z
-    .enum(['executive', 'legislative', 'judicial'])
-    .describe('The branch of government the public official serves in'),
-  federalExecutiveOffice: z
-    .enum(['president', 'vice-president', 'secretary-of-state'])
-    .optional(),
-  stateExecutiveOffice: z
-    .enum(['governor', 'lieutenant-governor', 'secretary-of-state'])
-    .optional(),
-  legislativeChamber: z.enum(['upper', 'lower']).optional(),
 })
 
 /**
  * Structured for querying AI (no utility fields)
  */
-// export const leaderAiQuerySchema = z.object({
-//   name: z.string().min(1, { message: 'Required' }),
-//   age: z.number().min(10),
-// })
-// .merge(leaderPersonalSchema)
-// .merge(leaderAuthoritySchema)
+export const leaderAiQuerySchema = z
+  .object({})
+  .merge(leaderPersonalSchema)
+  .default({})
+
+/** Executive Structure for querying AI
+ *
+ */
+
+export const stateExecutiveStructureSchema = z.object({
+  executiveBranchDescription: z
+    .string()
+    .optional()
+    .describe('One paragraph description of the executive branch of the state'),
+  governor: leaderAiQuerySchema.optional(),
+  lieutenantGovernor: leaderAiQuerySchema.optional(),
+  secretaryOfState: leaderAiQuerySchema.optional(),
+})
+
+/**
+ * Leader authority schema
+ */
+export const jurisdictionSchema = z.enum(['federal', 'state'])
+export const branchSchema = z.enum(['executive', 'legislative', 'judicial'])
+export const federalExecutiveOfficeSchema = z.enum([
+  'president',
+  'vice-president',
+  'secretary-of-state',
+])
+export const stateExecutiveOfficeSchema = z.enum([
+  'governor',
+  'lieutenant-governor',
+  'secretary-of-state',
+])
+export const legislativeChamberSchema = z.enum(['upper', 'lower'])
+// Together they are the authority schema
+export const leaderAuthoritySchema = z.object({
+  jurisdiction: jurisdictionSchema.describe(
+    'The jurisdiction (state or federal) of the public official',
+  ),
+  branch: branchSchema.describe(
+    'The branch of government the public official serves in',
+  ),
+  federalExecutiveOffice: federalExecutiveOfficeSchema.optional(),
+  stateExecutiveOffice: stateExecutiveOfficeSchema.optional(),
+  legislativeChamberSchema: legislativeChamberSchema.optional(),
+})
 
 /**
  * Includes only fields in the database
@@ -139,34 +185,23 @@ export const leaderDbSchema = z
 export const leaderDbParser = leaderDbSchema.superRefine(superRefine)
 
 /**
- * Includes all fields in the database plus id
- * sanitized for serialization
- */
-export const leaderDtoSchema = leaderDbSchema.extend({
-  id: zodFirestoreDocumentId,
-  lastImportDate: z.date(),
-})
-
-/**
  * Includes fields in the database as well as fields added
- * by the Firestore converter
- * DocumentRefs are still objects, but converted to
- * serializable objects in the DTO
+ * or converted by the Firestore converter.
+ * Additional `ref` field is added for the document reference.
+ * Timestamps are converted to Date objects.
+ * DocumentRefs are converted to serializable objects.
  */
 export const leaderSchema = leaderDbSchema.extend({
-  id: zodFirestoreDocumentId,
   lastImportDate: z.date(),
-  dto: leaderDtoSchema,
-  ref: zodFirestoreDocumentReference.describe(
-    'The DocumentReference to this leader',
-  ),
+  ref: zodSimpleDocumentRef,
+  fullname: z.string(),
 })
 
 export const newLeaderSchema = leaderSchema
   .omit({
-    id: true,
-    dto: true,
     ref: true,
+    permaLink: true,
+    fullname: true,
   })
   .extend({
     // id: zodFirestoreDocumentId.optional(),

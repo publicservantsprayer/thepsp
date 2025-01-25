@@ -2,12 +2,11 @@
 
 import { ChatXAI } from '@langchain/xai'
 import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
-import { z } from 'zod'
 import { saveAiRequest } from '@/lib/firebase/firestore/ai-requests'
-import { StateCode } from '@/lib/types'
-import { leaderAiQuerySchema } from '@/lib/firebase/firestore/leaders.schema'
+import { stateExecutiveStructureSchema } from '@/lib/firebase/firestore/leaders.schema'
+import { State } from '@/lib/types'
 
-export async function executiveRequest(query: string, stateCode: StateCode) {
+export async function executiveRequest(query: string, state: State) {
   mustGetCurrentAdmin()
   const model = 'grok-2-1212'
 
@@ -19,7 +18,9 @@ export async function executiveRequest(query: string, stateCode: StateCode) {
     // other params...
   })
 
-  const structuredModel = grok.withStructuredOutput(executiveStructure)
+  const structuredModel = grok.withStructuredOutput(
+    stateExecutiveStructureSchema,
+  )
 
   const response = await structuredModel.invoke(query)
 
@@ -27,21 +28,10 @@ export async function executiveRequest(query: string, stateCode: StateCode) {
     query,
     response,
     type: 'executive',
-    stateCode,
+    stateCode: state.ref.id,
     model,
     createdAt: new Date(),
   })
 
-  return response
+  return stateExecutiveStructureSchema.parse(response)
 }
-
-const executiveStructure = z.object({
-  executiveBranchDescription: z
-    .string()
-    .describe('One paragraph description of the executive branch of the state'),
-  governor: leaderAiQuerySchema,
-  lieutenantGovernor: leaderAiQuerySchema.optional(),
-  secretaryOfState: leaderAiQuerySchema.optional(),
-})
-
-export type ExecutiveStructure = z.infer<typeof executiveStructure>

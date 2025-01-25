@@ -1,5 +1,8 @@
 import { z } from 'zod'
-import { zodFirestoreDocumentReference } from './zod-firestore-schemas'
+import {
+  zodFirestoreDocumentReference,
+  zodSimpleDocumentRef,
+} from './zod-firestore-schemas'
 
 export const stateCodeSchema = z.enum([
   'AL',
@@ -70,18 +73,21 @@ export const stateDbSchema = z.object({
 })
 
 /**
- * Includes all fields in the database plus id
- * sanitized for serialization
+ * Includes fields in the database as well as fields added
+ * or converted by the Firestore converter.
+ * Additional `ref` field is added for the document reference.
+ * Timestamps are converted to Date objects.
+ * DocumentRefs are converted to serializable objects.
  */
-export const stateDtoSchema = stateDbSchema
-  .omit({
-    governorRef: true,
-    lieutenantGovernorRef: true,
-    secretaryOfStateRef: true,
-  })
-  .extend({
+export const stateSchema = stateDbSchema.omit({}).extend({
+  ref: z.object({
     id: stateCodeSchema,
-  })
+    path: z.string(),
+  }),
+  governorRef: zodSimpleDocumentRef.optional(),
+  lieutenantGovernorRef: zodSimpleDocumentRef.optional(),
+  secretaryOfStateRef: zodSimpleDocumentRef.optional(),
+})
 
 /**
  * Includes only fields in the database
@@ -90,9 +96,3 @@ export const stateDtoSchema = stateDbSchema
  * Used for removing non-database fields in the FirestoreDataConverter.
  */
 export const stateDbParser = stateDbSchema
-
-export const stateSchema = stateDbSchema.extend({
-  id: stateCodeSchema,
-  dto: stateDtoSchema,
-  ref: zodFirestoreDocumentReference,
-})

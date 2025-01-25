@@ -5,12 +5,30 @@ import {
   leaderDbSchema,
   leaderAiQuerySchema,
   newLeaderSchema,
+  stateExecutiveStructureSchema,
+  jurisdictionSchema,
+  branchSchema,
+  federalExecutiveOfficeSchema,
+  stateExecutiveOfficeSchema,
+  legislativeChamberSchema,
 } from './leaders.schema'
 
 export type Leader = z.infer<typeof leaderSchema>
 export type LeaderDb = z.infer<typeof leaderDbSchema>
 export type NewLeader = z.infer<typeof newLeaderSchema>
+
+export type Jurisdiction = z.infer<typeof jurisdictionSchema>
+export type Branch = z.infer<typeof branchSchema>
+export type FederalExecutiveOffice = z.infer<
+  typeof federalExecutiveOfficeSchema
+>
+export type StateExecutiveOffice = z.infer<typeof stateExecutiveOfficeSchema>
+export type LegislativeChamber = z.infer<typeof legislativeChamberSchema>
+
 export type LeaderAiQuery = z.infer<typeof leaderAiQuerySchema>
+export type StateExecutiveStructure = z.infer<
+  typeof stateExecutiveStructureSchema
+>
 
 /**
  * @deprecated

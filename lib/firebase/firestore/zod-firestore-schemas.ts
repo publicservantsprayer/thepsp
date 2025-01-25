@@ -1,10 +1,7 @@
 import { DocumentReference, Timestamp } from 'firebase-admin/firestore'
 import { z } from 'zod'
 
-export const zodFirestoreDocumentId = z
-  .string()
-  .length(256)
-  .describe('The unique identifier from the database')
+export const zodFirestoreDocumentId = z.string().length(256)
 
 export const zodFirestoreDocumentReference = z.custom<DocumentReference>(
   (val) => {
@@ -17,7 +14,8 @@ export const zodFirestoreDocumentReference = z.custom<DocumentReference>(
   },
 )
 
-export const zodFirestoreDocumentReferenceDto = z.object({
+// A serializable version of a Firestore document reference
+export const zodSimpleDocumentRef = z.object({
   id: zodFirestoreDocumentId,
   path: z.string(),
 })

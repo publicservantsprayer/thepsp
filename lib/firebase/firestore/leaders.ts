@@ -2,6 +2,7 @@ import {
   QueryDocumentSnapshot,
   FirestoreDataConverter,
   WithFieldValue,
+  Timestamp,
 } from 'firebase-admin/firestore'
 import { db } from '@/lib/firebase/server/admin-app'
 
@@ -14,17 +15,20 @@ type GetLeaders = (args: { stateCode: StateCode }) => Promise<Leader[]>
 export const LeaderConverter: FirestoreDataConverter<Leader, LeaderDb> = {
   fromFirestore: (snapshot: QueryDocumentSnapshot<LeaderDb>): Leader => {
     const data = snapshot.data()
-    const dto = {
-      ...data,
-      id: snapshot.id,
-      lastImportDate: data.lastImportDate.toDate(),
-    }
     return {
       ...data,
-      lastImportDate: data.lastImportDate.toDate(),
-      id: snapshot.id,
-      dto,
-      ref: snapshot.ref,
+      ref: {
+        id: snapshot.id,
+        // The source of truth is always the root leader
+        // so we use the manually use the root path, even if we got this
+        // leader from a state subcollection
+        path: `leaders/${snapshot.id}`,
+      },
+      lastImportDate:
+        data.lastImportDate instanceof Timestamp
+          ? data.lastImportDate.toDate()
+          : data.lastImportDate,
+      fullname: [data.FirstName, data.LastName].join(' '),
     }
   },
   toFirestore: (leader: WithFieldValue<Leader>) => {
@@ -43,6 +47,8 @@ export const saveNewLeader = async (leader: NewLeader) => {
     .withConverter(LeaderConverter)
     .get()
 
+  console.log('path', savedLeaderSnapshot.ref.path)
+
   const savedLeader = savedLeaderSnapshot.data()
 
   if (!savedLeader) {
@@ -50,27 +56,54 @@ export const saveNewLeader = async (leader: NewLeader) => {
   }
 
   const permaLinkName = `${savedLeader.LastName}-${savedLeader.FirstName}`
-    .replace(/[^a-z0-9-]+/gi, '')
+    .split('')
+    .filter((char) => /[a-z0-9-]/i.test(char))
+    .join('')
     .toLowerCase()
 
-  const permaLink = [permaLinkName, savedLeader.id].join('-')
+  const permaLink = [permaLinkName, savedLeader.ref.id].join('-')
   savedLeader.permaLink = permaLink
 
-  await db.collection('leaders').doc(savedLeader.id).update(savedLeader)
+  // console.log({ permaLink })
+
+  await db.collection('leaders').doc(savedLeader.ref.id).update(savedLeader)
 
   return savedLeader
 }
 
 export const saveNewLeaderToStateCollection = async (leader: NewLeader) => {
   const savedLeader = await saveNewLeader(leader)
+
+  // console.log('savedLeader', savedLeader)
   await db
     .collection('states')
-    .doc(leader.stateCode)
+    .doc(savedLeader.stateCode)
     .collection('leaders')
-    .doc(savedLeader.id)
-    .set({ permaLink: leader.permaLink }, { merge: true })
+    .withConverter(LeaderConverter)
+    .doc(savedLeader.ref.id)
+    .create(savedLeader)
+  console.log('saved leader in states')
 
   return savedLeader
+}
+
+export const getLeader = async (leaderRef?: Leader['ref']) => {
+  if (!leaderRef) return
+
+  const docRef = db.doc(leaderRef.path).withConverter(LeaderConverter)
+  const docSnapshot = await docRef.get()
+
+  return docSnapshot.data()
+}
+
+export const mustGetLeader = async (leaderRef: Leader['ref']) => {
+  const leader = await getLeader(leaderRef)
+
+  if (!leader) {
+    throw new Error('Leader not found for ref: ' + leaderRef.path)
+  }
+
+  return leader
 }
 
 export const getLeaders: GetLeaders = async ({ stateCode }) => {
@@ -134,7 +167,7 @@ export const getOrderedLeadersForDailyPost = async (stateCode: StateCode) => {
   const leaderDocs = leadersSnapshot.docs.map((doc) => doc.data())
   const latestPost = postSnapshot.docs[0].data()
   const leader3 = leaderDocs.find(
-    (leader) => leader.id === latestPost.leader3.id,
+    (leader) => leader.ref.id === latestPost.leader3.ref.id,
   )
   if (!leader3) {
     throw new Error(

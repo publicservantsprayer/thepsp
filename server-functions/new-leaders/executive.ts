@@ -1,52 +1,38 @@
 'use server'
 
 import {
-  getStateByStateCode,
   saveNewLeaderToStateCollection,
+  updateState,
 } from '@/lib/firebase/firestore'
 import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
-import {
-  Leader,
-  LeaderAiQuery,
-  LeaderDb,
-  NewLeader,
-  StateCode,
-} from '@/lib/types'
+import { NewLeader, State } from '@/lib/types'
+import { revalidatePath } from 'next/cache'
 
 export const saveNewExecutiveStateLeader = async (
-  leaderData: LeaderAiQuery,
-  stateCode: StateCode,
+  leader: NewLeader,
+  state: State,
 ) => {
   mustGetCurrentAdmin()
 
-  if (
-    leaderData.jurisdiction !== 'state' ||
-    leaderData.branch !== 'executive'
-  ) {
+  if (leader.jurisdiction !== 'state' || leader.branch !== 'executive') {
     throw new Error('Leader is not a state executive')
-  }
-  const leader: NewLeader = {
-    ...leaderData,
-    stateCode,
-    lastImportDate: new Date(),
-    hasPhoto: false,
   }
 
   const savedLeader = await saveNewLeaderToStateCollection(leader)
-  const state = await getStateByStateCode(stateCode)
 
   if (leader.stateExecutiveOffice === 'governor') {
-    await state.ref.update({ governorRef: savedLeader.ref })
+    await updateState(state, { governorRef: savedLeader.ref })
   } else if (leader.stateExecutiveOffice === 'lieutenant-governor') {
-    await state.ref.update({ lieutenantGovernorRef: savedLeader.ref })
+    await updateState(state, { lieutenantGovernorRef: savedLeader.ref })
   } else if (leader.stateExecutiveOffice === 'secretary-of-state') {
-    await state.ref.update({ secretaryOfStateRef: savedLeader.ref })
+    await updateState(state, { secretaryOfStateRef: savedLeader.ref })
   } else {
     throw new Error(
       'Leader does not hold a state executive office: ' +
         leader.stateExecutiveOffice,
     )
   }
+  revalidatePath('/psp-admin/states')
 
-  return savedLeader
+  return { success: true }
 }

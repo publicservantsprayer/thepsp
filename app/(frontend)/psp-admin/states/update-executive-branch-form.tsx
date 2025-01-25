@@ -19,66 +19,130 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import React from 'react'
-import { LeaderAiQuery, State } from '@/lib/types'
-import { ExecutiveStructure } from '@/server-functions/ai/executive-request'
+import {
+  Branch,
+  Jurisdiction,
+  LeaderAiQuery,
+  State,
+  StateExecutiveOffice,
+  StateExecutiveStructure,
+} from '@/lib/types'
 import { Input } from '@/components/ui/input'
 // import { leaderAiQuerySchema } from '@/lib/firebase/firestore/leaders.schema'
 import { saveNewExecutiveStateLeader } from '@/server-functions/new-leaders/executive'
 import { z } from 'zod'
+import React from 'react'
 
-export function UpdateExecutiveBranchForm({ stateDto, result }: Props) {
-  // return null
-  // const existingGovernor = React.use(get)
+interface Props {
+  state: State
+  result?: StateExecutiveStructure
+  previous: {
+    governor?: LeaderAiQuery
+    lieutenantGovernor?: LeaderAiQuery
+    secretaryOfState?: LeaderAiQuery
+  }
+  jurisdiction: Jurisdiction
+  branch: Branch
+}
 
+export function UpdateExecutiveBranchForm({
+  state,
+  result,
+  previous,
+  branch,
+  jurisdiction,
+}: Props) {
   return (
-    <Accordion type="single" collapsible>
-      <AccordionItem value="info">
-        <AccordionTrigger>{stateDto.name} Governor</AccordionTrigger>
+    <Accordion type="single" collapsible className="pr-4">
+      <AccordionItem value="governor">
+        <AccordionTrigger>{state.name} Governor</AccordionTrigger>
         <AccordionContent>
-          <div className="grid grid-cols-2 gap-4">
-            <LeaderForm stateDto={stateDto} leader={result.governor} disabled />
-            <LeaderForm stateDto={stateDto} leader={result.governor} />
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+            <h2 className="text-center font-semibold text-muted-foreground">
+              Existing Governor
+            </h2>
+            <h2 className="text-center font-semibold text-muted-foreground">
+              AI Result
+            </h2>
+            {!previous.governor && <div>None</div>}
+            <LeaderForm
+              state={state}
+              leader={previous.governor}
+              branch={branch}
+              jurisdiction={jurisdiction}
+              disabled
+            />
+            {!result?.governor && <div>Thinking...</div>}
+            <LeaderForm
+              state={state}
+              leader={result?.governor}
+              branch={branch}
+              jurisdiction={jurisdiction}
+              stateExecutiveOffice="governor"
+            />
           </div>
         </AccordionContent>
       </AccordionItem>
 
-      {stateDto.hasLieutenantGovernor && (
-        <AccordionItem value="leader-1">
-          <AccordionTrigger>
-            {stateDto.name} Lieutenant Governor
-          </AccordionTrigger>
+      {state.hasLieutenantGovernor && (
+        <AccordionItem value="lieutenantGovernor">
+          <AccordionTrigger>{state.name} Lieutenant Governor</AccordionTrigger>
           <AccordionContent>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+              <h2 className="text-center font-semibold text-muted-foreground">
+                Existing Lieutenant Governor
+              </h2>
+              <h2 className="text-center font-semibold text-muted-foreground">
+                AI Result
+              </h2>
+              {!previous.lieutenantGovernor && <div>None</div>}
               <LeaderForm
-                stateDto={stateDto}
-                leader={result.governor}
+                state={state}
+                leader={previous.lieutenantGovernor}
+                branch={branch}
+                jurisdiction={jurisdiction}
                 disabled
               />
+              {!result?.lieutenantGovernor && <div>Thinking...</div>}
               <LeaderForm
-                stateDto={stateDto}
-                leader={result.lieutenantGovernor}
+                state={state}
+                leader={result?.lieutenantGovernor}
+                branch={branch}
+                jurisdiction={jurisdiction}
+                stateExecutiveOffice="lieutenant-governor"
               />
             </div>
           </AccordionContent>
         </AccordionItem>
       )}
 
-      {stateDto.hasSecretaryOfState && (
-        <AccordionItem value="leader-1">
-          <AccordionTrigger>
-            {stateDto.name} Secretary of State
-          </AccordionTrigger>
+      {state.hasSecretaryOfState && (
+        <AccordionItem value="secretaryOfState">
+          <AccordionTrigger>{state.name} Secretary of State</AccordionTrigger>
           <AccordionContent>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+              <h2 className="text-center font-semibold text-muted-foreground">
+                Existing Secretary of State
+              </h2>
+
+              <h2 className="text-center font-semibold text-muted-foreground">
+                AI Result
+              </h2>
+              {!previous.secretaryOfState && <div>None</div>}
               <LeaderForm
-                stateDto={stateDto}
-                leader={result.governor}
+                state={state}
+                leader={previous.secretaryOfState}
+                branch={branch}
+                jurisdiction={jurisdiction}
                 disabled
               />
+              {!result?.secretaryOfState && <div>Thinking...</div>}
               <LeaderForm
-                stateDto={stateDto}
-                leader={result.secretaryOfState}
+                state={state}
+                leader={result?.secretaryOfState}
+                branch={branch}
+                jurisdiction={jurisdiction}
+                stateExecutiveOffice="secretary-of-state"
               />
             </div>
           </AccordionContent>
@@ -90,56 +154,79 @@ export function UpdateExecutiveBranchForm({ stateDto, result }: Props) {
 
 type NameType = keyof LeaderAiQuery
 type UseFormType = UseFormReturn<LeaderAiQuery>
-const leaderAiQuerySchema = z.object({
-  name: z.string().min(1, { message: 'Required' }),
-  age: z.number().min(10),
-})
-
-const schema = z.object({
-  name: z.string().min(1, { message: 'Required' }),
-  age: z.number().min(10),
-})
-interface Props {
-  stateDto: State['dto']
-  result: ExecutiveStructure
-}
 
 interface LeaderFormProps {
-  stateDto: State['dto']
-  leader: ExecutiveStructure[
-    | 'governor'
-    | 'lieutenantGovernor'
-    | 'secretaryOfState']
+  state: State
+  leader?: LeaderAiQuery
+  jurisdiction: Jurisdiction
+  branch: Branch
+  stateExecutiveOffice?: StateExecutiveOffice
   disabled?: boolean
 }
 
-function LeaderForm({ stateDto, leader, disabled }: LeaderFormProps) {
+function LeaderForm({
+  state,
+  leader,
+  branch,
+  jurisdiction,
+  stateExecutiveOffice,
+  disabled,
+}: LeaderFormProps) {
   const { toast } = useToast()
+  const [leaderSaved, setLeaderSaved] = React.useState(false)
 
   const form = useForm<LeaderAiQuery>({
-    resolver: zodResolver(leaderAiQuerySchema),
-    // resolver: zodResolver(schema),
-    defaultValues: {
-      ...leader,
-    },
+    // Importing the schema from a leaders.schema file causes a crash
+    // resolver: zodResolver(leaderAiQuerySchema),
+    // So we define the schema in this file for now...
+    resolver: zodResolver(localLeaderAiQuerySchema),
+    defaultValues: leader,
   })
 
+  React.useEffect(() => {
+    if (!leader) return
+
+    form.reset(leader)
+  }, [form, leader])
+
   async function onSubmit(data: LeaderAiQuery) {
-    toast({
-      title: 'Saving new leader info...',
-      // description: data.Gender,
-    })
-    await saveNewExecutiveStateLeader(data, stateDto.id)
+    const result = await saveNewExecutiveStateLeader(
+      {
+        ...data,
+        branch,
+        jurisdiction,
+        stateExecutiveOffice,
+        stateCode: state.ref.id,
+        lastImportDate: new Date(),
+        hasPhoto: false,
+      },
+      state,
+    )
+    if (result.success) {
+      setLeaderSaved(true)
+      toast({
+        title: 'Success',
+        description: 'New leader info saved successfully.',
+      })
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to save leader info.',
+      })
+    }
   }
 
   if (!leader) return null
+
+  const formSubmitted = form.formState.isSubmitted
 
   return (
     <>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-0"
+          className="w-full space-y-0 pr-2"
         >
           {Object.keys(leader).map((key) => {
             const name = key as NameType
@@ -158,9 +245,10 @@ function LeaderForm({ stateDto, leader, disabled }: LeaderFormProps) {
                 type="submit"
                 className=""
                 loading={form.formState.isSubmitting}
-                disabled={form.formState.isSubmitting}
+                disabled={formSubmitted}
               >
-                Save Leader Info
+                {!leaderSaved && 'Save Leader Info'}
+                {leaderSaved && 'Leader Saved'}
               </Button>
             </div>
           )}
@@ -182,7 +270,9 @@ function FieldInput({ name, form, disabled }: FormFieldProps) {
       name={name}
       render={({ field }) => (
         <FormItem className="grid grid-cols-[auto,1fr] items-baseline gap-2">
-          <FormLabel className="w-24 text-right text-xs">{name}</FormLabel>
+          <FormLabel className="w-24 text-right text-xs text-muted-foreground">
+            {name}
+          </FormLabel>
           <div className="flex flex-col">
             <FormControl>
               <Input
@@ -198,3 +288,104 @@ function FieldInput({ name, form, disabled }: FormFieldProps) {
     />
   )
 }
+
+// !!!!!!!!!!!!!!!!!!!!!!
+// These are copied verbatim from the leader schema file
+// if imported, everything blows up.
+// !!!!!!!!!!!!!!!!!!!!!!
+
+// These need default values for controlled form fields
+const leaderPersonalSchema = z.object({
+  // Personal Information
+  FirstName: z
+    .string()
+    .default('')
+    .describe('The first name of the public official'),
+  LastName: z
+    .string()
+    .default('')
+    .describe('The last name of the public official'),
+  LegalName: z
+    .string()
+    .default('')
+    .describe('The full legal name of the public official'),
+  NickName: z
+    .string()
+    .default('')
+    .describe('The nickname of the public official'),
+  BirthDate: z
+    .string()
+    .default('')
+    .describe('The numeric birth day of the month of the public official'),
+  BirthMonth: z
+    .string()
+    .default('')
+    .describe('The numeric birth month of the year of the public official'),
+  BirthYear: z
+    .string()
+    .default('')
+    .describe('The numeric birth year of the public official'),
+  BirthPlace: z
+    .string()
+    .default('')
+    .describe('The city and state of the birthplace of the public official'),
+  Gender: z
+    .enum(['', 'M', 'F'])
+    .default('')
+    .describe('The biological sex of the public official'),
+  // Family and Residence
+  Marital: z
+    .string()
+    .default('')
+    .describe('The marital status of the public official'),
+  Spouse: z
+    .string()
+    .default('')
+    .describe('The name of the spouse of the public official'),
+  Family: z
+    .string()
+    .default('')
+    .describe('How many children the public official has, if any'),
+  Residence: z
+    .string()
+    .default('')
+    .describe('The city and state of the residence of the public official'),
+  // Office and Beliefs
+  Title: z.string().default('').describe('The title of the public official'),
+  ElectDate: z
+    .string()
+    .default('')
+    .describe('The date the public official was elected'),
+  Party: z
+    .string()
+    .default('')
+    .describe('The political party of the public official'),
+  Religion: z
+    .string()
+    .default('')
+    .describe('The religious affiliation of the public official'),
+  // Social Media and Contact
+  TwitterHandle: z
+    .string()
+    .default('')
+    .describe(
+      'The official X (Twitter) platform handle of the public official',
+    ),
+  Facebook: z
+    .string()
+    .default('')
+    .describe('The official Facebook page (URL) of the public official'),
+  Website: z
+    .string()
+    .default('')
+    .describe('The official website of the public official'),
+  Email: z
+    .string()
+    .default('')
+    .describe('The official email address of the public official'),
+})
+
+const localLeaderAiQuerySchema = z
+  .object({})
+  .merge(leaderPersonalSchema)
+  .default({})

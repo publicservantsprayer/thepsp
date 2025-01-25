@@ -73,3 +73,9 @@ env:
     secret: langsmithApiKey
   - variable: LANGSMITH_PROJECT
     value: PSP
+
+  # Algolia
+  - variable: ALGOLIA_APP_ID
+    value: 99QQZQ3D2P
+  - variable: ALGOLIA_ADMIN_API_KEY
+    secret: algoliaAdminApiKey

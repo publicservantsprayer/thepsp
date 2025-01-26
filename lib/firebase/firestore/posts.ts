@@ -4,6 +4,7 @@ import {
 } from 'firebase-admin/firestore'
 import { db } from '@/lib/firebase/server/admin-app'
 import { Post, PostDb, StateCode } from '@/lib/types'
+import { postSchemaParser } from './posts.schema'
 
 export const PostConverter: FirestoreDataConverter<Post> = {
   fromFirestore: (snapshot: QueryDocumentSnapshot<PostDb>) => {
@@ -23,9 +24,7 @@ export const PostConverter: FirestoreDataConverter<Post> = {
     }
   },
   toFirestore: (doc) => {
-    delete doc.id
-    // delete doc.dto
-    return doc
+    return postSchemaParser.parse(doc)
   },
 }
 

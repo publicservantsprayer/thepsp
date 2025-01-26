@@ -18,11 +18,13 @@ import {
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { Textarea } from '@/components/ui/textarea'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 
 const FormSchema = z.object({
   query: z.string().min(4, {
     message: 'Username must be at least 4 characters.',
   }),
+  imgType: z.enum(['face', 'photo']),
 })
 
 export function SearchLeaderForm({ query }: { query: string }) {
@@ -33,6 +35,7 @@ export function SearchLeaderForm({ query }: { query: string }) {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       query: query || '',
+      imgType: 'face',
     },
   })
 
@@ -41,7 +44,7 @@ export function SearchLeaderForm({ query }: { query: string }) {
     router.push('/psp-admin/leader-photo-search?' + urlSearchParams.toString())
     toast({
       title: 'Searching Google for Image:',
-      description: data.query,
+      // description: JSON.stringify(data),
     })
   }
 
@@ -55,11 +58,7 @@ export function SearchLeaderForm({ query }: { query: string }) {
             <FormItem>
               <FormLabel>Leader Name and Office</FormLabel>
               <FormControl>
-                <Textarea
-                  // placeholder="Department of Government Efficiency Co-leader Elon Musk"
-                  className="resize-none"
-                  {...field}
-                />
+                <Textarea className="resize-none" {...field} />
               </FormControl>
               <FormDescription>
                 The name and office the leader holds.
@@ -68,6 +67,25 @@ export function SearchLeaderForm({ query }: { query: string }) {
             </FormItem>
           )}
         />
+        <FormItem>
+          <FormControl>
+            <FormField
+              control={form.control}
+              name="imgType"
+              render={({ field }) => (
+                <ToggleGroup
+                  type="single"
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <ToggleGroupItem value="face">Face</ToggleGroupItem>
+                  <ToggleGroupItem value="photo">Photo</ToggleGroupItem>
+                </ToggleGroup>
+              )}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
         <Button type="submit" className="w-full">
           Search
         </Button>

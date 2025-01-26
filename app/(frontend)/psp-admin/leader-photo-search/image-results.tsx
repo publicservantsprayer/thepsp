@@ -23,7 +23,7 @@ import { Code } from '@/payload/blocks/Code/Component.client'
 import { SearchLeaderForm } from './search-leader-form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
-  GoogleImageSearchResponse,
+  ImgType,
   performGoogleImageSearch,
 } from './perform-google-image-search'
 import Link from 'next/link'
@@ -34,11 +34,14 @@ import { Title } from '@/components/psp-admin/title'
 export async function ImageResponse({
   query,
   page,
+  imgType,
 }: {
   query: string
+  imgType: ImgType
   page?: string
 }) {
-  const response = await performGoogleImageSearch(query, page)
+  const response = await performGoogleImageSearch(query, imgType, page)
+  console.log(response?.data.items)
 
   return (
     <div className="container">
@@ -52,7 +55,7 @@ export async function ImageResponse({
           </TabsList>
           <TabsContent value="results">
             <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
-              {query && <ImageResults items={response.data.items} />}
+              {query && <ImageResults items={response?.data.items} />}
             </div>
             <div className="flex justify-center p-4">
               <LoadMoreLink />
@@ -90,11 +93,24 @@ export async function ImageResponse({
 function ImageResults({
   items,
 }: {
-  items: GoogleImageSearchResponse['data']['items']
+  items: Awaited<ReturnType<typeof performGoogleImageSearch>> extends undefined
+    ? never
+    : NonNullable<
+        Awaited<ReturnType<typeof performGoogleImageSearch>>
+      >['data']['items']
 }) {
+  if (!items) {
+    return <div>No results</div>
+  }
   return (
     <>
       {items.map((item, i) => {
+        if (!item.image?.contextLink) {
+          return null
+        }
+        const extension = item.image.contextLink.split('.').pop()?.toLowerCase()
+        const isPdf = extension === 'pdf'
+        console.log(extension)
         return (
           <Card key={i} className="bg-card/40">
             <CardHeader>
@@ -118,21 +134,27 @@ function ImageResults({
                     src={item.image.thumbnailLink}
                     height={item.image.thumbnailHeight}
                     width={item.image.thumbnailWidth}
-                    alt={item.title}
+                    alt={item.title!}
                     // className="object-cover"
                   />
+                  {isPdf && (
+                    <span className="mt-1 block text-xs">(Image in PDF)</span>
+                  )}
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>{item.title}</DialogTitle>
                     <DialogDescription>
-                      <img
-                        src={item.link}
-                        height={item.image.height}
-                        width={item.image.width}
-                        alt={item.title}
-                        // className="object-cover"
-                      />
+                      {isPdf && <span className="text-xs">(Image in PDF)</span>}
+                      {!isPdf && (
+                        <img
+                          src={item.link!}
+                          height={item.image.height}
+                          width={item.image.width}
+                          alt={item.title!}
+                          // className="object-cover"
+                        />
+                      )}
                     </DialogDescription>
                   </DialogHeader>
 
@@ -147,9 +169,15 @@ function ImageResults({
                       </Button>
                     </DialogClose>
 
-                    <Button type="button" variant="default" className="flex-1">
-                      Use this Photo
-                    </Button>
+                    {!isPdf && (
+                      <Button
+                        type="button"
+                        variant="default"
+                        className="flex-1"
+                      >
+                        Use this Photo
+                      </Button>
+                    )}
                   </DialogFooter>
                 </DialogContent>
               </Dialog>

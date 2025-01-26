@@ -5,10 +5,20 @@ const search = google.customsearch('v1')
 const apiKey = process.env.GOOGLE_CUSTOM_SEARCH_API_KEY
 const searchEngineId = process.env.GOOGLE_CUSTOM_SEARCH_ENGINE_ID
 
+export type ImgType =
+  | 'clipart' // Clipart-style images only.
+  | 'face' // Images of faces only.
+  | 'lineart' // Line art images only.
+  | 'stock' // Stock images only.
+  | 'photo' // Photo images only.
+  | 'animated' // Animated images only.
+
 export const performGoogleImageSearch = async (
   query: string,
+  imgType: ImgType,
   page: string = '1',
 ) => {
+  console.log('Performing Google Image Search', query, imgType, page)
   const imageSearch = async (q: string, page?: string) => {
     if (Number(page) < 1 && Number(page) > 10) {
       throw new Error('Page number must be between 1 and 10')
@@ -22,32 +32,30 @@ export const performGoogleImageSearch = async (
       q,
       cx: searchEngineId,
       auth: apiKey,
-      // clipart 	Clipart-style images only.
-      // face 	Images of faces only.
-      // lineart 	Line art images only.
-      // stock 	Stock images only.
-      // photo 	Photo images only.
-      // animated 	Animated images only.
-      imgType: 'face',
+      imgType,
       searchType: 'image',
       num: 10,
       start: pageIndex * 10 + 1, // 1, 11, 21, 31, 41, 51, 61, 71, 81, 91 - but not more than 100
     })
   }
 
-  const cachedImageSearch = async (query: string, page: string) =>
-    unstable_cache(imageSearch, [query, page], {
+  const cachedImageSearch = async (
+    query: string,
+    imgType: ImgType,
+    page: string,
+  ) =>
+    unstable_cache(imageSearch, [query, imgType, page], {
       revalidate: 60 * 60 * 24,
     })(query, page)
 
   let response
 
   if (query) {
-    response = await cachedImageSearch(query, '1')
+    response = await cachedImageSearch(query, imgType, '1')
     console.log('Adding page', 1)
     for (let i = 2; i <= Number(page); i++) {
       console.log('Adding page', i)
-      const nthResponse = await cachedImageSearch(query, String(i))
+      const nthResponse = await cachedImageSearch(query, imgType, String(i))
       if (
         !response?.data?.items ||
         !nthResponse.data.items ||

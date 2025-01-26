@@ -32,7 +32,7 @@ export const performGoogleImageSearch = async (
       searchType: 'image',
       num: 10,
       start: pageIndex * 10 + 1, // 1, 11, 21, 31, 41, 51, 61, 71, 81, 91 - but not more than 100
-    }) as unknown as GoogleImageSearchResponse
+    })
   }
 
   const cachedImageSearch = async (query: string, page: string) =>
@@ -40,7 +40,7 @@ export const performGoogleImageSearch = async (
       revalidate: 60 * 60 * 24,
     })(query, page)
 
-  let response: GoogleImageSearchResponse
+  let response
 
   if (query) {
     response = await cachedImageSearch(query, '1')
@@ -48,130 +48,22 @@ export const performGoogleImageSearch = async (
     for (let i = 2; i <= Number(page); i++) {
       console.log('Adding page', i)
       const nthResponse = await cachedImageSearch(query, String(i))
-      if (nthResponse.data.items.length === 0) {
+      if (
+        !response?.data?.items ||
+        !nthResponse.data.items ||
+        nthResponse.data.items.length === 0
+      ) {
         break
       }
-      response.data.items = [...response.data.items, ...nthResponse.data.items]
+      console.log(typeof nthResponse.data.items)
+      response.data.items = [
+        ...(response.data.items || []),
+        ...(nthResponse.data.items || []),
+      ]
     }
-  } else {
-    response = {
-      data: {
-        items: [],
-      },
-    } as unknown as GoogleImageSearchResponse
   }
 
   return response
-}
-
-export interface GoogleImageSearchResponse {
-  config: {
-    url: string
-    method: string
-    apiVersion: string
-    userAgentDirectives: Array<{
-      product: string
-      version: string
-      comment: string
-    }>
-    headers: {
-      'x-goog-api-client': string
-      'Accept-Encoding': string
-      'User-Agent': string
-    }
-    params: {
-      q: string
-      cx: string
-      imgType: string
-      searchType: string
-      start: number
-      key: string
-    }
-    retry: boolean
-    responseType: string
-  }
-  data: {
-    kind: string
-    url: {
-      type: string
-      template: string
-    }
-    queries: {
-      request: Array<{
-        title: string
-        totalResults: string
-        searchTerms: string
-        count: number
-        startIndex: number
-        inputEncoding: string
-        outputEncoding: string
-        safe: string
-        cx: string
-        searchType: string
-        imgType: string
-      }>
-      nextPage: Array<{
-        title: string
-        totalResults: string
-        searchTerms: string
-        count: number
-        startIndex: number
-        inputEncoding: string
-        outputEncoding: string
-        safe: string
-        cx: string
-        searchType: string
-        imgType: string
-      }>
-    }
-    context: {
-      title: string
-    }
-    searchInformation: {
-      searchTime: number
-      formattedSearchTime: string
-      totalResults: string
-      formattedTotalResults: string
-    }
-    items: Array<{
-      kind: string
-      title: string
-      htmlTitle: string
-      link: string
-      displayLink: string
-      snippet: string
-      htmlSnippet: string
-      mime: string
-      fileFormat: string
-      image: {
-        contextLink: string
-        height: number
-        width: number
-        byteSize: number
-        thumbnailLink: string
-        thumbnailHeight: number
-        thumbnailWidth: number
-      }
-    }>
-  }
-  headers: {
-    'alt-svc': string
-    connection: string
-    'content-encoding': string
-    'content-type': string
-    date: string
-    server: string
-    'transfer-encoding': string
-    vary: string
-    'x-content-type-options': string
-    'x-frame-options': string
-    'x-xss-protection': string
-  }
-  status: number
-  statusText: string
-  request: {
-    responseURL: string
-  }
 }
 
 /*

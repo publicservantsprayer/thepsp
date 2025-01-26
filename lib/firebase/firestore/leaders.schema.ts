@@ -11,7 +11,6 @@ import { stateCodeSchema } from './states.schema'
 export const leaderUtilitySchema = z.object({
   permaLink: z
     .string()
-    .optional()
     .describe('The permanent link of made up of the name and id'),
   lastImportDate: zodFirestoreTimestamp
     .or(z.date())

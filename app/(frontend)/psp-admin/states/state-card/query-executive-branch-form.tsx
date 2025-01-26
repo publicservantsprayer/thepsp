@@ -32,7 +32,7 @@ import {
   State,
   StateExecutiveStructure,
 } from '@/lib/types'
-import { PreviousStateExecutiveLeaders } from './page'
+import { PreviousStateExecutiveLeaders } from '.'
 
 const FormSchema = z.object({
   query: z.string().min(4, {

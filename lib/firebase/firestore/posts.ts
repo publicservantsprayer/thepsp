@@ -3,17 +3,23 @@ import {
   FirestoreDataConverter,
 } from 'firebase-admin/firestore'
 import { db } from '@/lib/firebase/server/admin-app'
-import { Post, PostDbType, StateCode } from '@/lib/types'
+import { Post, PostDb, StateCode } from '@/lib/types'
 
 export const PostConverter: FirestoreDataConverter<Post> = {
-  fromFirestore: (snapshot: QueryDocumentSnapshot<PostDbType>) => {
+  fromFirestore: (snapshot: QueryDocumentSnapshot<PostDb>) => {
     const data = snapshot.data()
     return {
       ...data,
       leader1: JSON.parse(JSON.stringify(data.leader1)),
       leader2: JSON.parse(JSON.stringify(data.leader2)),
       leader3: JSON.parse(JSON.stringify(data.leader3)),
-      id: snapshot.id,
+      ref: {
+        id: snapshot.id,
+        // The source of truth is always the root leader
+        // so we use the manually use the root path, even if we got this
+        // leader from a state subcollection
+        path: `leaders/${snapshot.id}`,
+      },
     }
   },
   toFirestore: (doc) => {

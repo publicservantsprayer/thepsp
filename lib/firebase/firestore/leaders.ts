@@ -167,11 +167,11 @@ export const getOrderedLeadersForDailyPost = async (stateCode: StateCode) => {
   const leaderDocs = leadersSnapshot.docs.map((doc) => doc.data())
   const latestPost = postSnapshot.docs[0].data()
   const leader3 = leaderDocs.find(
-    (leader) => leader.ref.id === latestPost.leader3.ref.id,
+    (leader) => leader.permaLink === latestPost.leader3.permaLink,
   )
   if (!leader3) {
     throw new Error(
-      'No leader3 found for ' + stateCode + ' post: ' + latestPost.id,
+      'No leader3 found for ' + stateCode + ' post: ' + latestPost.dateID,
     )
   }
   const leader3Index = leaderDocs.indexOf(leader3)

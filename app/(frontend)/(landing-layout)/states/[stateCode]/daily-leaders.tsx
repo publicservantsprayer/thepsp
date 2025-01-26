@@ -1,12 +1,9 @@
 import React from 'react'
 
 import { notFound } from 'next/navigation'
-import type { Post, StateCode } from '@/lib/types'
-import type { Leader } from '@/lib/types'
-
+import type { Post, PostLeader, StateCode } from '@/lib/types'
 import { SiFacebook, SiX } from 'react-icons/si'
 import { MdEmail } from 'react-icons/md'
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import moment from 'moment'
 import { getHistoricalPost, getLatestPost } from '@/lib/firebase/firestore'
@@ -102,7 +99,7 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
   )
 }
 
-function LeaderPhoto({ leader }: { leader: Leader }) {
+function LeaderPhoto({ leader }: { leader: PostLeader }) {
   if (!leader) return null
 
   return (

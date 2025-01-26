@@ -1,12 +1,7 @@
-import { Leader } from '@/lib/types'
+import { postLeaderSchema, postSchema } from './posts.schema'
+import { z } from 'zod'
 
-export interface PostDbType {
-  dateID: string // 'YYYY-MM-DD'
-  leader1: Leader
-  leader2: Leader
-  leader3: Leader
-}
+export type Post = z.infer<typeof postSchema>
+export type PostDb = z.infer<typeof postSchema>
 
-export interface Post extends PostDbType {
-  id: string
-}
+export type PostLeader = z.infer<typeof postLeaderSchema>

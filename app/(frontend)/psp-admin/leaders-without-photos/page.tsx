@@ -22,7 +22,6 @@ export default async function LeadersPage() {
   await mustGetCurrentAdmin()
 
   const getStateLeadersObj = async () => {
-    console.log('!!!!!!!!!!!! actually doing search')
     const stateLeaderPromises = stateCodes.map(async (stateCode) => {
       const leaders = await getOrderedLeadersForDailyPost(stateCode)
       const stateLeaders = leaders

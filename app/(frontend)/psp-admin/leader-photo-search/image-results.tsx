@@ -41,7 +41,6 @@ export async function ImageResponse({
   page?: string
 }) {
   const response = await performGoogleImageSearch(query, imgType, page)
-  console.log(response?.data.items)
 
   return (
     <div className="container">
@@ -110,7 +109,6 @@ function ImageResults({
         }
         const extension = item.image.contextLink.split('.').pop()?.toLowerCase()
         const isPdf = extension === 'pdf'
-        console.log(extension)
         return (
           <Card key={i} className="bg-card/40">
             <CardHeader>
@@ -135,7 +133,6 @@ function ImageResults({
                     height={item.image.thumbnailHeight}
                     width={item.image.thumbnailWidth}
                     alt={item.title!}
-                    // className="object-cover"
                   />
                   {isPdf && (
                     <span className="mt-1 block text-xs">(Image in PDF)</span>
@@ -152,7 +149,6 @@ function ImageResults({
                           height={item.image.height}
                           width={item.image.width}
                           alt={item.title!}
-                          // className="object-cover"
                         />
                       )}
                     </DialogDescription>

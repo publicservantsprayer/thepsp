@@ -9,6 +9,7 @@ import {
   MenubarContent,
   MenubarItem,
   MenubarMenu,
+  MenubarSeparator,
   MenubarTrigger,
 } from '@/components/ui/menubar'
 import { getStates } from '@/lib/firebase/firestore'
@@ -33,6 +34,8 @@ export default function DefaultLayout({ children }: Props) {
 
 async function PspAdminNavBar() {
   const states = await getStates()
+
+  const usingDevDatabase = !!process.env.FIREBASE_DEV_DATABASE_ID
 
   return (
     <div className="container">
@@ -59,6 +62,7 @@ async function PspAdminNavBar() {
               <Link href="/psp-admin/states">
                 <MenubarItem className="cursor-pointer">All States</MenubarItem>
               </Link>
+              <MenubarSeparator />
               <ScrollArea className="h-[75vh]">
                 {states.map((state) => (
                   <Link
@@ -73,6 +77,11 @@ async function PspAdminNavBar() {
               </ScrollArea>
             </MenubarContent>
           </MenubarMenu>
+          {usingDevDatabase && (
+            <div className="text-xs italic text-destructive">
+              Using Dev Database
+            </div>
+          )}
         </Menubar>
       </div>
     </div>

@@ -23,7 +23,9 @@ import {
   LegislativeChamber,
   State,
 } from '@/lib/types'
-import { DistrictEditDialog } from './district-edit-dialog'
+import { EditDistrictsDialog } from './edit-districts-dialog'
+import React from 'react'
+import { DistrictManageDialog } from './district-manage-dialog'
 
 interface Props {
   params: Promise<{
@@ -125,6 +127,8 @@ function LegislativeBodyCard({
   jurisdiction: Jurisdiction
   legislativeChamber: LegislativeChamber
 }) {
+  let prevDistrictNumber = 0
+
   return (
     <Card>
       <CardHeader>
@@ -136,14 +140,14 @@ function LegislativeBodyCard({
           <TableHeader>
             <TableRow>
               <TableHead className="py-2">
-                <DistrictEditDialog
+                <EditDistrictsDialog
                   state={state}
                   districts={districts}
                   jurisdiction={jurisdiction}
                   legislativeChamber={legislativeChamber}
                 >
                   District
-                </DistrictEditDialog>
+                </EditDistrictsDialog>
               </TableHead>
               <TableHead className="py-2">Name</TableHead>
               <TableHead className="py-2"></TableHead>
@@ -152,13 +156,39 @@ function LegislativeBodyCard({
           </TableHeader>
           <TableBody>
             {districts.map((district, i) => {
-              const leader = findDistrictLeader(leaders, district)
+              const districtLeaders = findDistrictLeaders(leaders, district)
+              const districtNumber = getNumberFromName(district.name)
+              const prevDistrictNumberCopy = prevDistrictNumber
+              const missingOrDuplicate =
+                prevDistrictNumber !== districtNumber - 1
+              prevDistrictNumber = districtNumber
               return (
-                <TableRow key={i}>
-                  <TableCell className="py-2">{district.name}</TableCell>
-                  <TableCell className="py-2">{leader?.fullname}</TableCell>
+                <TableRow
+                  key={i}
+                  className="group"
+                  data-dup={missingOrDuplicate}
+                >
+                  <TableCell className="py-2 group-data-[dup=true]:text-yellow-500">
+                    <DistrictManageDialog
+                      state={state}
+                      district={district}
+                      jurisdiction={jurisdiction}
+                      legislativeChamber={legislativeChamber}
+                    >
+                      {district.name}
+                    </DistrictManageDialog>
+                  </TableCell>
                   <TableCell className="py-2">
-                    {leader?.District} - {leader?.Chamber}
+                    {districtLeaders.map((leader, index) => (
+                      <div key={index}>{leader?.fullname}</div>
+                    ))}
+                  </TableCell>
+                  <TableCell className="py-2">
+                    {districtLeaders.map((leader, index) => (
+                      <div key={index}>
+                        {leader?.District} - {leader?.Chamber}
+                      </div>
+                    ))}
                   </TableCell>
                   <TableCell className="py-2"></TableCell>
                 </TableRow>
@@ -171,24 +201,24 @@ function LegislativeBodyCard({
   )
 }
 
-// split district name, get last part, convert to number, find leader with matching district
-function findDistrictLeader(leaders: Leader[], district: District) {
-  const getNumberFromName = (name: string) => {
-    const lastPart = name.split(' ').pop()
-    return parseInt(lastPart?.replace(/\D/g, '') || '0')
-  }
+// Find the number at the end of the district name
+const getNumberFromName = (name: string) => {
+  const lastPart = name.split(' ').pop()
+  return parseInt(lastPart?.replace(/\D/g, '') || '0')
+}
 
+function findDistrictLeaders(leaders: Leader[], district: District) {
   const districtNumber = getNumberFromName(district.name)
 
-  const leader = leaders.find((leader) => {
+  const districtLeaders = leaders.filter((leader) => {
     const leaderDistrictNumber = getNumberFromName(leader?.District || '')
     return leaderDistrictNumber === districtNumber
   })
 
-  if (!leader) {
+  if (!districtLeaders.length) {
     console.log('no leader found for district: ', district)
   }
-  return leader || null
+  return districtLeaders || null
 }
 
 function filterUSSenate(leaders: Leader[]) {

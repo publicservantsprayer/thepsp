@@ -1,3 +1,8 @@
+/**
+ * Root Leaders
+ * path: leaders/{leaderId}
+ */
+
 import {
   QueryDocumentSnapshot,
   FirestoreDataConverter,
@@ -5,7 +10,6 @@ import {
   Timestamp,
 } from 'firebase-admin/firestore'
 import { db } from '@/lib/firebase/server/admin-app'
-
 import type { Leader, LeaderDb, NewLeader, StateCode } from '@/lib/types'
 import { PostConverter } from './posts'
 import { leaderDbParser } from './leaders.schema'
@@ -17,10 +21,7 @@ export const LeaderConverter: FirestoreDataConverter<Leader> = {
       ...data,
       ref: {
         id: snapshot.id,
-        // The source of truth is always the root leader
-        // so we use the manually use the root path, even if we got this
-        // leader from a state subcollection
-        path: `leaders/${snapshot.id}`,
+        path: snapshot.ref.path,
       },
       lastImportDate:
         data.lastImportDate instanceof Timestamp

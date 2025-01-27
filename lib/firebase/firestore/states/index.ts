@@ -27,6 +27,10 @@ const StateConverter: FirestoreDataConverter<State, StateDb> = {
         id: data.secretaryOfStateRef.id,
         path: data.secretaryOfStateRef.path,
       },
+      usSenateName: 'U.S. Senate',
+      usSenateFullname: 'United States Senate',
+      usHouseName: 'U.S. House',
+      usHouseFullname: 'United States House of Representatives',
     }
   },
   toFirestore: (state: State) => {

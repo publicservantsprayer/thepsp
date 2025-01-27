@@ -6,6 +6,7 @@ import {
   WithFieldValue,
 } from 'firebase-admin/firestore'
 import { districtDbParser } from './districts.schema'
+import { LeaderConverter } from '../leaders'
 
 export const DistrictConverter: FirestoreDataConverter<District> = {
   fromFirestore: (snapshot: QueryDocumentSnapshot<DistrictDb>): District => {
@@ -49,4 +50,26 @@ export const setNewStateDistrict = async (
   const newDistrictDocRef = await collectionRef.add(district as District)
 
   return newDistrictDocRef
+}
+
+export async function getDistrictLeaders(district: District, state: State) {
+  const districtDocRef = db.doc(district.ref.path)
+
+  const stateLeaderCollectionRef = db.doc(state.ref.path).collection('leaders')
+  const snapshot = await stateLeaderCollectionRef
+    .where('districtRef', '==', districtDocRef)
+    .withConverter(LeaderConverter)
+    .get()
+
+  return snapshot.docs.map((doc) => doc.data())
+}
+
+export const deleteDistrict = async (district: District, state: State) => {
+  const leaders = await getDistrictLeaders(district, state)
+
+  if (leaders.length > 0) {
+    throw new Error('District has leaders')
+  }
+
+  await db.doc(district.ref.path).delete()
 }

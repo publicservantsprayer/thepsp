@@ -4,7 +4,6 @@ import { useToast } from '@/components/hooks/use-toast'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -22,51 +21,66 @@ import {
 import { Input } from '@/components/ui/input'
 
 import { District, Jurisdiction, LegislativeChamber, State } from '@/lib/types'
-import { addNewDistrict } from '@/server-functions/states'
+import { addNewDistrict, serverDeleteDistrict } from '@/server-functions/states'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { SquareX } from 'lucide-react'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-export function DistrictEditDialog({
+export function DistrictManageDialog({
   state,
-  districts,
+  district,
   jurisdiction,
   legislativeChamber,
   children,
 }: {
   state: State
-  districts: District[]
+  district: District
   jurisdiction: Jurisdiction
   legislativeChamber: LegislativeChamber
   children?: React.ReactNode
 }) {
+  const { toast } = useToast()
+
+  const handleRename = (district: District) => async () => {
+    // const result = await serverDeleteDistrict({
+    //   district,
+    //   state,
+    //   revalidatePath:
+    //     '/psp-admin/states/' + state.ref.id.toLowerCase() + '/legislative',
+    // })
+    // if (result.success) {
+    //   toast({
+    //     title: 'District deleted.',
+    //   })
+    // } else {
+    //   toast({
+    //     title: 'Error',
+    //     description: result.error,
+    //   })
+    // }
+  }
+
   return (
     <Dialog>
       <DialogTrigger>{children}</DialogTrigger>
       <DialogContent size="lg">
         <DialogHeader>
-          <DialogTitle>{state.name}</DialogTitle>
+          <DialogTitle>
+            {state.name} - {district.name}
+          </DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-1">
-            {districts.map((district) => (
-              <div
-                key={district.ref.id}
-                className="rounded border p-1 text-center text-xs"
-              >
-                {district.name}
-              </div>
-            ))}
-          </div>
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-1"></div>
         </div>
 
-        <StateForm
+        {/* <StateForm
           state={state}
           districts={districts}
           jurisdiction={jurisdiction}
           legislativeChamber={legislativeChamber}
-        />
+        /> */}
       </DialogContent>
     </Dialog>
   )
@@ -101,7 +115,7 @@ function StateForm({
     form.resetField('name', {
       defaultValue: `District ${districts?.length + 1}`,
     })
-  }, [districts])
+  }, [districts, nextDistrict])
 
   const { toast } = useToast()
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -112,8 +126,7 @@ function StateForm({
   })
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log('submitting', data)
-    const result = await addNewDistrict(
+    await addNewDistrict(
       { name: data.name, jurisdiction, legislativeChamber },
       state,
     )

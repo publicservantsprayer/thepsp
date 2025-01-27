@@ -1,5 +1,5 @@
 import { StateLeaders } from './state-leaders'
-import { getLeaders } from '@/lib/firebase/firestore'
+import { getStateLeaders } from '@/lib/firebase/firestore'
 import { validateStateCode } from '@/lib/get-state-info'
 import { notFound } from 'next/navigation'
 
@@ -16,7 +16,7 @@ export default async function StatePage({ params }: Props) {
 
   if (!stateCode) return notFound()
 
-  const leaders = await getLeaders({
+  const leaders = await getStateLeaders({
     stateCode,
   })
 

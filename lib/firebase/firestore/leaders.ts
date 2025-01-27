@@ -10,9 +10,7 @@ import type { Leader, LeaderDb, NewLeader, StateCode } from '@/lib/types'
 import { PostConverter } from './posts'
 import { leaderDbParser } from './leaders.schema'
 
-type GetLeaders = (args: { stateCode: StateCode }) => Promise<Leader[]>
-
-export const LeaderConverter: FirestoreDataConverter<Leader, LeaderDb> = {
+export const LeaderConverter: FirestoreDataConverter<Leader> = {
   fromFirestore: (snapshot: QueryDocumentSnapshot<LeaderDb>): Leader => {
     const data = snapshot.data()
     return {
@@ -106,11 +104,13 @@ export const mustGetLeader = async (leaderRef: Leader['ref']) => {
   return leader
 }
 
-export const getLeaders: GetLeaders = async ({ stateCode }) => {
+type GetLeaders = (args: { stateCode: StateCode }) => Promise<Leader[]>
+export const getStateLeaders: GetLeaders = async ({ stateCode }) => {
   const collectionRef = db
     .collection('states')
     .doc(stateCode)
     .collection('leaders')
+    .orderBy('District')
   const querySnapshot = await collectionRef.withConverter(LeaderConverter).get()
   if (querySnapshot.empty) {
     console.error('No matching leaders.')

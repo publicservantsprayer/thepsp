@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { getLeader } from '@/lib/firebase/firestore'
+import { getDistricts, getLeader } from '@/lib/firebase/firestore'
 import { Branch, Jurisdiction, LeaderAiQuery, State } from '@/lib/types'
 import {
   Dialog,
@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import React from 'react'
 import { leaderAiQuerySchema } from '@/lib/firebase/firestore/leaders.schema'
 import { QueryExecutiveBranchForm } from './query-executive-branch-form'
+import Link from 'next/link'
 
 interface StateCardProps {
   state: State
@@ -31,10 +32,19 @@ export async function StateCard({ state }: StateCardProps) {
     secretaryOfState: leaderAiQuerySchema.parse(secretaryOfState),
   }
 
+  const districts = await getDistricts(state)
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{state.name}</CardTitle>
+        <CardTitle>
+          <Link
+            href={`/psp-admin/states/${state.ref.id.toLowerCase()}/legislative`}
+            className="hover:underline"
+          >
+            {state.name}
+          </Link>
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <h2 className="text-lg font-semibold">Government Organization</h2>
@@ -79,12 +89,13 @@ export async function StateCard({ state }: StateCardProps) {
           <div className="grid grid-cols-[1fr,auto]">
             <div className="flex items-center">{state.name} Legislative</div>
             <div className="flex items-center justify-end">
-              <BranchUpdateDialog
-                state={state}
-                jurisdiction="state"
-                branch="legislative"
-                previous={previous}
-              />
+              <Link
+                href={`/psp-admin/states/${state.ref.id}/legislative`.toLowerCase()}
+              >
+                <Button variant="link" size="sm" className="">
+                  Update
+                </Button>
+              </Link>
             </div>
           </div>
 

@@ -3,7 +3,7 @@ import {
   zodFirestoreTimestamp,
   zodSimpleDocumentRef,
 } from './zod-firestore-schemas'
-import { stateCodeSchema } from './states.schema'
+import { stateCodeSchema } from './states/states.schema'
 
 // List of fields indexed
 // permaLink,lastImportDate,hasPhoto,stateCode,FirstName,LastName,LegalName,NickName,BirthDate,BirthMonth,BirthYear,BirthPlace,Gender,Marital,Spouse,Family,Residence,ElectDate,Party,Religion,TwitterHandle,Facebook,Website,Email,jurisdiction,branch,federalExecutiveOffice,stateExecutiveOffice,legislativeChamber,Title,stateCode,photoFile
@@ -23,6 +23,8 @@ export const leaderUtilitySchema = z.object({
     'The uppercase, two digit state code where the public official serves',
   ),
   PhotoFile: z.string().optional(),
+
+  // From KnowWho
   District: z.string().optional(),
   DistrictID: z.string().optional(),
   Chamber: z.string().optional(),
@@ -152,8 +154,8 @@ export const stateExecutiveStructureSchema = z.object({
 /**
  * Leader authority schema
  */
-export const jurisdictionSchema = z.enum(['federal', 'state'])
-export const branchSchema = z.enum(['executive', 'legislative', 'judicial'])
+export const jurisdictionSchema = z.enum(['federal', 'state']) // also used in district schema
+export const branchSchema = z.enum(['executive', 'legislative', 'judicial']) // also used in district schema
 export const federalExecutiveOfficeSchema = z.enum([
   'president',
   'vice-president',

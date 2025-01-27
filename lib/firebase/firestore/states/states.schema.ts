@@ -2,7 +2,7 @@ import { z } from 'zod'
 import {
   zodFirestoreDocumentReference,
   zodSimpleDocumentRef,
-} from './zod-firestore-schemas'
+} from '@/lib/firebase/firestore/zod-firestore-schemas'
 
 export const stateCodeSchema = z.enum([
   'AL',
@@ -87,6 +87,8 @@ export const stateSchema = stateDbSchema.extend({
   governorRef: zodSimpleDocumentRef.optional(),
   lieutenantGovernorRef: zodSimpleDocumentRef.optional(),
   secretaryOfStateRef: zodSimpleDocumentRef.optional(),
+  upperChamberName: z.string().optional(),
+  lowerChamberName: z.string().optional(),
 })
 
 /**

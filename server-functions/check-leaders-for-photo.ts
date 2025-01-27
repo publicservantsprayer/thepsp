@@ -1,7 +1,7 @@
 'use server'
 
 import {
-  getLeaders,
+  getStateLeaders,
   mergeUpdateStateLeaderById,
 } from '@/lib/firebase/firestore'
 import { storage } from '@/lib/firebase/server/admin-app'
@@ -14,7 +14,7 @@ export const checkLeadersForPhoto = async (stateCode: StateCode) => {
   const bucket = storage.bucket('repsp123-leaders')
   const result: string[] = []
 
-  const leaders = await getLeaders({ stateCode })
+  const leaders = await getStateLeaders({ stateCode })
 
   const setLeaderHasPhotoFalse = async (id: string) => {
     await mergeUpdateStateLeaderById({

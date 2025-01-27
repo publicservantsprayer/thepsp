@@ -58,7 +58,7 @@ export const getStates = async () => {
   return querySnapshot.docs.map((doc) => doc.data())
 }
 
-export const getStateByStateCode = async (stateCode: StateCode) => {
+export const mustGetState = async (stateCode: StateCode) => {
   const docRef = db.collection('states').doc(stateCode)
   const docSnapshot = await docRef.withConverter(StateConverter).get()
   const state = docSnapshot.data()

@@ -3,7 +3,7 @@
 import { stateCodes } from '@/data/states'
 import {
   getCollectionGroupLeaderByPermaLink,
-  getLeaders,
+  getStateLeaders,
   getRootLeaderById,
 } from '@/lib/firebase/firestore'
 import { storage } from '@/lib/firebase/server/admin-app'
@@ -21,7 +21,7 @@ export const checkLeadersForPhoto = async (stateCode: StateCode) => {
   await Promise.all(
     stateCodes.map(async (stateCode) => {
       // Get leaders without a photo
-      const leaders = await getLeaders({ stateCode })
+      const leaders = await getStateLeaders({ stateCode })
       await Promise.all(
         leaders.map(async (leader) => {
           if (!leader.PhotoFile) {

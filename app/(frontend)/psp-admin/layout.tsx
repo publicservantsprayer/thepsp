@@ -11,6 +11,8 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from '@/components/ui/menubar'
+import { getStates } from '@/lib/firebase/firestore'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 interface Props {
   children: React.ReactNode
@@ -29,7 +31,9 @@ export default function DefaultLayout({ children }: Props) {
   )
 }
 
-function PspAdminNavBar() {
+async function PspAdminNavBar() {
+  const states = await getStates()
+
   return (
     <div className="container">
       <div className="mx-auto flex flex-row items-center justify-between">
@@ -55,6 +59,18 @@ function PspAdminNavBar() {
               <Link href="/psp-admin/states">
                 <MenubarItem className="cursor-pointer">All States</MenubarItem>
               </Link>
+              <ScrollArea className="h-[75vh]">
+                {states.map((state) => (
+                  <Link
+                    key={state.ref.id}
+                    href={`/psp-admin/states/${state.ref.id}/legislative`}
+                  >
+                    <MenubarItem className="cursor-pointer">
+                      {state.name}
+                    </MenubarItem>
+                  </Link>
+                ))}
+              </ScrollArea>
             </MenubarContent>
           </MenubarMenu>
         </Menubar>

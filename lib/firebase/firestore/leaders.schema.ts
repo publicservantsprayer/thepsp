@@ -11,12 +11,12 @@ import { stateCodeSchema } from './states/states.schema'
 export const leaderUtilitySchema = z.object({
   permaLink: z
     .string()
-    .describe('The permanent link of made up of the name and id'),
-  lastImportDate: zodFirestoreTimestamp
-    .or(z.date())
-    .describe('The date the data was last imported'),
+    .default('')
+    .describe('The permanent link made up of the name and id'),
   hasPhoto: z
     .boolean()
+    .default(false)
+    .optional()
     .describe('Whether the public official has a photo or not'),
   photoFile: z.string().optional().describe('The file name of the photo'),
   StateCode: stateCodeSchema.describe(
@@ -122,7 +122,15 @@ const leaderPersonalSchema = z.object({
   Website: z
     .string()
     .default('')
-    .describe('The official website of the public official'),
+    .describe('The official or personal website of the public official'),
+  BallotpediaPage: z
+    .string()
+    .default('')
+    .describe('The ballotpedia.com page of the public official'),
+  WikipediaPage: z
+    .string()
+    .default('')
+    .describe('The wikipedia.com page of the public official'),
   Email: z
     .string()
     .default('')
@@ -137,10 +145,9 @@ export const leaderAiQuerySchema = z
   .merge(leaderPersonalSchema)
   .default({})
 
-/** Executive Structure for querying AI
- *
+/**
+ * Executive Structure for querying AI
  */
-
 export const stateExecutiveStructureSchema = z.object({
   // executiveBranchDescription: z
   //   .string()
@@ -150,6 +157,8 @@ export const stateExecutiveStructureSchema = z.object({
   lieutenantGovernor: leaderAiQuerySchema.optional(),
   secretaryOfState: leaderAiQuerySchema.optional(),
 })
+
+export const singleLeaderAiQuerySchema = leaderAiQuerySchema.optional()
 
 /**
  * Leader authority schema
@@ -186,7 +195,14 @@ export const leaderAuthoritySchema = z.object({
  * Used for removing non-database fields in the FirestoreDataConverter
  */
 export const leaderDbSchema = z
-  .object({})
+  .object({
+    createdAt: zodFirestoreTimestamp.or(z.date()).optional(),
+    updatedAt: zodFirestoreTimestamp.or(z.date()).optional(),
+    lastImportDate: zodFirestoreTimestamp
+      .or(z.date())
+      .optional()
+      .describe('The date the data was last confirmed to hold this office'),
+  })
   .merge(leaderUtilitySchema)
   .merge(leaderPersonalSchema)
   .merge(leaderAuthoritySchema)
@@ -207,7 +223,6 @@ export const leaderDbParser = leaderDbSchema.strip().superRefine(superRefine)
  * DocumentRefs are converted to serializable objects.
  */
 export const leaderSchema = leaderDbSchema.extend({
-  lastImportDate: z.date(),
   ref: zodSimpleDocumentRef,
   fullname: z.string(),
 })

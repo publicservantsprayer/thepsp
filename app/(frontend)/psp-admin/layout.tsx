@@ -67,7 +67,7 @@ async function PspAdminNavBar() {
                 {states.map((state) => (
                   <Link
                     key={state.ref.id}
-                    href={`/psp-admin/states/${state.ref.id}/legislative`}
+                    href={`/psp-admin/states/${state.ref.id.toLowerCase()}/legislative`}
                   >
                     <MenubarItem className="cursor-pointer">
                       {state.name}

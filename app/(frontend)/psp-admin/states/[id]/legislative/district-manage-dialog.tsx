@@ -1,6 +1,5 @@
 'use client'
 
-import { useToast } from '@/components/hooks/use-toast'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -10,58 +9,46 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
-import { District, Jurisdiction, LegislativeChamber, State } from '@/lib/types'
-import { addNewDistrict, serverDeleteDistrict } from '@/server-functions/states'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { SquareX } from 'lucide-react'
+import {
+  District,
+  Jurisdiction,
+  Leader,
+  LeaderAiQuery,
+  LegislativeChamber,
+  State,
+} from '@/lib/types'
 import React from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { LeaderForm, NewLeaderForm } from '@/components/psp-admin/leader-form'
+import { singleLeaderRequest } from '@/server-functions/ai/executive-request'
+import { LeaderAiRequestForm } from '@/components/psp-admin/leader-ai-request-form'
+import { set } from 'date-fns'
+import { useToast } from '@/components/hooks/use-toast'
+import { serverSaveNewStateLeader } from '@/server-functions/new-leaders/new-state-leader'
 
 export function DistrictManageDialog({
   state,
   district,
+  leaders,
   jurisdiction,
   legislativeChamber,
   children,
 }: {
   state: State
   district: District
+  leaders: Leader[]
   jurisdiction: Jurisdiction
   legislativeChamber: LegislativeChamber
   children?: React.ReactNode
 }) {
-  const { toast } = useToast()
-
-  const handleRename = (district: District) => async () => {
-    // const result = await serverDeleteDistrict({
-    //   district,
-    //   state,
-    //   revalidatePath:
-    //     '/psp-admin/states/' + state.ref.id.toLowerCase() + '/legislative',
-    // })
-    // if (result.success) {
-    //   toast({
-    //     title: 'District deleted.',
-    //   })
-    // } else {
-    //   toast({
-    //     title: 'Error',
-    //     description: result.error,
-    //   })
-    // }
-  }
-
   return (
     <Dialog>
       <DialogTrigger>{children}</DialogTrigger>
@@ -71,104 +58,116 @@ export function DistrictManageDialog({
             {state.name} - {district.name}
           </DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-1"></div>
+        <Table>
+          <TableCaption></TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="py-2">Name</TableHead>
+              <TableHead className="py-2"></TableHead>
+              <TableHead className="py-2"></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {leaders.map((leader, i) => {
+              return (
+                <TableRow key={i}>
+                  <TableCell className="py-2 group-data-[dup=true]:text-yellow-500">
+                    {leader.fullname}
+                  </TableCell>
+                  <TableCell className="py-2">{leader?.fullname}</TableCell>
+                  <TableCell className="py-2"></TableCell>
+                  <TableCell className="py-2"></TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+        <div className="flex justify-end">
+          <AddLeaderDialog
+            state={state}
+            district={district}
+            leaders={leaders}
+            jurisdiction={jurisdiction}
+            legislativeChamber={legislativeChamber}
+          >
+            <Button>Add New Leader</Button>
+          </AddLeaderDialog>
         </div>
-
-        {/* <StateForm
-          state={state}
-          districts={districts}
-          jurisdiction={jurisdiction}
-          legislativeChamber={legislativeChamber}
-        /> */}
       </DialogContent>
     </Dialog>
   )
 }
 
-const FormSchema = z.object({
-  name: z.string(),
-})
-
-function StateForm({
+function AddLeaderDialog({
   state,
-  districts,
+  district,
   jurisdiction,
   legislativeChamber,
+  children,
 }: {
   state: State
-  districts: District[]
+  district: District
+  leaders: Leader[]
   jurisdiction: Jurisdiction
   legislativeChamber: LegislativeChamber
+  children?: React.ReactNode
 }) {
-  const [nextDistrict, setNextDistrict] = React.useState(districts?.length || 0)
-
-  // Update field, guessing next district name
-  React.useEffect(() => {
-    console.log('districts: ', districts)
-    if (!districts) return
-    if (districts.length + 1 === nextDistrict) return
-
-    console.log('setting next district to: ', districts?.length + 1)
-    setNextDistrict(districts?.length + 1 || 0)
-
-    form.resetField('name', {
-      defaultValue: `District ${districts?.length + 1}`,
-    })
-  }, [districts, nextDistrict])
-
   const { toast } = useToast()
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      name: `District ${nextDistrict}`,
-    },
-  })
+  const [aiResult, setAiResult] = React.useState<LeaderAiQuery | undefined>()
+  const [leaderDesignation, setLeaderDesignation] = React.useState<string>()
+  const [open, setOpen] = React.useState(false)
+  const onOpenChange = () => {
+    setAiResult(undefined)
+    setLeaderDesignation(undefined)
+    setOpen(!open)
+  }
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
-    await addNewDistrict(
-      { name: data.name, jurisdiction, legislativeChamber },
+  async function onSubmit(leader: NewLeaderForm) {
+    console.log('onsubmit leader: ', leader)
+    const result = await serverSaveNewStateLeader({
+      leader,
       state,
-    )
-    toast({
-      title: 'District added.',
+      revalidatePath: `/psp-admin/states/${state.ref.id.toLowerCase()}/legislative`,
     })
+    if (result.success) {
+      toast({
+        title: 'Success',
+        description: result.newLeader.fullname + ' info saved successfully.',
+      })
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to save leader info.',
+      })
+    }
   }
 
   return (
-    <div>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-6"
-        >
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="">Name</FormLabel>
-                <FormControl>
-                  <Input className="" {...field} />
-                </FormControl>
-                <FormDescription>Name of the district</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent size="default">
+        <DialogHeader>
+          <DialogTitle>Add New Leader</DialogTitle>
+        </DialogHeader>
+        <LeaderForm
+          state={state}
+          district={district}
+          jurisdiction={jurisdiction}
+          legislativeChamber={legislativeChamber}
+          branch="legislative"
+          aiResult={aiResult}
+          setLeaderDesignation={setLeaderDesignation}
+          onSubmit={onSubmit}
+        />
+        {leaderDesignation && (
+          <LeaderAiRequestForm
+            state={state}
+            leaderDesignation={leaderDesignation}
+            setAiResult={setAiResult}
           />
-          <div className="flex space-x-4">
-            <Button
-              type="submit"
-              size="sm"
-              className="w-full text-sm"
-              loading={form.formState.isSubmitting}
-              disabled={form.formState.isSubmitting}
-            >
-              Add District
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+        )}
+      </DialogContent>
+    </Dialog>
   )
 }

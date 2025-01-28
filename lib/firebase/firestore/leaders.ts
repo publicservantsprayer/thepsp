@@ -10,7 +10,7 @@ import {
   Timestamp,
 } from 'firebase-admin/firestore'
 import { db } from '@/lib/firebase/server/admin-app'
-import type { Leader, LeaderDb, NewLeader, StateCode } from '@/lib/types'
+import type { Leader, LeaderDb, NewLeader, State, StateCode } from '@/lib/types'
 import { PostConverter } from './posts'
 import { leaderDbParser } from './leaders.schema'
 
@@ -27,16 +27,29 @@ export const LeaderConverter: FirestoreDataConverter<Leader> = {
         data.lastImportDate instanceof Timestamp
           ? data.lastImportDate.toDate()
           : data.lastImportDate,
+      createdAt:
+        data.createdAt instanceof Timestamp
+          ? data.createdAt.toDate()
+          : data.createdAt,
+      updatedAt:
+        data.updatedAt instanceof Timestamp
+          ? data.updatedAt.toDate()
+          : data.updatedAt,
       fullname: [data.FirstName, data.LastName].join(' '),
     }
   },
   toFirestore: (leader: WithFieldValue<Leader>) => {
+    leader.updatedAt = new Date()
     const dbLeader = leaderDbParser.parse(leader)
     return dbLeader
   },
 }
 
 export const saveNewLeader = async (leader: NewLeader) => {
+  const date = new Date()
+  leader.createdAt = date
+  leader.lastImportDate = date
+
   const savedLeaderDocRef = await db
     .collection('leaders')
     .withConverter(LeaderConverter)
@@ -70,13 +83,15 @@ export const saveNewLeader = async (leader: NewLeader) => {
   return savedLeader
 }
 
-export const saveNewLeaderToStateCollection = async (leader: NewLeader) => {
+export const saveNewLeaderToStateCollection = async (
+  leader: NewLeader,
+  state: State,
+) => {
   const savedLeader = await saveNewLeader(leader)
 
-  // console.log('savedLeader', savedLeader)
   await db
     .collection('states')
-    .doc(savedLeader.StateCode)
+    .doc(state.ref.id)
     .collection('leaders')
     .withConverter(LeaderConverter)
     .doc(savedLeader.ref.id)

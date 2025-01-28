@@ -158,7 +158,6 @@ function LegislativeBodyCard({
             {districts.map((district, i) => {
               const districtLeaders = findDistrictLeaders(leaders, district)
               const districtNumber = getNumberFromName(district.name)
-              const prevDistrictNumberCopy = prevDistrictNumber
               const missingOrDuplicate =
                 prevDistrictNumber !== districtNumber - 1
               prevDistrictNumber = districtNumber
@@ -172,6 +171,7 @@ function LegislativeBodyCard({
                     <DistrictManageDialog
                       state={state}
                       district={district}
+                      leaders={districtLeaders}
                       jurisdiction={jurisdiction}
                       legislativeChamber={legislativeChamber}
                     >

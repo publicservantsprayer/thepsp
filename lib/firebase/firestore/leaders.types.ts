@@ -11,11 +11,14 @@ import {
   federalExecutiveOfficeSchema,
   stateExecutiveOfficeSchema,
   legislativeChamberSchema,
+  newLeaderFormSchema,
 } from './leaders.schema'
 
 export type Leader = z.infer<typeof leaderSchema>
 export type LeaderDb = z.infer<typeof leaderDbSchema>
 export type NewLeader = z.infer<typeof newLeaderSchema>
+
+export type NewLeaderForm = z.infer<typeof newLeaderFormSchema>
 
 export type Jurisdiction = z.infer<typeof jurisdictionSchema>
 export type Branch = z.infer<typeof branchSchema>

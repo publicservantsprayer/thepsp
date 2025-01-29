@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import {
+  zodFirestoreDocumentReference,
   zodFirestoreTimestamp,
   zodSimpleDocumentRef,
 } from './zod-firestore-schemas'
@@ -138,6 +139,13 @@ const leaderPersonalSchema = z.object({
 })
 
 /**
+ * Structured for creating a new leader form
+ */
+export const newLeaderFormSchema = leaderPersonalSchema
+export const emptyNewLeaderWithDefaultValues = leaderPersonalSchema.parse({})
+// console.log('emptyNewLeaderWithDefaultValues', emptyNewLeaderWithDefaultValues)
+
+/**
  * Structured for querying AI (no utility fields)
  */
 export const leaderAiQuerySchema = z
@@ -202,18 +210,11 @@ export const leaderDbSchema = z
       .or(z.date())
       .optional()
       .describe('The date the data was last confirmed to hold this office'),
+    districtRef: zodFirestoreDocumentReference.optional(),
   })
   .merge(leaderUtilitySchema)
   .merge(leaderPersonalSchema)
   .merge(leaderAuthoritySchema)
-
-/**
- * Includes only fields in the database
- * as well as possible zod refinements.
- *
- * Used for removing non-database fields in the FirestoreDataConverter.
- */
-export const leaderDbParser = leaderDbSchema.strip().superRefine(superRefine)
 
 /**
  * Includes fields in the database as well as fields added
@@ -224,6 +225,7 @@ export const leaderDbParser = leaderDbSchema.strip().superRefine(superRefine)
  */
 export const leaderSchema = leaderDbSchema.extend({
   ref: zodSimpleDocumentRef,
+  districtRef: zodSimpleDocumentRef.optional(),
   fullname: z.string(),
 })
 
@@ -241,7 +243,7 @@ export const newLeaderSchema = leaderSchema
   })
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function superRefine(data: any, ctx: z.RefinementCtx) {
+export function leaderDbSuperRefine(data: any, ctx: z.RefinementCtx) {
   // Federal executive requires federalExecutiveOffice
   if (
     data.jurisdiction === 'federal' &&

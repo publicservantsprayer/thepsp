@@ -1,7 +1,7 @@
 'use client'
 
 import { useToast } from '@/components/hooks/use-toast'
-import { LeaderForm, NewLeaderForm } from '@/components/psp-admin/leader-form'
+import { LeaderForm } from '@/components/psp-admin/leader-form'
 import {
   Accordion,
   AccordionContent,
@@ -13,10 +13,13 @@ import {
   Jurisdiction,
   LeaderAiQuery,
   NewLeader,
+  NewLeaderForm,
   State,
+  StateExecutiveOffice,
   StateExecutiveStructure,
 } from '@/lib/types'
-import { saveNewExecutiveStateLeader } from '@/server-functions/new-leaders/executive'
+// TODO: should this be combined with the other saveNewStateLeader function?
+import { serverSaveNewExecutiveStateLeader } from '@/server-functions/new-leaders/executive'
 
 import React from 'react'
 
@@ -41,19 +44,38 @@ export function UpdateExecutiveBranchForm({
 }: Props) {
   const { toast } = useToast()
 
-  async function onSubmit(data: NewLeaderForm) {
-    const result = await saveNewExecutiveStateLeader(data, state)
-    if (result.success) {
-      toast({
-        title: 'Success',
-        description: 'New leader info saved successfully.',
+  const getOnSubmit = ({
+    stateExecutiveOffice,
+  }: {
+    stateExecutiveOffice: StateExecutiveOffice
+  }) => {
+    return async function onSubmit(leaderFormData: NewLeaderForm) {
+      const leader: NewLeader = {
+        ...leaderFormData,
+        jurisdiction,
+        branch,
+        stateExecutiveOffice,
+        StateCode: state.ref.id,
+      }
+
+      const result = await serverSaveNewExecutiveStateLeader({
+        leader,
+        state,
+        revalidatePath: '/states',
       })
-    } else {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to save leader info.',
-      })
+
+      if (result.success) {
+        toast({
+          title: 'Success',
+          description: 'New leader info saved successfully.',
+        })
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Failed to save leader info.',
+        })
+      }
     }
   }
 
@@ -67,25 +89,13 @@ export function UpdateExecutiveBranchForm({
               Existing Governor
             </h2>
             <h2 className="text-center font-semibold text-muted-foreground">
-              AI Result
+              New Governor
             </h2>
-            {!previous.governor && <div>None</div>}
-            <LeaderForm
-              state={state}
-              leader={previous.governor}
-              branch={branch}
-              jurisdiction={jurisdiction}
-              onSubmit={onSubmit}
-              disabled
-            />
-            {!result?.governor && <div>Thinking...</div>}
+            <LeaderForm state={state} leader={previous.governor} disabled />
             <LeaderForm
               state={state}
               leader={result?.governor}
-              branch={branch}
-              jurisdiction={jurisdiction}
-              stateExecutiveOffice="governor"
-              onSubmit={onSubmit}
+              onSubmit={getOnSubmit({ stateExecutiveOffice: 'governor' })}
             />
           </div>
         </AccordionContent>
@@ -100,25 +110,19 @@ export function UpdateExecutiveBranchForm({
                 Existing Lieutenant Governor
               </h2>
               <h2 className="text-center font-semibold text-muted-foreground">
-                AI Result
+                New Lieutenant Governor
               </h2>
-              {!previous.lieutenantGovernor && <div>None</div>}
               <LeaderForm
                 state={state}
                 leader={previous.lieutenantGovernor}
-                branch={branch}
-                jurisdiction={jurisdiction}
                 disabled
-                onSubmit={onSubmit}
               />
-              {!result?.lieutenantGovernor && <div>Thinking...</div>}
               <LeaderForm
                 state={state}
                 leader={result?.lieutenantGovernor}
-                branch={branch}
-                jurisdiction={jurisdiction}
-                stateExecutiveOffice="lieutenant-governor"
-                onSubmit={onSubmit}
+                onSubmit={getOnSubmit({
+                  stateExecutiveOffice: 'lieutenant-governor',
+                })}
               />
             </div>
           </AccordionContent>
@@ -135,25 +139,19 @@ export function UpdateExecutiveBranchForm({
               </h2>
 
               <h2 className="text-center font-semibold text-muted-foreground">
-                AI Result
+                New Secretary of State
               </h2>
-              {!previous.secretaryOfState && <div>None</div>}
               <LeaderForm
                 state={state}
                 leader={previous.secretaryOfState}
-                branch={branch}
-                jurisdiction={jurisdiction}
-                onSubmit={onSubmit}
                 disabled
               />
-              {!result?.secretaryOfState && <div>Thinking...</div>}
               <LeaderForm
                 state={state}
                 leader={result?.secretaryOfState}
-                branch={branch}
-                jurisdiction={jurisdiction}
-                stateExecutiveOffice="secretary-of-state"
-                onSubmit={onSubmit}
+                onSubmit={getOnSubmit({
+                  stateExecutiveOffice: 'secretary-of-state',
+                })}
               />
             </div>
           </AccordionContent>

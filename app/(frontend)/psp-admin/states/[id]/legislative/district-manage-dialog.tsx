@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -24,20 +25,23 @@ import {
   Leader,
   LeaderAiQuery,
   LegislativeChamber,
+  NewLeader,
+  NewLeaderForm,
   State,
 } from '@/lib/types'
 import React from 'react'
-import { LeaderForm, NewLeaderForm } from '@/components/psp-admin/leader-form'
-import { singleLeaderRequest } from '@/server-functions/ai/executive-request'
+import { LeaderForm } from '@/components/psp-admin/leader-form'
 import { LeaderAiRequestForm } from '@/components/psp-admin/leader-ai-request-form'
-import { set } from 'date-fns'
 import { useToast } from '@/components/hooks/use-toast'
 import { serverSaveNewStateLeader } from '@/server-functions/new-leaders/new-state-leader'
+import { SquareX } from 'lucide-react'
+import { DeleteLeaderDialog } from './delete-leader-dialog'
 
 export function DistrictManageDialog({
   state,
   district,
   leaders,
+  oldLeaders,
   jurisdiction,
   legislativeChamber,
   children,
@@ -45,6 +49,7 @@ export function DistrictManageDialog({
   state: State
   district: District
   leaders: Leader[]
+  oldLeaders: Leader[]
   jurisdiction: Jurisdiction
   legislativeChamber: LegislativeChamber
   children?: React.ReactNode
@@ -71,11 +76,27 @@ export function DistrictManageDialog({
             {leaders.map((leader, i) => {
               return (
                 <TableRow key={i}>
-                  <TableCell className="py-2 group-data-[dup=true]:text-yellow-500">
-                    {leader.fullname}
+                  <TableCell className="py-2">
+                    <DeleteLeaderDialog state={state} leader={leader}>
+                      <SquareX size={16} />
+                    </DeleteLeaderDialog>
                   </TableCell>
+                  <TableCell className="py-2">{leader.fullname}</TableCell>
                   <TableCell className="py-2">{leader?.fullname}</TableCell>
                   <TableCell className="py-2"></TableCell>
+                </TableRow>
+              )
+            })}
+            {oldLeaders.map((leader, i) => {
+              return (
+                <TableRow key={i} className="text-muted">
+                  <TableCell className="py-2">
+                    <DeleteLeaderDialog state={state} leader={leader}>
+                      <SquareX size={16} />
+                    </DeleteLeaderDialog>
+                  </TableCell>
+                  <TableCell className="py-2">{leader.fullname}</TableCell>
+                  <TableCell className="py-2">{leader?.fullname}</TableCell>
                   <TableCell className="py-2"></TableCell>
                 </TableRow>
               )
@@ -115,17 +136,26 @@ function AddLeaderDialog({
   const { toast } = useToast()
   const [aiResult, setAiResult] = React.useState<LeaderAiQuery | undefined>()
   const [leaderDesignation, setLeaderDesignation] = React.useState<string>()
+
   const [open, setOpen] = React.useState(false)
-  const onOpenChange = () => {
+  const onOpenChange = (open: boolean) => {
     setAiResult(undefined)
     setLeaderDesignation(undefined)
-    setOpen(!open)
+    setOpen(open)
   }
 
-  async function onSubmit(leader: NewLeaderForm) {
-    console.log('onsubmit leader: ', leader)
+  const onSubmit = async (leaderFormData: NewLeaderForm) => {
+    const newLeader: NewLeader = {
+      ...leaderFormData,
+      jurisdiction,
+      branch: 'legislative',
+      legislativeChamber,
+      districtRef: district.ref,
+      StateCode: state.ref.id,
+    }
+    
     const result = await serverSaveNewStateLeader({
-      leader,
+      leader: newLeader,
       state,
       revalidatePath: `/psp-admin/states/${state.ref.id.toLowerCase()}/legislative`,
     })
@@ -134,6 +164,7 @@ function AddLeaderDialog({
         title: 'Success',
         description: result.newLeader.fullname + ' info saved successfully.',
       })
+      setOpen(false)
     } else {
       toast({
         variant: 'destructive',
@@ -143,21 +174,20 @@ function AddLeaderDialog({
     }
   }
 
+  console.log('render')
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent size="default">
         <DialogHeader>
-          <DialogTitle>Add New Leader</DialogTitle>
+          <DialogTitle>New Leader</DialogTitle>
+          <DialogDescription>Add a new leader.</DialogDescription>
         </DialogHeader>
         <LeaderForm
           state={state}
-          district={district}
-          jurisdiction={jurisdiction}
-          legislativeChamber={legislativeChamber}
-          branch="legislative"
-          aiResult={aiResult}
           setLeaderDesignation={setLeaderDesignation}
+          aiResult={aiResult}
           onSubmit={onSubmit}
         />
         {leaderDesignation && (

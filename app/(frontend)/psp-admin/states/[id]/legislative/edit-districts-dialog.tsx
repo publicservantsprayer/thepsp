@@ -23,10 +23,15 @@ import { Input } from '@/components/ui/input'
 import { District, Jurisdiction, LegislativeChamber, State } from '@/lib/types'
 import { addNewDistrict, serverDeleteDistrict } from '@/server-functions/states'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SquareX } from 'lucide-react'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import {
+  FindLegislativeAiRequestForm,
+  LegislativeDistrictAiResult,
+} from './find-legislative-ai-request-form'
 
 export function EditDistrictsDialog({
   state,
@@ -42,6 +47,9 @@ export function EditDistrictsDialog({
   children?: React.ReactNode
 }) {
   const { toast } = useToast()
+  const [aiResult, setAiResult] = React.useState<
+    LegislativeDistrictAiResult | undefined
+  >()
 
   const handleDelete = (district: District) => async () => {
     const result = await serverDeleteDistrict({
@@ -69,32 +77,52 @@ export function EditDistrictsDialog({
         <DialogHeader>
           <DialogTitle>{state.name}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-1">
-            {districts.map((district) => (
-              <div
-                key={district.ref.id}
-                className="flex items-center rounded border text-sm"
-              >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleDelete(district)}
-                >
-                  <SquareX className="h-[12px] w-[12px]" />
-                </Button>
-                <div className="whitespace-nowrap pr-1">{district.name}</div>
+        <Tabs defaultValue="districts" className="">
+          <TabsList>
+            <TabsTrigger value="districts">Districts</TabsTrigger>
+            <TabsTrigger value="update-leaders">
+              Find Current Leaders
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="districts">
+            <div className="space-y-4">
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-1">
+                {districts.map((district) => (
+                  <div
+                    key={district.ref.id}
+                    className="flex items-center rounded border text-sm"
+                  >
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleDelete(district)}
+                    >
+                      <SquareX className="h-[12px] w-[12px]" />
+                    </Button>
+                    <div className="whitespace-nowrap pr-1">
+                      {district.name}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
 
-        <StateForm
-          state={state}
-          districts={districts}
-          jurisdiction={jurisdiction}
-          legislativeChamber={legislativeChamber}
-        />
+              <StateForm
+                state={state}
+                districts={districts}
+                jurisdiction={jurisdiction}
+                legislativeChamber={legislativeChamber}
+              />
+            </div>
+          </TabsContent>
+          <TabsContent value="update-leaders">
+            <FindLegislativeAiRequestForm
+              state={state}
+              jurisdiction={jurisdiction}
+              legislativeChamber={legislativeChamber}
+              setAiResult={setAiResult}
+            />
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   )

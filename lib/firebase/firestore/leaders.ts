@@ -12,7 +12,22 @@ import {
 import { db } from '@/lib/firebase/server/admin-app'
 import type { Leader, LeaderDb, NewLeader, State, StateCode } from '@/lib/types'
 import { PostConverter } from './posts'
-import { leaderDbParser } from './leaders.schema'
+import { leaderDbSchema, leaderDbSuperRefine } from './leaders.schema'
+
+/**
+ * Used for transforming non-database fields in the FirestoreDataConverter.
+ */
+const leaderDbParser = leaderDbSchema
+  .strip()
+  .superRefine(leaderDbSuperRefine)
+  .transform((data) => {
+    if (data.districtRef) {
+      data.districtRef = db.doc(data.districtRef.path)
+    } else {
+      delete data.districtRef
+    }
+    return data
+  })
 
 export const LeaderConverter: FirestoreDataConverter<Leader> = {
   fromFirestore: (snapshot: QueryDocumentSnapshot<LeaderDb>): Leader => {
@@ -22,6 +37,10 @@ export const LeaderConverter: FirestoreDataConverter<Leader> = {
       ref: {
         id: snapshot.id,
         path: snapshot.ref.path,
+      },
+      districtRef: data.districtRef && {
+        id: data.districtRef.id,
+        path: data.districtRef.path,
       },
       lastImportDate:
         data.lastImportDate instanceof Timestamp
@@ -38,7 +57,7 @@ export const LeaderConverter: FirestoreDataConverter<Leader> = {
       fullname: [data.FirstName, data.LastName].join(' '),
     }
   },
-  toFirestore: (leader: WithFieldValue<Leader>) => {
+  toFirestore: (leader: Leader) => {
     leader.updatedAt = new Date()
     const dbLeader = leaderDbParser.parse(leader)
     return dbLeader
@@ -50,6 +69,11 @@ export const saveNewLeader = async (leader: NewLeader) => {
   leader.createdAt = date
   leader.lastImportDate = date
 
+  if (leader.districtRef) {
+    const path = leader.districtRef.path
+    leader.districtRef = db.doc(path)
+  }
+
   const savedLeaderDocRef = await db
     .collection('leaders')
     .withConverter(LeaderConverter)
@@ -58,8 +82,6 @@ export const saveNewLeader = async (leader: NewLeader) => {
   const savedLeaderSnapshot = await savedLeaderDocRef
     .withConverter(LeaderConverter)
     .get()
-
-  console.log('path', savedLeaderSnapshot.ref.path)
 
   const savedLeader = savedLeaderSnapshot.data()
 
@@ -76,9 +98,12 @@ export const saveNewLeader = async (leader: NewLeader) => {
   const permaLink = [permaLinkName, savedLeader.ref.id].join('-')
   savedLeader.permaLink = permaLink
 
-  // console.log({ permaLink })
-
-  await db.collection('leaders').doc(savedLeader.ref.id).update(savedLeader)
+  await db
+    .collection('leaders')
+    .doc(savedLeader.ref.id)
+    // doc.update does not use toFirestore so here we need to run
+    // it through the parser with the transform
+    .update(leaderDbParser.parse(savedLeader))
 
   return savedLeader
 }
@@ -96,7 +121,6 @@ export const saveNewLeaderToStateCollection = async (
     .withConverter(LeaderConverter)
     .doc(savedLeader.ref.id)
     .create(savedLeader)
-  console.log('saved leader in states')
 
   return savedLeader
 }
@@ -126,7 +150,6 @@ export const getStateLeaders: GetLeaders = async ({ stateCode }) => {
     .collection('states')
     .doc(stateCode)
     .collection('leaders')
-    .orderBy('District')
   const querySnapshot = await collectionRef.withConverter(LeaderConverter).get()
   if (querySnapshot.empty) {
     console.error('No matching leaders.')
@@ -241,7 +264,27 @@ export const mergeUpdateStateLeaderById = async ({
     .doc(stateCode)
     .collection('leaders')
     .doc(id)
+  // set does use toFirestore
   await doc.set(data, { merge: true })
+}
+
+export const deleteLeaderFromStateCollectionOnly = async ({
+  leader,
+  state,
+}: {
+  leader: Leader
+  state: State
+}) => {
+  await db
+    .collection('states')
+    .doc(state.ref.id)
+    .collection('leaders')
+    .doc(leader.ref.id)
+    .delete()
+}
+
+export const deleteLeaderFromRootCollection = async (leader: Leader) => {
+  await db.collection('leaders').doc(leader.ref.id).delete()
 }
 
 // get all leaders in baches of 250

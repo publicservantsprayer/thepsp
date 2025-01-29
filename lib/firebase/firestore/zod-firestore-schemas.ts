@@ -1,15 +1,13 @@
 import { DocumentReference, Timestamp } from 'firebase-admin/firestore'
 import { z } from 'zod'
 
-export const zodFirestoreDocumentId = z.string().length(256)
+export const zodFirestoreDocumentId = z.string()
 
 export const zodFirestoreDocumentReference = z.custom<DocumentReference>(
   (val) => {
     return (
-      val &&
-      typeof val['id'] === 'string' &&
-      typeof val['path'] === 'string' &&
-      val instanceof DocumentReference
+      val && typeof val['id'] === 'string' && typeof val['path'] === 'string' // &&
+      // val instanceof DocumentReference
     )
   },
 )

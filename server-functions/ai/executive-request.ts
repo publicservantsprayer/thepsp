@@ -25,7 +25,13 @@ export async function executiveRequest(query: string, state: State) {
     stateExecutiveStructureSchema,
   )
 
-  const response = await structuredModel.invoke(query)
+  const response = await structuredModel.invoke([
+    [
+      'system',
+      'You are a helpful assistant that researches public officials.  Provide information the following government leader.',
+    ],
+    ['user', query],
+  ])
 
   await saveAiRequest({
     query,
@@ -45,7 +51,7 @@ export async function singleLeaderRequest(query: string, state: State) {
 
   const grok = new ChatXAI({
     model,
-    temperature: 0,
+    temperature: 1,
     maxTokens: undefined,
     maxRetries: 2,
     // other params...
@@ -53,12 +59,20 @@ export async function singleLeaderRequest(query: string, state: State) {
 
   const structuredModel = grok.withStructuredOutput(singleLeaderAiQuerySchema)
 
-  const response = await structuredModel.invoke(query)
+  const response = await structuredModel.invoke([
+    [
+      'system',
+      `You are a helpful assistant that researches public officials.  Provide information the requested government leader.
+
+      Be as complete as possible.  Include information for all of the fields requested if available, including  gender, marital status, how many kids (family), city of residence, date elected, party affiliation, religion, email, Twitter or X.com handle, Facebook page, website, ballotpedia page, and wikipedia page.`,
+    ],
+    ['user', query],
+  ])
 
   await saveAiRequest({
     query,
     response,
-    type: 'executive',
+    type: 'leader',
     stateCode: state.ref.id,
     model,
     createdAt: new Date(),

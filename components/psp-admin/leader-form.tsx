@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, UseFormReturn } from 'react-hook-form'
 
-import { useToast } from '@/components/hooks/use-toast'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -13,73 +12,81 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import {
-  Branch,
-  District,
-  Jurisdiction,
-  LeaderAiQuery,
-  LegislativeChamber,
-  State,
-  StateExecutiveOffice,
-} from '@/lib/types'
+import { LeaderAiQuery, NewLeaderForm, State } from '@/lib/types'
 
 import { Input } from '@/components/ui/input'
 import { z } from 'zod'
 import React from 'react'
 import Link from 'next/link'
 
+const emptyNewLeaderWithDefaultValues: NewLeaderForm = {
+  FirstName: '',
+  LastName: '',
+  LegalName: '',
+  MidName: '',
+  NickName: '',
+  Prefix: '',
+  BirthDate: '',
+  BirthMonth: '',
+  BirthYear: '',
+  BirthPlace: '',
+  Gender: '',
+  Marital: '',
+  Spouse: '',
+  Family: '',
+  Residence: '',
+  Title: '',
+  ElectDate: '',
+  Party: '',
+  Religion: '',
+  TwitterHandle: '',
+  Facebook: '',
+  Website: '',
+  BallotpediaPage: '',
+  WikipediaPage: '',
+  Email: '',
+}
+
 type NameType = keyof NewLeaderForm
 type UseFormType = UseFormReturn<NewLeaderForm>
 
 interface LeaderFormProps {
   state: State
-  district?: District
-  leader?: NewLeaderPersonalForm
-  jurisdiction: Jurisdiction
-  branch: Branch
-  stateExecutiveOffice?: StateExecutiveOffice
-  legislativeChamber?: LegislativeChamber
-  aiResult?: LeaderAiQuery
+  leader?: NewLeaderForm
   setLeaderDesignation?: React.Dispatch<
     React.SetStateAction<string | undefined>
   >
+  aiResult?: LeaderAiQuery
   disabled?: boolean
-  onSubmit: (data: NewLeaderForm) => void
+  onSubmit?: (data: NewLeaderForm) => void
 }
 
 export function LeaderForm({
   state,
-  leader: initialLeader,
-  branch,
-  jurisdiction,
-  stateExecutiveOffice,
-  legislativeChamber,
-  aiResult,
+  leader,
   setLeaderDesignation,
   disabled,
+  aiResult,
   onSubmit,
 }: LeaderFormProps) {
-  const { toast } = useToast()
-  const [leader, setLeader] = React.useState<NewLeaderForm | undefined>(
-    newLeaderFormSchema.parse({
-      ...initialLeader,
-      branch,
-      jurisdiction,
-      stateExecutiveOffice,
-      legislativeChamber,
-    }),
-  )
-  const [leaderSaved, setLeaderSaved] = React.useState(false)
-  const validationSchema = newLeaderFormSchema.extend({
+  if (!onSubmit) {
+    onSubmit = () => {
+      throw new Error('This form cannot be submitted')
+    }
+  }
+
+  const validationSchema = z.object({
     FirstName: z.string().nonempty(),
     LastName: z.string().nonempty(),
+    // Gender: z.enum(['M', 'F']),
     // LegalName: z.string().nonempty(),
   })
 
   const form = useForm<NewLeaderForm>({
     resolver: zodResolver(validationSchema),
-    defaultValues: leader,
+    defaultValues: leader || emptyNewLeaderWithDefaultValues,
   })
+
   const [firstName, lastName] = form.watch(['FirstName', 'LastName'])
   const touchedName =
     form.formState.touchedFields.FirstName &&
@@ -91,11 +98,7 @@ export function LeaderForm({
       const office = state.upperChamberName
       const title = 'Senator'
       setLeaderDesignation(
-        `Provide detailed information about ` +
-          `${title} ${firstName} ${lastName} ` +
-          `from the ${office}.` +
-          `\n\n` +
-          `Be as complete as possible.  Include information for all of the fields requested if available, including  gender, marital status, how many kids (family), city of residence, date elected, party affiliation, religion, email, Twitter or X.com handle, Facebook page, website, ballotpedia page, and wikipedia page.`,
+        `${title} ${firstName} ${lastName} ` + `from the ${office}.`,
       )
     }
   }, [touchedName, firstName, lastName, setLeaderDesignation, state])
@@ -106,17 +109,11 @@ export function LeaderForm({
     }
   }, [aiResult, form])
 
-  React.useEffect(() => {
-    if (!leader) return
-
-    form.reset(leader)
-  }, [form, leader])
-
-  if (!leader) return null
-
   const formSubmitted = form.formState.isSubmitted
 
+  // TODO: Deal with other errors
   console.log(form.formState.errors)
+
   return (
     <>
       <Form {...form}>
@@ -124,16 +121,7 @@ export function LeaderForm({
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-0 pr-2"
         >
-          <input type="hidden" {...form.register('branch')} />
-          <input type="hidden" {...form.register('jurisdiction')} />
-          {stateExecutiveOffice && (
-            <input type="hidden" {...form.register('stateExecutiveOffice')} />
-          )}
-          {legislativeChamber && (
-            <input type="hidden" {...form.register('legislativeChamber')} />
-          )}
-
-          {Object.keys(leaderPersonalSchema.parse({})).map((key) => {
+          {Object.keys(emptyNewLeaderWithDefaultValues).map((key) => {
             const name = key as NameType
             return (
               <FieldInput
@@ -197,57 +185,6 @@ function FieldInput({ name, form, disabled }: FormFieldProps) {
   )
 }
 
-// function FieldRadio({
-//   name,
-//   form,
-//   disabled,
-// }: {
-//   name: NameType
-//   form: UseFormType
-//   disabled?: boolean
-// }) {
-//   return (
-//     <FormField
-//       control={form.control}
-//       name={name}
-//       render={({ field }) => (
-//         <FormItem className="space-y-3">
-//           <FormLabel>{name}</FormLabel>
-//           <FormControl>
-//             <RadioGroup
-//               onValueChange={field.onChange}
-//               defaultValue={field.value}
-//               className="flex flex-col space-y-1"
-//             >
-//               <FormItem className="flex items-center space-x-3 space-y-0">
-//                 <FormControl>
-//                   <RadioGroupItem value="all" />
-//                 </FormControl>
-//                 <FormLabel className="font-normal">All new messages</FormLabel>
-//               </FormItem>
-//               <FormItem className="flex items-center space-x-3 space-y-0">
-//                 <FormControl>
-//                   <RadioGroupItem value="mentions" />
-//                 </FormControl>
-//                 <FormLabel className="font-normal">
-//                   Direct messages and mentions
-//                 </FormLabel>
-//               </FormItem>
-//               <FormItem className="flex items-center space-x-3 space-y-0">
-//                 <FormControl>
-//                   <RadioGroupItem value="none" />
-//                 </FormControl>
-//                 <FormLabel className="font-normal">Nothing</FormLabel>
-//               </FormItem>
-//             </RadioGroup>
-//           </FormControl>
-//           <FormMessage />
-//         </FormItem>
-//       )}
-//     />
-//   )
-// }
-
 function LinkToSocialMedia({
   children,
   name,
@@ -285,151 +222,3 @@ function LinkToSocialMedia({
     </Link>
   )
 }
-
-// !!!!!!!!!!!!!!!!!!!!!!
-// These are copied verbatim from the leader schema file
-// if imported, everything blows up.
-// !!!!!!!!!!!!!!!!!!!!!!
-
-// Importing the schema from a leaders.schema file causes a crash
-// resolver: zodResolver(leaderAiQuerySchema),
-// So we define the schema in this file for now...
-const leaderPersonalSchema = z.object({
-  // Personal Information
-  FirstName: z
-    .string()
-    .default('')
-    .describe('The first name of the public official'),
-  LastName: z
-    .string()
-    .default('')
-    .describe('The last name of the public official'),
-  LegalName: z
-    .string()
-    .default('')
-    .describe('The full legal name of the public official'),
-  MidName: z
-    .string()
-    .default('')
-    .describe('The middle name of the public official'),
-  NickName: z
-    .string()
-    .default('')
-    .describe('The nickname of the public official'),
-  Prefix: z.string().default('').describe('The prefix of the public official'),
-  BirthDate: z
-    .string()
-    .default('')
-    .describe('The numeric birth day of the month of the public official'),
-  BirthMonth: z
-    .string()
-    .default('')
-    .describe('The numeric birth month of the year of the public official'),
-  BirthYear: z
-    .string()
-    .default('')
-    .describe('The numeric birth year of the public official'),
-  BirthPlace: z
-    .string()
-    .default('')
-    .describe('The city and state of the birthplace of the public official'),
-  Gender: z
-    .enum(['', 'M', 'F'])
-    .default('')
-    .describe('The biological sex of the public official'),
-  // Family and Residence
-  Marital: z
-    .string()
-    .default('')
-    .describe('The marital status of the public official'),
-  Spouse: z
-    .string()
-    .default('')
-    .describe('The name of the spouse of the public official'),
-  Family: z
-    .string()
-    .default('')
-    .describe('How many children the public official has, if any'),
-  Residence: z
-    .string()
-    .default('')
-    .describe('The city and state of the residence of the public official'),
-  // Office and Beliefs
-  Title: z.string().default('').describe('The title of the public official'),
-  ElectDate: z
-    .string()
-    .default('')
-    .describe('The date the public official was elected'),
-  Party: z
-    .string()
-    .default('')
-    .describe('The political party of the public official'),
-  Religion: z
-    .string()
-    .default('')
-    .describe('The religious affiliation of the public official'),
-  // Social Media and Contact
-  TwitterHandle: z
-    .string()
-    .default('')
-    .describe(
-      'The official X (Twitter) platform handle of the public official',
-    ),
-  Facebook: z
-    .string()
-    .default('')
-    .describe('The official Facebook page (URL) of the public official'),
-  Website: z
-    .string()
-    .default('')
-    .describe('The official or personal website of the public official'),
-  BallotpediaPage: z
-    .string()
-    .default('')
-    .describe('The ballotpedia.com page of the public official'),
-  WikipediaPage: z
-    .string()
-    .default('')
-    .describe('The wikipedia.com page of the public official'),
-  Email: z
-    .string()
-    .default('')
-    .describe('The official email address of the public official'),
-})
-
-/**
- * Leader authority schema
- */
-export const jurisdictionSchema = z.enum(['federal', 'state']) // also used in district schema
-export const branchSchema = z.enum(['executive', 'legislative', 'judicial']) // also used in district schema
-export const federalExecutiveOfficeSchema = z.enum([
-  'president',
-  'vice-president',
-  'secretary-of-state',
-])
-export const stateExecutiveOfficeSchema = z.enum([
-  'governor',
-  'lieutenant-governor',
-  'secretary-of-state',
-])
-export const legislativeChamberSchema = z.enum(['upper', 'lower'])
-// Together they are the authority schema
-export const leaderAuthoritySchema = z.object({
-  jurisdiction: jurisdictionSchema.describe(
-    'The jurisdiction (state or federal) of the public official',
-  ),
-  branch: branchSchema.describe(
-    'The branch of government the public official serves in',
-  ),
-  federalExecutiveOffice: federalExecutiveOfficeSchema.optional(),
-  stateExecutiveOffice: stateExecutiveOfficeSchema.optional(),
-  legislativeChamber: legislativeChamberSchema.optional(),
-})
-
-const newLeaderFormSchema = z
-  .object({})
-  .merge(leaderPersonalSchema)
-  .merge(leaderAuthoritySchema)
-
-export type NewLeaderPersonalForm = z.infer<typeof leaderPersonalSchema>
-export type NewLeaderForm = z.infer<typeof newLeaderFormSchema>

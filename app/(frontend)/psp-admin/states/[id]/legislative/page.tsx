@@ -1,4 +1,3 @@
-import { Title } from '@/components/psp-admin/title'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   getDistricts,
@@ -26,10 +25,11 @@ import {
 import { EditDistrictsDialog } from './edit-districts-dialog'
 import React from 'react'
 import { DistrictManageDialog } from './district-manage-dialog'
-import { SquareX, X } from 'lucide-react'
+import { SquareX } from 'lucide-react'
 import { DeleteLeaderDialog } from './delete-leader-dialog'
 import { indianaHouseOfRepresentatives, indianaStateSenate } from './indiana'
 import Link from 'next/link'
+import { ExpandableContainerTitle } from '@/components/psp-admin/expandable-container-title'
 
 interface Props {
   params: Promise<{
@@ -73,10 +73,8 @@ export default async function StatePage({ params }: Props) {
   )
 
   return (
-    <div className="container">
-      <Title>{state.name}</Title>
-
-      <div className="grid grid-cols-3 gap-4">
+    <ExpandableContainerTitle title={state.name}>
+      <div className="grid w-full grid-cols-3 gap-4">
         <div className="flex flex-col gap-4">
           <LegislativeBodyCard
             state={state}
@@ -129,7 +127,7 @@ export default async function StatePage({ params }: Props) {
           />
         </div>
       </div>
-    </div>
+    </ExpandableContainerTitle>
   )
 }
 

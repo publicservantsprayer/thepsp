@@ -112,7 +112,7 @@ export function LeaderForm({
   const formSubmitted = form.formState.isSubmitted
 
   // TODO: Deal with other errors
-  console.log(form.formState.errors)
+  // console.log(form.formState.errors)
 
   return (
     <>

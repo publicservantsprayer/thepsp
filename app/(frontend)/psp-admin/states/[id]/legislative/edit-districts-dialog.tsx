@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -20,7 +21,13 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import { District, Jurisdiction, LegislativeChamber, State } from '@/lib/types'
+import {
+  District,
+  Jurisdiction,
+  Leader,
+  LegislativeChamber,
+  State,
+} from '@/lib/types'
 import { addNewDistrict, serverDeleteDistrict } from '@/server-functions/states'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -32,24 +39,53 @@ import {
   FindLegislativeAiRequestForm,
   LegislativeDistrictAiResult,
 } from './find-legislative-ai-request-form'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { serverSaveLinedUpLeaders } from '@/server-functions/new-leaders/save-leader-batch'
 
 export function EditDistrictsDialog({
   state,
   districts,
   jurisdiction,
   legislativeChamber,
+  leadersToLineUp,
   children,
 }: {
   state: State
   districts: District[]
   jurisdiction: Jurisdiction
   legislativeChamber: LegislativeChamber
+  leadersToLineUp?: Leader[]
   children?: React.ReactNode
 }) {
   const { toast } = useToast()
   const [aiResult, setAiResult] = React.useState<
     LegislativeDistrictAiResult | undefined
   >()
+  const [savingLinedUpLeaders, setSavingLinedUpLeaders] = React.useState(false)
+
+  const handleSaveLinedUpLeaders = async () => {
+    if (!leadersToLineUp) return
+    setSavingLinedUpLeaders(true)
+
+    const result = await serverSaveLinedUpLeaders({
+      leaders: leadersToLineUp,
+      revalidatePath: '/psp-admin/states/' + state.ref.id.toLowerCase(),
+    })
+    console.log('Save Lined Up Leaders')
+    setSavingLinedUpLeaders(false)
+
+    if (result.success) {
+      toast({
+        title: result.count + ' Leaders saved.',
+      })
+    } else {
+      console.error(result.error)
+      toast({
+        title: 'Error',
+        description: result.error,
+      })
+    }
+  }
 
   const handleDelete = (district: District) => async () => {
     const result = await serverDeleteDistrict({
@@ -76,14 +112,18 @@ export function EditDistrictsDialog({
       <DialogContent size="lg">
         <DialogHeader>
           <DialogTitle>{state.name}</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
-        <Tabs defaultValue="districts" className="">
+
+        <Tabs defaultValue="districts" className="min-h-[50vh]">
           <TabsList>
             <TabsTrigger value="districts">Districts</TabsTrigger>
             <TabsTrigger value="update-leaders">
               Find Current Leaders
             </TabsTrigger>
+            <TabsTrigger value="super-admin">Super Admin</TabsTrigger>
           </TabsList>
+
           <TabsContent value="districts">
             <div className="space-y-4">
               <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-1">
@@ -122,6 +162,38 @@ export function EditDistrictsDialog({
               setAiResult={setAiResult}
             />
           </TabsContent>
+
+          <TabsContent value="super-admin">
+            <div className="my-6">Super Admin</div>
+            <ScrollArea className="h-[30vh]">
+              <div className="grid grid-cols-[auto_auto_auto_auto_auto_auto_auto] gap-y-1 bg-muted/20 text-xs">
+                {leadersToLineUp?.map((leader) => (
+                  <React.Fragment key={leader.ref.id}>
+                    <div className="whitespace-nowrap">{leader.fullname}</div>
+                    <div className="whitespace-nowrap">
+                      {leader.districtName}
+                    </div>
+                    <div className="whitespace-nowrap">{leader.District}</div>
+                    <div className="whitespace-nowrap">{leader.Chamber}</div>
+                    <div className="whitespace-nowrap">
+                      {leader.legislativeChamber}
+                    </div>
+                    <div className="whitespace-nowrap">
+                      {leader.jurisdiction}
+                    </div>
+                    <div className="whitespace-nowrap">{leader.LegType}</div>
+                  </React.Fragment>
+                ))}
+              </div>
+            </ScrollArea>
+            <Button
+              onClick={handleSaveLinedUpLeaders}
+              loading={savingLinedUpLeaders}
+              disabled={savingLinedUpLeaders}
+            >
+              Save Lined Up Leaders
+            </Button>
+          </TabsContent>
         </Tabs>
       </DialogContent>
     </Dialog>
@@ -145,6 +217,14 @@ function StateForm({
 }) {
   const [nextDistrict, setNextDistrict] = React.useState(districts?.length || 0)
 
+  const { toast } = useToast()
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      name: `District ${nextDistrict}`,
+    },
+  })
+
   // Update field, guessing next district name
   React.useEffect(() => {
     console.log('districts: ', districts)
@@ -157,15 +237,7 @@ function StateForm({
     form.resetField('name', {
       defaultValue: `District ${districts?.length + 1}`,
     })
-  }, [districts, nextDistrict])
-
-  const { toast } = useToast()
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      name: `District ${nextDistrict}`,
-    },
-  })
+  }, [districts, form, nextDistrict])
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     await addNewDistrict(

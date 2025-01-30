@@ -38,7 +38,7 @@ export const Leaders = ({ leaders, chamber, legType }: Props) => {
               <div className="p-1">
                 <div className="flex min-w-[145px] justify-center">
                   <Image
-                    alt={leader.fullname}
+                    alt={leader.fullname || ''}
                     src={leaderPhoto(leader)}
                     width={108}
                     height={148}

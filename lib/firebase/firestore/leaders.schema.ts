@@ -204,10 +204,16 @@ export const leaderAuthoritySchema = z.object({
  */
 export const leaderDbSchema = z
   .object({
-    createdAt: zodFirestoreTimestamp.or(z.date()).optional(),
-    updatedAt: zodFirestoreTimestamp.or(z.date()).optional(),
-    lastImportDate: zodFirestoreTimestamp
-      .or(z.date())
+    // createdAt: zodFirestoreTimestamp.or(z.date()).optional(),
+    // updatedAt: zodFirestoreTimestamp.or(z.date()).optional(),
+    // lastImportDate: zodFirestoreTimestamp
+    //   .or(z.date())
+    //   .optional()
+    //   .describe('The date the data was last confirmed to hold this office'),
+    createdAt: z.date().optional(),
+    updatedAt: z.date().optional(),
+    lastImportDate: z
+      .date()
       .optional()
       .describe('The date the data was last confirmed to hold this office'),
     districtRef: zodFirestoreDocumentReference.optional(),
@@ -226,7 +232,9 @@ export const leaderDbSchema = z
 export const leaderSchema = leaderDbSchema.extend({
   ref: zodSimpleDocumentRef,
   districtRef: zodSimpleDocumentRef.optional(),
-  fullname: z.string(),
+  // ephemeral fields
+  fullname: z.string().optional(),
+  districtName: z.string().optional(),
 })
 
 export const newLeaderSchema = leaderSchema

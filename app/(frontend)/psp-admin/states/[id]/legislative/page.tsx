@@ -6,30 +6,13 @@ import {
 } from '@/lib/firebase/firestore'
 import { validateStateCode } from '@/lib/get-state-info'
 import { notFound } from 'next/navigation'
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import {
-  District,
-  Jurisdiction,
-  Leader,
-  LegislativeChamber,
-  State,
-} from '@/lib/types'
-import { EditDistrictsDialog } from './edit-districts-dialog'
+import { District, Leader, State } from '@/lib/types'
 import React from 'react'
-import { DistrictManageDialog } from './district-manage-dialog'
 import { SquareX } from 'lucide-react'
 import { DeleteLeaderDialog } from './delete-leader-dialog'
 import { indianaHouseOfRepresentatives, indianaStateSenate } from './indiana'
-import Link from 'next/link'
 import { ExpandableContainerTitle } from '@/components/psp-admin/expandable-container-title'
+import { LegislativeBodyCard } from './legislative-body-card'
 
 interface Props {
   params: Promise<{
@@ -131,146 +114,6 @@ export default async function StatePage({ params }: Props) {
   )
 }
 
-function LegislativeBodyCard({
-  state,
-  leaders,
-  districts,
-  title,
-  caption,
-  jurisdiction,
-  legislativeChamber,
-  updatedInfo,
-}: {
-  state: State
-  leaders: Leader[]
-  districts: District[]
-  title?: string
-  caption: string
-  jurisdiction: Jurisdiction
-  legislativeChamber: LegislativeChamber
-  updatedInfo?: {
-    districtName: string
-    leaderName: string
-    leaderURL: string
-    dateElected: string
-  }[]
-}) {
-  let prevDistrictNumber = 0
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableCaption>{caption}</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="py-2">
-                <EditDistrictsDialog
-                  state={state}
-                  districts={districts}
-                  jurisdiction={jurisdiction}
-                  legislativeChamber={legislativeChamber}
-                >
-                  District
-                </EditDistrictsDialog>
-              </TableHead>
-              <TableHead className="py-2">Name</TableHead>
-              <TableHead className="py-2">Current</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {districts.map((district, i) => {
-              const districtLeaders = findDistrictLeaders(leaders, district)
-              const oldDistrictLeaders = findOldDistrictLeaders(
-                leaders,
-                district,
-              )
-              const districtNumber = getNumberFromName(district.name)
-              const missingOrDuplicate =
-                prevDistrictNumber !== districtNumber - 1
-              prevDistrictNumber = districtNumber
-              return (
-                <TableRow
-                  key={i}
-                  className="group"
-                  data-dup={missingOrDuplicate}
-                >
-                  <TableCell className="py-2 group-data-[dup=true]:text-yellow-500">
-                    <DistrictManageDialog
-                      state={state}
-                      district={district}
-                      leaders={districtLeaders}
-                      oldLeaders={oldDistrictLeaders}
-                      jurisdiction={jurisdiction}
-                      legislativeChamber={legislativeChamber}
-                    >
-                      {district.name}
-                    </DistrictManageDialog>
-                  </TableCell>
-                  <TableCell className="py-2">
-                    {districtLeaders.map((leader, index) => (
-                      <div key={index}>{leader?.fullname}</div>
-                    ))}
-                    {oldDistrictLeaders.map((leader, index) => (
-                      <div key={index} className="text-muted-foreground">
-                        {leader?.fullname}
-                      </div>
-                    ))}
-                  </TableCell>
-                  <TableCell className="py-2">
-                    {/* {districtLeaders.map((leader, index) => (
-                      <div key={index}>
-                        {leader?.District} - {leader?.Chamber}
-                      </div>
-                    ))} */}
-                    <Link
-                      href={updatedInfo?.[i]?.leaderURL || '#'}
-                      target="_blank"
-                    >
-                      {updatedInfo?.[i]?.leaderName}
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              )
-            })}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
-  )
-}
-
-// Find the number at the end of the district name
-const getNumberFromName = (name: string) => {
-  const lastPart = name.split(' ').pop()
-  return parseInt(lastPart?.replace(/\D/g, '') || '0')
-}
-
-function findDistrictLeaders(leaders: Leader[], district: District) {
-  const districtLeaders = leaders.filter((leader) => {
-    return leader.districtRef?.id === district.ref.id
-  })
-
-  return districtLeaders
-}
-
-function findOldDistrictLeaders(leaders: Leader[], district: District) {
-  const districtNumber = getNumberFromName(district.name)
-
-  const districtLeaders = leaders.filter((leader) => {
-    const leaderDistrictNumber = getNumberFromName(leader?.District || '')
-    return leaderDistrictNumber === districtNumber
-  })
-
-  if (!districtLeaders.length) {
-    // console.log('no leader found for district: ', district)
-  }
-  return districtLeaders || null
-}
-
 // Sort districts by number from name
 function sortByName(districts: District[]) {
   return districts.sort((a, b) => {
@@ -347,12 +190,15 @@ function filterStateLowerDistricts(districts: District[]) {
   )
 }
 
-function filterLeadersWithoutDistrict(leaders: Leader[]) {
-  return leaders.filter((leader) => !leader.District)
+function filterLeadersWithoutOldDistrict(leaders: Leader[]) {
+  return leaders.filter((leader) => !leader.District && !leader.districtRef)
 }
 
-function filterLeadersWithoutChamber(leaders: Leader[]) {
-  return leaders.filter((leader) => !['S', 'H'].includes(leader.Chamber!))
+function filterLeadersWithoutOldChamber(leaders: Leader[]) {
+  return leaders.filter(
+    (leader) =>
+      !['S', 'H'].includes(leader.Chamber!) && !leader.legislativeChamber,
+  )
 }
 
 function StrayLeaders({
@@ -364,10 +210,10 @@ function StrayLeaders({
   leadersLeftOver: Leader[]
   state: State
 }) {
-  const noDistrict = filterLeadersWithoutDistrict(leaders)
-  const noChamber = filterLeadersWithoutChamber(leaders)
+  const noDistrict = filterLeadersWithoutOldDistrict(leaders)
+  const noChamber = filterLeadersWithoutOldChamber(leaders)
 
-  if (noDistrict.length === 0 && noChamber.length === 0) return null
+  // if (noDistrict.length === 0 && noChamber.length === 0) return null
 
   return (
     <Card>
@@ -380,6 +226,36 @@ function StrayLeaders({
             <h3>Left Over</h3>
             <ul>
               {leadersLeftOver.map((leader) => (
+                <li key={leader.ref.id}>
+                  <DeleteLeaderDialog state={state} leader={leader}>
+                    <SquareX size={16} />
+                  </DeleteLeaderDialog>
+                  {leader.fullname} - {leader.LegType} - {leader.Chamber}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {noDistrict.length > 0 && (
+          <div>
+            <h3>Leaders Without Old District</h3>
+            <ul>
+              {noDistrict.map((leader) => (
+                <li key={leader.ref.id}>
+                  <DeleteLeaderDialog state={state} leader={leader}>
+                    <SquareX size={16} />
+                  </DeleteLeaderDialog>
+                  {leader.fullname} - {leader.LegType} - {leader.Chamber}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {noChamber.length > 0 && (
+          <div>
+            <h3>Leaders Without Old Chamber</h3>
+            <ul>
+              {noChamber.map((leader) => (
                 <li key={leader.ref.id}>
                   <DeleteLeaderDialog state={state} leader={leader}>
                     <SquareX size={16} />

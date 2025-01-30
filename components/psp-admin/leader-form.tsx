@@ -19,7 +19,7 @@ import { z } from 'zod'
 import React from 'react'
 import Link from 'next/link'
 
-const emptyNewLeaderWithDefaultValues: NewLeaderForm = {
+export const emptyNewLeaderWithDefaultValues: NewLeaderForm = {
   FirstName: '',
   LastName: '',
   LegalName: '',

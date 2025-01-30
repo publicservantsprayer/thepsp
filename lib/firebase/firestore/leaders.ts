@@ -328,3 +328,28 @@ export const normalizeAllLeaders = async () => {
 
   return count
 }
+
+export const saveLeaderBatch = async ({ leaders }: { leaders: Leader[] }) => {
+  const batch = db.batch()
+
+  leaders.forEach((leader) => {
+    const rootLeaderRef = db
+      .collection('leaders')
+      .withConverter(LeaderConverter)
+      .doc(leader.ref.id)
+    batch.update(rootLeaderRef, leader)
+
+    if (!leader.StateCode)
+      throw new Error('Leader missing StateCode: ' + leader.ref.id)
+
+    const stateLeaderRef = db
+      .collection('states')
+      .doc(leader.StateCode)
+      .collection('leaders')
+      .withConverter(LeaderConverter)
+      .doc(leader.ref.id)
+    batch.update(stateLeaderRef, leader)
+  })
+
+  return await batch.commit()
+}

@@ -13,6 +13,7 @@ import { DeleteLeaderDialog } from './delete-leader-dialog'
 import { indianaHouseOfRepresentatives, indianaStateSenate } from './indiana'
 import { ExpandableContainerTitle } from '@/components/psp-admin/expandable-container-title'
 import { LegislativeBodyCard } from './legislative-body-card'
+import { LeaderCardDialog } from '@/components/psp-admin/leader-card-dialog'
 
 interface Props {
   params: Promise<{
@@ -81,6 +82,7 @@ export default async function StatePage({ params }: Props) {
             leaders={leaders}
             leadersLeftOver={leadersLeftOver}
             state={state}
+            districts={districts}
           />
         </div>
 
@@ -205,10 +207,12 @@ function StrayLeaders({
   leaders,
   leadersLeftOver,
   state,
+  districts,
 }: {
   leaders: Leader[]
   leadersLeftOver: Leader[]
   state: State
+  districts: District[]
 }) {
   const noDistrict = filterLeadersWithoutOldDistrict(leaders)
   const noChamber = filterLeadersWithoutOldChamber(leaders)
@@ -230,7 +234,13 @@ function StrayLeaders({
                   <DeleteLeaderDialog state={state} leader={leader}>
                     <SquareX size={16} />
                   </DeleteLeaderDialog>
-                  {leader.fullname} - {leader.LegType} - {leader.Chamber}
+                  <LeaderCardDialog
+                    leader={leader}
+                    state={state}
+                    districts={districts}
+                  >
+                    {leader.fullname}
+                  </LeaderCardDialog>
                 </li>
               ))}
             </ul>

@@ -135,7 +135,12 @@ export function LegislativeBodyCard({
                   <TableCell className="py-2">
                     {districtLeaders.map((leader, index) => (
                       <div key={index} className="flex items-center gap-2">
-                        <LeaderCardDialog leader={leader} state={state} asChild>
+                        <LeaderCardDialog
+                          leader={leader}
+                          state={state}
+                          districts={districts}
+                          asChild
+                        >
                           <Button size="xs" variant="link">
                             <CircleChevronUp />
                           </Button>
@@ -150,7 +155,12 @@ export function LegislativeBodyCard({
                         key={index}
                         className="flex items-center gap-2 text-muted-foreground"
                       >
-                        <LeaderCardDialog leader={leader} state={state} asChild>
+                        <LeaderCardDialog
+                          leader={leader}
+                          state={state}
+                          districts={districts}
+                          asChild
+                        >
                           <Button size="xs" variant="link">
                             <CircleChevronUp />
                           </Button>

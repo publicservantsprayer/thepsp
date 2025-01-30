@@ -35,10 +35,30 @@
       "indexes": "firestore.indexes.json"
     }
   ],
-  "functions": {
-    "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run lint"],
-    "source": "cloud-functions"
-  },
+  "functions": [
+    {
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ],
+      "source": "cloud-functions",
+      "codebase": "default"
+    },
+    {
+      "source": "thepsp-cloud-functions",
+      "codebase": "thepsp",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint",
+        "npm --prefix \"$RESOURCE_DIR\" run build"
+      ]
+    }
+  ],
   "storage": {
     "rules": "storage.rules"
   }

@@ -30,7 +30,7 @@ module.exports = {
   ],
   rules: {
     'import/no-unresolved': 0,
-    indent: ['error', 2],
-    'prettier/prettier': 'error', // Add this line
+    // indent: ['error', 2],
+    'prettier/prettier': 0, // Add this line
   },
 }

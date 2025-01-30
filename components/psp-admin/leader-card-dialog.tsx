@@ -1,7 +1,6 @@
 'use client'
 
 import { useToast } from '@/components/hooks/use-toast'
-import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -10,34 +9,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 
-import {
-  District,
-  Jurisdiction,
-  Leader,
-  LegislativeChamber,
-  State,
-} from '@/lib/types'
-import { addNewDistrict, serverDeleteDistrict } from '@/server-functions/states'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { Leader, NewLeaderForm, State } from '@/lib/types'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Scroll, SquareX } from 'lucide-react'
 import React from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { serverSaveLinedUpLeaders } from '@/server-functions/new-leaders/save-leader-batch'
 import { emptyNewLeaderWithDefaultValues, LeaderForm } from './leader-form'
+import { serverSaveLeader } from '@/server-functions/new-leaders/save-leader'
 
 export function LeaderCardDialog({
   leader,
@@ -57,6 +35,26 @@ export function LeaderCardDialog({
   const otherFields = leaderFields.filter(
     (field) => !newLeaderFormField.includes(field),
   )
+
+  const handleSaveLeader = async (data: NewLeaderForm) => {
+    const result = await serverSaveLeader({
+      leader: {
+        ...leader,
+        ...data,
+      },
+    })
+
+    if (result.success) {
+      toast({
+        title: 'Leader saved.',
+      })
+    } else {
+      toast({
+        title: 'Error',
+        description: result.error,
+      })
+    }
+  }
 
   return (
     <Dialog>
@@ -88,9 +86,12 @@ export function LeaderCardDialog({
                   <DisplayField leader={leader} field="DistrictID" />
                 </div>
               </div>
-              <LeaderForm leader={leader} state={state} />
+              <LeaderForm
+                leader={leader}
+                state={state}
+                onSubmit={handleSaveLeader}
+              />
               <div className="flex flex-row flex-wrap gap-1">
-                {/*  */}
                 {otherFields.map((field) => (
                   <React.Fragment key={field}>
                     <DisplayField

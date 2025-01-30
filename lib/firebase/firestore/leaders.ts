@@ -6,7 +6,7 @@
 import {
   QueryDocumentSnapshot,
   FirestoreDataConverter,
-  WithFieldValue,
+  // WithFieldValue,
   Timestamp,
 } from 'firebase-admin/firestore'
 import { db } from '@/lib/firebase/server/admin-app'
@@ -18,7 +18,6 @@ import { leaderDbSchema, leaderDbSuperRefine } from './leaders.schema'
  * Used for transforming non-database fields in the FirestoreDataConverter.
  */
 const leaderDbParser = leaderDbSchema
-  .strip()
   .superRefine(leaderDbSuperRefine)
   .transform((data) => {
     if (data.districtRef) {
@@ -26,6 +25,9 @@ const leaderDbParser = leaderDbSchema
     } else {
       delete data.districtRef
     }
+    delete (data as Partial<Leader>).ref
+    delete (data as Partial<Leader>).fullname
+    delete (data as Partial<Leader>).districtName
     return data
   })
 
@@ -290,66 +292,97 @@ export const deleteLeaderFromRootCollection = async (leader: Leader) => {
 // get all leaders in baches of 250
 // update each leader with the normalized data
 // return the number of leaders updated
-export const normalizeAllLeaders = async () => {
-  const normalizeLeader = (leader: Leader): Leader => {
-    // change something
-    return leader
-  }
+//
+// export const normalizeAllLeaders = async () => {
+//   const normalizeLeader = (leader: Leader): Leader => {
+//     // change something
+//     return leader
+//   }
 
-  const batchSize = 250
-  let lastDoc: QueryDocumentSnapshot | undefined = undefined
-  let count = 0
+//   const batchSize = 250
+//   let lastDoc: QueryDocumentSnapshot | undefined = undefined
+//   let count = 0
 
-  while (true) {
-    let query = db
-      .collection('leaders')
-      .withConverter(LeaderConverter)
-      .limit(batchSize)
-    if (lastDoc) {
-      query = query.startAfter(lastDoc)
-    }
+//   while (true) {
+//     let query = db
+//       .collection('leaders')
+//       .withConverter(LeaderConverter)
+//       .limit(batchSize)
+//     if (lastDoc) {
+//       query = query.startAfter(lastDoc)
+//     }
 
-    const snapshot = await query.get()
-    if (snapshot.empty) {
-      break
-    }
+//     const snapshot = await query.get()
+//     if (snapshot.empty) {
+//       break
+//     }
 
-    const batch = db.batch()
-    snapshot.docs.forEach((doc) => {
-      const data = doc.data()
-      const normalizedData = normalizeLeader(data)
-      batch.set(doc.ref, normalizedData)
-      count++
-    })
+//     const batch = db.batch()
+//     snapshot.docs.forEach((doc) => {
+//       const data = doc.data()
+//       const normalizedData = normalizeLeader(data)
+//       batch.set(doc.ref, normalizedData)
+//       count++
+//     })
 
-    await batch.commit()
-    lastDoc = snapshot.docs[snapshot.docs.length - 1]
-  }
+//     await batch.commit()
+//     lastDoc = snapshot.docs[snapshot.docs.length - 1]
+//   }
 
-  return count
-}
+//   return count
+// }
 
+/**
+ * Batch save leaders to root and state collections
+ */
 export const saveLeaderBatch = async ({ leaders }: { leaders: Leader[] }) => {
   const batch = db.batch()
 
-  leaders.forEach((leader) => {
+  leaders.forEach((unparsedLeader) => {
+    const leader = leaderDbParser.parse(unparsedLeader)
     const rootLeaderRef = db
       .collection('leaders')
       .withConverter(LeaderConverter)
-      .doc(leader.ref.id)
+      .doc(unparsedLeader.ref.id)
     batch.update(rootLeaderRef, leader)
 
     if (!leader.StateCode)
-      throw new Error('Leader missing StateCode: ' + leader.ref.id)
+      throw new Error('Leader missing StateCode: ' + unparsedLeader.ref.id)
 
     const stateLeaderRef = db
       .collection('states')
       .doc(leader.StateCode)
       .collection('leaders')
       .withConverter(LeaderConverter)
-      .doc(leader.ref.id)
+      .doc(unparsedLeader.ref.id)
     batch.update(stateLeaderRef, leader)
   })
 
   return await batch.commit()
+}
+
+/**
+ * Save a single leader to root and state collections
+ */
+export const saveLeader = async ({ leader }: { leader: Leader }) => {
+  const dbLeader = leaderDbParser.parse(leader)
+
+  if (!leader.StateCode)
+    throw new Error('Leader missing StateCode: ' + leader.ref.id)
+
+  const rootLeaderRef = db
+    .collection('leaders')
+    .withConverter(LeaderConverter)
+    .doc(leader.ref.id)
+  await rootLeaderRef.set(dbLeader, { merge: true })
+
+  const stateLeaderRef = db
+    .collection('states')
+    .doc(leader.StateCode)
+    .collection('leaders')
+    .withConverter(LeaderConverter)
+    .doc(leader.ref.id)
+  await stateLeaderRef.set(dbLeader, { merge: true })
+
+  return dbLeader
 }

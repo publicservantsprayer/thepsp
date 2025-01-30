@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { zodSimpleDocumentRef } from '@/lib/firebase/firestore/zod-firestore-schemas'
 import { jurisdictionSchema, legislativeChamberSchema } from '../leaders.schema'
+import { District } from '@/lib/types'
 
 /**
  * Includes only fields in the database
@@ -36,4 +37,7 @@ export const newDistrictSchema = districtSchema
  *
  * Used for removing non-database fields in the FirestoreDataConverter.
  */
-export const districtDbParser = districtDbSchema.strip()
+export const districtDbParser = districtDbSchema.transform((data) => {
+  delete (data as Partial<District>).ref
+  return data
+})

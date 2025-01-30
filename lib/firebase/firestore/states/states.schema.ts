@@ -3,6 +3,7 @@ import {
   zodFirestoreDocumentReference,
   zodSimpleDocumentRef,
 } from '@/lib/firebase/firestore/zod-firestore-schemas'
+import { State } from '@/lib/types'
 
 export const stateCodeSchema = z.enum([
   'AL',
@@ -97,4 +98,7 @@ export const stateSchema = stateDbSchema.extend({
  *
  * Used for removing non-database fields in the FirestoreDataConverter.
  */
-export const stateDbParser = stateDbSchema.strip()
+export const stateDbParser = stateDbSchema.transform((data) => {
+  delete (data as Partial<State>).ref
+  return data
+})

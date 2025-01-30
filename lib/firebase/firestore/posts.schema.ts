@@ -39,4 +39,4 @@ export const postSchema = postDbSchema.extend({
  *
  * Used for removing non-database fields in the FirestoreDataConverter.
  */
-export const postSchemaParser = postDbSchema.strip()
+export const postSchemaParser = postDbSchema

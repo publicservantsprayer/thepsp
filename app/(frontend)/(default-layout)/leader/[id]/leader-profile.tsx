@@ -1,6 +1,9 @@
 import React from 'react'
 
-import { SiX, SiFacebook } from 'react-icons/si'
+import {
+  // SiX,
+  SiFacebook,
+} from 'react-icons/si'
 import Image from 'next/image'
 
 import type { Leader } from '@/lib/types'

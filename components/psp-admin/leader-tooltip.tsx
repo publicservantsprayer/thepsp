@@ -1,54 +1,16 @@
 'use client'
 
-import { useToast } from '@/components/hooks/use-toast'
-import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-
-import {
-  District,
-  Jurisdiction,
-  Leader,
-  LegislativeChamber,
-  State,
-} from '@/lib/types'
-import { addNewDistrict, serverDeleteDistrict } from '@/server-functions/states'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Scroll, SquareX } from 'lucide-react'
+import { Leader, State } from '@/lib/types'
 import React from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { serverSaveLinedUpLeaders } from '@/server-functions/new-leaders/save-leader-batch'
-import { emptyNewLeaderWithDefaultValues, LeaderForm } from './leader-form'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { LeaderCardDialog } from './leader-card-dialog'
 
 export function LeaderTooltip({
   leader,
-  state,
   asChild,
   children,
 }: {
@@ -57,14 +19,6 @@ export function LeaderTooltip({
   asChild?: boolean
   children?: React.ReactNode
 }) {
-  const { toast } = useToast()
-
-  const leaderFields = Object.keys(leader)
-  const newLeaderFormField = Object.keys(emptyNewLeaderWithDefaultValues)
-  const otherFields = leaderFields.filter(
-    (field) => !newLeaderFormField.includes(field),
-  )
-
   return (
     <TooltipProvider>
       <Tooltip>

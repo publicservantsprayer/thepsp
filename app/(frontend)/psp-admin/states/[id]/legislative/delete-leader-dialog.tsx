@@ -12,21 +12,12 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-import {
-  District,
-  Jurisdiction,
-  Leader,
-  LegislativeChamber,
-  State,
-} from '@/lib/types'
+import { Leader, State } from '@/lib/types'
 import {
   serverDeleteStateAndRootLeader,
   serverDeleteStateLeader,
 } from '@/server-functions/new-leaders/delete'
-import { serverDeleteDistrict } from '@/server-functions/states'
 import { CheckedState } from '@radix-ui/react-checkbox'
-import { set } from 'date-fns'
-import { Check, SquareX, X } from 'lucide-react'
 import React, { MouseEventHandler } from 'react'
 
 export function DeleteLeaderDialog({

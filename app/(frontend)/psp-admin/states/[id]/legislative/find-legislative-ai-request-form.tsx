@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
-  FormDescription,
+  // FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -38,8 +38,8 @@ interface Props {
 export function FindLegislativeAiRequestForm({
   state,
   setAiResult,
-  jurisdiction,
-  legislativeChamber,
+  // jurisdiction,
+  // legislativeChamber,
 }: Props) {
   const { toast } = useToast()
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -63,10 +63,7 @@ export function FindLegislativeAiRequestForm({
   return (
     <>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="xxspace-y-6 w-full"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
           <FormField
             control={form.control}
             name="query"

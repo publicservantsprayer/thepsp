@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import {
   zodFirestoreDocumentReference,
-  zodFirestoreTimestamp,
   zodSimpleDocumentRef,
 } from './zod-firestore-schemas'
 import { stateCodeSchema } from './states/states.schema'

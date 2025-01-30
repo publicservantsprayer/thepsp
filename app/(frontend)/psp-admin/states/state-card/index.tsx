@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { getDistricts, getLeader } from '@/lib/firebase/firestore'
+import { getLeader } from '@/lib/firebase/firestore'
 import { Branch, Jurisdiction, LeaderAiQuery, State } from '@/lib/types'
 import {
   Dialog,
@@ -31,8 +31,6 @@ export async function StateCard({ state }: StateCardProps) {
     lieutenantGovernor: leaderAiQuerySchema.parse(lieutenantGovernor),
     secretaryOfState: leaderAiQuerySchema.parse(secretaryOfState),
   }
-
-  const districts = await getDistricts(state)
 
   return (
     <Card>
@@ -190,7 +188,11 @@ async function SecretaryOfState({ state }: StateCardProps) {
   )
 }
 
-function JudicialSystem({ state }: StateCardProps) {
+function JudicialSystem(
+  {
+    // state
+  }: StateCardProps,
+) {
   return (
     <>
       <OfficeAndName office="Highest Appellate Court" name={undefined} />
@@ -199,7 +201,11 @@ function JudicialSystem({ state }: StateCardProps) {
   )
 }
 
-function Justices({ state }: StateCardProps) {
+function Justices(
+  {
+    // state
+  }: StateCardProps,
+) {
   return (
     <>
       <OfficeAndName office="Chief Justice" name={undefined} />
@@ -208,7 +214,11 @@ function Justices({ state }: StateCardProps) {
   )
 }
 
-function LegislativeSystem({ state }: StateCardProps) {
+function LegislativeSystem(
+  {
+    // state
+  }: StateCardProps,
+) {
   return (
     <>
       <OfficeAndName office="Upper Chamber" name="U.S. Senate" />

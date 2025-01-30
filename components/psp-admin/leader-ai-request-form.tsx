@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,18 +16,8 @@ import {
 } from '@/components/ui/form'
 import React from 'react'
 import { Textarea } from '@/components/ui/textarea'
-import {
-  executiveRequest,
-  singleLeaderRequest,
-} from '@/server-functions/ai/executive-request'
-import { DialogClose } from '@/components/ui/dialog'
-import {
-  Branch,
-  Jurisdiction,
-  LeaderAiQuery,
-  State,
-  StateExecutiveStructure,
-} from '@/lib/types'
+import { singleLeaderRequest } from '@/server-functions/ai/executive-request'
+import { LeaderAiQuery, State } from '@/lib/types'
 import { CloudCog } from 'lucide-react'
 
 const FormSchema = z.object({

@@ -46,7 +46,7 @@ export default async function StatePage({ params }: Props) {
         </div>
       )}
 
-      <DailyLeaders stateCode={stateCode} />
+      <DailyLeaders state={state} />
     </div>
   )
 }

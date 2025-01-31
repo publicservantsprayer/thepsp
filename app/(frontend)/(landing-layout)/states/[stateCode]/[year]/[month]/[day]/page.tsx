@@ -1,5 +1,7 @@
-import { makeValidStateCode } from '@/lib/get-state-info'
+import { makeValidStateCode, validateStateCode } from '@/lib/get-state-info'
 import { DailyLeaders } from '../../../daily-leaders'
+import { mustGetState } from '@/lib/firebase/firestore'
+import { notFound } from 'next/navigation'
 
 interface Props {
   params: Promise<{
@@ -13,10 +15,16 @@ interface Props {
 export default async function StatePage({ params }: Props) {
   const { stateCode, year, month, day } = await params
 
+  if (!validateStateCode(stateCode.toUpperCase())) {
+    return notFound()
+  }
+
+  const state = await mustGetState(makeValidStateCode(stateCode))
+
   return (
     <div>
       <DailyLeaders
-        stateCode={makeValidStateCode(stateCode)}
+        state={state}
         year={Number(year)}
         month={Number(month)}
         day={Number(day)}

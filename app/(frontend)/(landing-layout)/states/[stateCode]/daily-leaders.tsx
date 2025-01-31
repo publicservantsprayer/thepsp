@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { notFound } from 'next/navigation'
-import type { Post, PostLeader, StateCode } from '@/lib/types'
+import type { Post, PostLeader, State, StateCode } from '@/lib/types'
 import { SiFacebook, SiX } from 'react-icons/si'
 import { MdEmail } from 'react-icons/md'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -15,13 +15,13 @@ import { Separator } from '@/components/ui/separator'
 import { getStateInfo } from '@/lib/get-state-info'
 
 interface Props {
-  stateCode: StateCode
+  state: State
   year?: number
   month?: number
   day?: number
 }
 
-export async function DailyLeaders({ stateCode, year, month, day }: Props) {
+export async function DailyLeaders({ state, year, month, day }: Props) {
   let post: Post
 
   if (year && month && day) {
@@ -29,9 +29,9 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
     if (!date.isValid()) {
       return notFound()
     }
-    post = await getHistoricalPost(stateCode, date.format('YYYY-MM-DD'))
+    post = await getHistoricalPost(state.ref.id, date.format('YYYY-MM-DD'))
   } else {
-    post = await getLatestPost(stateCode)
+    post = await getLatestPost(state.ref.id)
   }
 
   return (
@@ -45,25 +45,29 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
             Today
           </TabsTrigger>
           <TabsTrigger
-            value="email"
-            className="gap-2 data-[state=active]:text-accent-foreground"
+            value="x"
+            className="h-8 gap-2 data-[state=active]:text-accent-foreground"
             disabled={true}
+            // disabled={!state.createDailyPost}
           >
-            <MdEmail /> Email
+            <SiX />
+            {/* <span className="hidden sm:inline"> platform</span> */}
           </TabsTrigger>
           <TabsTrigger
             value="facebook"
             className="h-8 gap-2 data-[state=active]:text-accent-foreground"
             disabled={true}
+            // disabled={!state.createDailyPost}
           >
             <SiFacebook />
           </TabsTrigger>
           <TabsTrigger
-            value="x"
-            className="h-8 gap-2 data-[state=active]:text-accent-foreground"
+            value="email"
+            className="gap-2 data-[state=active]:text-accent-foreground"
             disabled={true}
+            // disabled={!state.createDailyPost}
           >
-            <SiX />
+            <MdEmail />
           </TabsTrigger>
         </TabsList>
 
@@ -91,7 +95,7 @@ export async function DailyLeaders({ stateCode, year, month, day }: Props) {
           </div>
 
           <div className="col-span-4 rounded-lg bg-card p-2 text-card-foreground sm:rounded-l-none sm:rounded-r-lg">
-            <StateMessage stateCode={stateCode} />
+            <StateMessage stateCode={state.ref.id} />
           </div>
         </div>
       </Tabs>
@@ -104,15 +108,15 @@ function LeaderPhoto({ leader }: { leader: PostLeader }) {
 
   return (
     <div className="m-1 h-[148px] w-full max-w-[108px]">
-      <Link href={`/leader/${leader.permaLink}`}>
-        <Image
-          height={148}
-          width={108}
-          src={leaderPhoto(leader)}
-          alt="Leader"
-          className="rounded-lg"
-        />
-      </Link>
+      {/* <Link href={`/leader/${leader.permaLink}`}> */}
+      <Image
+        height={148}
+        width={108}
+        src={leaderPhoto(leader)}
+        alt="Leader"
+        className="rounded-lg"
+      />
+      {/* </Link> */}
     </div>
   )
 }
@@ -133,18 +137,19 @@ export function StateMessage({ stateCode }: { stateCode: StateCode }) {
 
   return (
     <div className="grid gap-3 p-4 font-light leading-relaxed text-muted-foreground">
-      <h2 className="text-2xl">PSP {stateName}</h2>
+      <h2 className="font-psp text-2xl uppercase text-foreground">
+        PSP &middot; {stateName}
+      </h2>
 
       <Separator className="bg-muted-foreground" />
 
       <p>
         Every day we pray for three {stateName}{' '}
-        <Link
+        {/* <Link
           href={`/states/${stateCode.toLowerCase()}/leaders`}
           className="underline"
-        >
-          legislators
-        </Link>{' '}
+        > */}
+        legislators {/* </Link>{' '} */}
         on both the state and federal level.
       </p>
 

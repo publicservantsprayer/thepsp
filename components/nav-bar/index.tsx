@@ -125,7 +125,6 @@ export async function NavBar() {
         {/* Hamburger menu on small screens */}
         <HamburgerDrawer resources={resources} learnMore={learnMore} />
 
-        {/* Logo or brand name */}
         <Link href="/" className="font-psp uppercase md:flex">
           PSP &middot; <StateName />
         </Link>

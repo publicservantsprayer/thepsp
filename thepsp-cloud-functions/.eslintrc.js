@@ -31,6 +31,7 @@ module.exports = {
   rules: {
     'import/no-unresolved': 0,
     // indent: ['error', 2],
+    '@typescript-eslint/no-inferrable-types': 2,
     'prettier/prettier': 0, // Add this line
   },
 }

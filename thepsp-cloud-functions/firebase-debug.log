@@ -1,0 +1,393 @@
+[debug] [2025-01-31T05:33:42.006Z] ----------------------------------------------------------------------
+[debug] [2025-01-31T05:33:42.008Z] Command:       /Users/namick/.asdf/installs/nodejs/22.6.0/bin/node /Users/namick/.asdf/installs/nodejs/22.6.0/bin/firebase functions:shell
+[debug] [2025-01-31T05:33:42.008Z] CLI Version:   13.29.3
+[debug] [2025-01-31T05:33:42.008Z] Platform:      darwin
+[debug] [2025-01-31T05:33:42.008Z] Node Version:  v22.6.0
+[debug] [2025-01-31T05:33:42.008Z] Time:          Fri Jan 31 2025 00:33:42 GMT-0500 (Eastern Standard Time)
+[debug] [2025-01-31T05:33:42.008Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-01-31T05:33:42.110Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-01-31T05:33:42.111Z] > authorizing via signed-in user (thoughtobject@gmail.com)
+[debug] [2025-01-31T05:33:42.111Z] [iam] checking project repsp123 for permissions ["firebase.projects.get"]
+[debug] [2025-01-31T05:33:42.111Z] Checked if tokens are valid: false, expires at: 1738301913557
+[debug] [2025-01-31T05:33:42.111Z] Checked if tokens are valid: false, expires at: 1738301913557
+[debug] [2025-01-31T05:33:42.112Z] > refreshing access token with scopes: []
+[debug] [2025-01-31T05:33:42.112Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-01-31T05:33:42.112Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-01-31T05:33:42.253Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-01-31T05:33:42.254Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-01-31T05:33:42.267Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/repsp123:testIamPermissions [none]
+[debug] [2025-01-31T05:33:42.267Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/repsp123:testIamPermissions x-goog-quota-user=projects/repsp123
+[debug] [2025-01-31T05:33:42.267Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/repsp123:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2025-01-31T05:33:42.443Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/repsp123:testIamPermissions 200
+[debug] [2025-01-31T05:33:42.443Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/repsp123:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2025-01-31T05:33:42.621Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-01-31T05:33:42.622Z] defaultcredentials: writing to file /Users/namick/.config/firebase/thoughtobject_gmail_com_application_default_credentials.json
+[debug] [2025-01-31T05:33:42.624Z] DEBUG: Setting GAC to /Users/namick/.config/firebase/thoughtobject_gmail_com_application_default_credentials.json
+[debug] [2025-01-31T05:33:42.624Z] Checked if tokens are valid: true, expires at: 1738305221254
+[debug] [2025-01-31T05:33:42.624Z] Checked if tokens are valid: true, expires at: 1738305221254
+[debug] [2025-01-31T05:33:42.625Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/repsp123/adminSdkConfig [none]
+[debug] [2025-01-31T05:33:42.964Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/repsp123/adminSdkConfig 200
+[debug] [2025-01-31T05:33:42.964Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/repsp123/adminSdkConfig {"projectId":"repsp123","databaseURL":"https://repsp123.firebaseio.com","storageBucket":"repsp123.appspot.com","locationId":"us-central"}
+[debug] [2025-01-31T05:33:42.983Z] [functions] Watching "/Users/namick/code/thepsp/cloud-functions" for Cloud Functions...
+[debug] [2025-01-31T05:33:42.995Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] ⚠  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2025-01-31T05:33:43.581Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase serve --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "test": "GOOGLE_APPLICATION_CREDENTIALS=`pwd`/../serviceAccountKey-staging.json firebase emulators:exec --only functions,firestore 'jest --watch functions'"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^3.1.0",
+    "child-process-promise": "^2.2.1",
+    "cores": "^0.8.5",
+    "dateformat": "^3.0.3",
+    "encodeurl": "^1.0.2",
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "fast-crc32c": "^1.0.4",
+    "firebase-admin": "^9.4.2",
+    "firebase-functions": "^3.3.0",
+    "fs": "0.0.1-security",
+    "googleapis": "^67.0.0",
+    "grpc": "^1.24.2",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.27",
+    "os": "^0.1.1",
+    "path": "^0.12.7",
+    "querystring": "^0.2.0",
+    "readline-promise": "^1.0.4",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.7",
+    "supertest": "^4.0.2",
+    "twitter": "^1.7.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.6.0",
+    "eslint-config-google": "^0.14.0",
+    "firebase-functions-test": "^0.1.6",
+    "jest": "^24.9.0"
+  },
+  "private": true
+}
+[debug] [2025-01-31T05:33:43.581Z] Building nodejs source
+[debug] [2025-01-31T05:33:43.582Z] Failed to find version of module node: reached end of search path /Users/namick/code/thepsp/cloud-functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "22". Using node@22 from host. 
+[warn] ⚠  functions: You are using an old version of firebase-functions SDK (3.13.0). Please update firebase-functions SDK to >=3.20.0 
+[debug] [2025-01-31T05:33:43.876Z] [functions] Loaded functions definitions from source: rss, createFacebookPost, createUserProfile.
+[debug] [2025-01-31T05:33:43.876Z] [functions[us-central1-rss]] http function initialized (http://127.0.0.1:5001/repsp123/us-central1/rss).
+[debug] [2025-01-31T05:33:43.876Z] [functions[us-central1-createFacebookPost]] function ignored because the firestore emulator does not exist or is not running.
+[debug] [2025-01-31T05:33:43.876Z] addAuthTrigger {"eventTrigger":{"eventType":"providers/firebase.auth/eventTypes/user.create","resource":"projects/repsp123"}}
+[debug] [2025-01-31T05:33:43.876Z] [functions[us-central1-createUserProfile]] auth function initialized.
+[debug] [2025-01-31T05:33:43.876Z] [functions] Watching "/Users/namick/code/thepsp/thepsp-cloud-functions" for Cloud Functions...
+[debug] [2025-01-31T05:33:43.877Z] Validating nodejs source
+[debug] [2025-01-31T05:33:44.277Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "child-process-promise": "^2.2.1",
+    "firebase-admin": "^13.0.2",
+    "firebase-functions": "^6.3.0",
+    "moment-timezone": "^0.5.47"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^5.2.3",
+    "firebase-functions-test": "^3.1.0",
+    "prettier": "^3.4.2",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2025-01-31T05:33:44.277Z] Building nodejs source
+[debug] [2025-01-31T05:33:44.277Z] Failed to find version of module node: reached end of search path /Users/namick/code/thepsp/thepsp-cloud-functions/node_modules
+[info] ✔  functions: Using node@22 from host. 
+[debug] [2025-01-31T05:33:44.278Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-01-31T05:33:44.285Z] Found firebase-functions binary at '/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8445
+
+[error] (node:51253) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+[debug] [2025-01-31T05:33:44.815Z] Got response from /__/functions.yaml {"endpoints":{"createDailyPostHandler":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"scheduleTrigger":{"schedule":"every day 04:55","retryConfig":{},"timeZone":"America/New_York"},"entryPoint":"createDailyPostHandler"},"createPostPhotoHandler":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"eventTrigger":{"eventType":"google.cloud.firestore.document.v1.created","eventFilters":{"database":"(default)","namespace":"(default)"},"eventFilterPathPatterns":{"document":"states/{stateCode}/posts/{date}"},"retry":false},"entryPoint":"createPostPhotoHandler"}},"specVersion":"v1alpha1","requiredAPIs":[{"api":"cloudscheduler.googleapis.com","reason":"Needed for scheduled functions."}],"extensions":{}}
+[debug] [2025-01-31T05:33:49.829Z] [functions] Loaded functions definitions from source: createDailyPostHandler, createPostPhotoHandler.
+[debug] [2025-01-31T05:33:49.830Z] [functions[us-central1-createDailyPostHandler]] function ignored because the pubsub emulator does not exist or is not running.
+[debug] [2025-01-31T05:33:49.830Z] [functions[us-central1-createPostPhotoHandler]] function ignored because the firestore emulator does not exist or is not running.
+[info] i  functions: Loaded functions: rss, createFacebookPost, createUserProfile, createDailyPostHandler, createPostPhotoHandler 
+[warn] ⚠  functions: The following emulators are not running, calls to these services will affect production: firestore, database, pubsub, storage, eventarc, tasks 
+[debug] [2025-01-31T05:36:25.505Z] DEBUG: File /Users/namick/code/thepsp/thepsp-cloud-functions/src/index.ts changed, reloading triggers
+[debug] [2025-01-31T05:36:26.507Z] Validating nodejs source
+[debug] [2025-01-31T05:36:27.017Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "child-process-promise": "^2.2.1",
+    "firebase-admin": "^13.0.2",
+    "firebase-functions": "^6.3.0",
+    "moment-timezone": "^0.5.47"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^5.2.3",
+    "firebase-functions-test": "^3.1.0",
+    "prettier": "^3.4.2",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2025-01-31T05:36:27.017Z] Building nodejs source
+[debug] [2025-01-31T05:36:27.017Z] Failed to find version of module node: reached end of search path /Users/namick/code/thepsp/thepsp-cloud-functions/node_modules
+[info] ✔  functions: Using node@22 from host. 
+[debug] [2025-01-31T05:36:27.018Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-01-31T05:36:27.019Z] Found firebase-functions binary at '/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8624
+
+[error] (node:51384) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+[debug] [2025-01-31T05:36:27.408Z] Got response from /__/functions.yaml {"endpoints":{"createDailyPostHandler":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"scheduleTrigger":{"schedule":"every day 04:55","retryConfig":{},"timeZone":"America/New_York"},"entryPoint":"createDailyPostHandler"},"createPostPhotoHandler":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"eventTrigger":{"eventType":"google.cloud.firestore.document.v1.created","eventFilters":{"database":"(default)","namespace":"(default)"},"eventFilterPathPatterns":{"document":"states/{stateCode}/posts/{date}"},"retry":false},"entryPoint":"createPostPhotoHandler"}},"specVersion":"v1alpha1","requiredAPIs":[{"api":"cloudscheduler.googleapis.com","reason":"Needed for scheduled functions."}],"extensions":{}}
+[debug] [2025-01-31T05:36:32.417Z] [functions] Loaded functions definitions from source: createDailyPostHandler, createPostPhotoHandler.
+[debug] [2025-01-31T05:36:47.744Z] shell:createDailyPostHandler: trigger={"entryPoint":"createDailyPostHandler","platform":"gcfv2","region":"us-central1","name":"createDailyPostHandler","id":"us-central1-createDailyPostHandler","codebase":"thepsp","availableMemoryMb":256,"labels":{"EVENTARC_CLOUD_EVENT_SOURCE":"run-emulated.googleapis.com/projects/repsp123/locations/us-central1/services/createDailyPostHandler"},"timeoutSeconds":60,"secretEnvironmentVariables":[],"eventTrigger":{"eventType":"pubsub","resource":""},"schedule":{"schedule":"every day 04:55","timeZone":"America/New_York","retryConfig":{}}}
+[debug] [2025-01-31T05:36:47.744Z] shell:createDailyPostHandler: opts={}, data={}
+[debug] [2025-01-31T05:36:47.747Z] DEBUG: [worker-pool] addWorker(us-central1-createDailyPostHandler)
+[debug] [2025-01-31T05:36:47.747Z] DEBUG: [worker-pool] Adding worker with key us-central1-createDailyPostHandler, total=1
+[info] >  (node:51401) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead. {"user":"(node:51401) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"\u001b[90m> \u001b[39m (node:51401) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead."}}
+[info] >  (Use `node --trace-deprecation ...` to show where the warning was created) {"user":"(Use `node --trace-deprecation ...` to show where the warning was created)","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"\u001b[90m> \u001b[39m (Use `node --trace-deprecation ...` to show where the warning was created)"}}
+[debug] [2025-01-31T05:36:48.378Z] DEBUG: [runtime-status] [51401] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.0.2","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2025-01-31T05:36:48.378Z] DEBUG: [runtime-status] [51401] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.0","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/index.js"}
+[debug] [2025-01-31T05:36:48.378Z] DEBUG: [runtime-status] [51401] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}]
+[debug] [2025-01-31T05:36:48.379Z] DEBUG: [runtime-status] [51401] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.0","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/index.js"}
+[debug] [2025-01-31T05:36:48.563Z] DEBUG: [runtime-status] [51401] Checked functions.config() {"config":{}}
+[debug] [2025-01-31T05:36:48.564Z] DEBUG: [runtime-status] [51401] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"6.3.0","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/index.js"}}
+[debug] [2025-01-31T05:36:48.564Z] DEBUG: [runtime-status] [51401] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.0","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/index.js"}
+[debug] [2025-01-31T05:36:48.565Z] DEBUG: [runtime-status] [51401] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.0.2","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2025-01-31T05:36:48.566Z] DEBUG: [runtime-status] [51401] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.0","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/index.js"}
+[debug] [2025-01-31T05:36:48.567Z] DEBUG: [runtime-status] [51401] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"13.0.2","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-admin/lib/index.js"}}
+[warn] ⚠  functions: The Firebase Storage emulator is not running, so calls to Firebase Storage will affect production. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"The Firebase Storage emulator is not running, so calls to Firebase Storage will affect production."}}
+[debug] [2025-01-31T05:36:48.628Z] DEBUG: [runtime-status] [51401] Functions runtime initialized. {"cwd":"/Users/namick/code/thepsp/thepsp-cloud-functions","node_version":"22.6.0"}
+[debug] [2025-01-31T05:36:48.629Z] DEBUG: [runtime-status] [51401] Listening to port: /var/folders/m0/_6zrwdm128ldpsw24klxp18h0000gn/T/fire_emu_26633465b883442a.sock
+[debug] [2025-01-31T05:36:48.664Z] DEBUG: [worker-us-central1-createDailyPostHandler-2280f8d0-5b0b-4568-8f80-4a006a437fc7]: IDLE
+[info] >  {"severity":"INFO","message":"Creating daily posts"} {"user":{"severity":"INFO","message":"Creating daily posts"},"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"\u001b[90m> \u001b[39m {\"severity\":\"INFO\",\"message\":\"Creating daily posts\"}"}}
+[warn] ⚠  Google API requested!
+   - URL: "https://oauth2.googleapis.com/token"
+   - Be careful, this may be a production service. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"Google API requested!\n   - URL: \"https://oauth2.googleapis.com/token\"\n   - Be careful, this may be a production service."}}
+[info] >  {"severity":"ERROR","message":"Error: 9 FAILED_PRECONDITION: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/repsp123/firestore/indexes?create_composite=Ckhwcm9qZWN0cy9yZXBzcDEyMy9kYXRhYmFzZXMvKGRlZmF1bHQpL2NvbGxlY3Rpb25Hcm91cHMvbGVhZGVycy9pbmRleGVzL18QARoMCghoYXNQaG90bxABGg0KCXBlcm1hTGluaxABGgwKCF9fbmFtZV9fEAE\n    at entryFromArgs (/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/logger/index.js:133:19)\n    at Object.error (/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/logger/index.js:120:11)\n    at httpFunc (/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/providers/scheduler.js:72:20)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async runFunction (/Users/namick/.asdf/installs/nodejs/22.6.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:506:9)\n    at async runHTTPS (/Users/namick/.asdf/installs/nodejs/22.6.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:531:5)\n    at async /Users/namick/.asdf/installs/nodejs/22.6.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:694:21"} {"user":{"severity":"ERROR","message":"Error: 9 FAILED_PRECONDITION: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/repsp123/firestore/indexes?create_composite=Ckhwcm9qZWN0cy9yZXBzcDEyMy9kYXRhYmFzZXMvKGRlZmF1bHQpL2NvbGxlY3Rpb25Hcm91cHMvbGVhZGVycy9pbmRleGVzL18QARoMCghoYXNQaG90bxABGg0KCXBlcm1hTGluaxABGgwKCF9fbmFtZV9fEAE\n    at entryFromArgs (/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/logger/index.js:133:19)\n    at Object.error (/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/logger/index.js:120:11)\n    at httpFunc (/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/providers/scheduler.js:72:20)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async runFunction (/Users/namick/.asdf/installs/nodejs/22.6.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:506:9)\n    at async runHTTPS (/Users/namick/.asdf/installs/nodejs/22.6.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:531:5)\n    at async /Users/namick/.asdf/installs/nodejs/22.6.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:694:21"},"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"\u001b[90m> \u001b[39m {\"severity\":\"ERROR\",\"message\":\"Error: 9 FAILED_PRECONDITION: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/repsp123/firestore/indexes?create_composite=Ckhwcm9qZWN0cy9yZXBzcDEyMy9kYXRhYmFzZXMvKGRlZmF1bHQpL2NvbGxlY3Rpb25Hcm91cHMvbGVhZGVycy9pbmRleGVzL18QARoMCghoYXNQaG90bxABGg0KCXBlcm1hTGluaxABGgwKCF9fbmFtZV9fEAE\\n    at entryFromArgs (/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/logger/index.js:133:19)\\n    at Object.error (/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/logger/index.js:120:11)\\n    at httpFunc (/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/providers/scheduler.js:72:20)\\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\\n    at async runFunction (/Users/namick/.asdf/installs/nodejs/22.6.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:506:9)\\n    at async runHTTPS (/Users/namick/.asdf/installs/nodejs/22.6.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:531:5)\\n    at async /Users/namick/.asdf/installs/nodejs/22.6.0/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:694:21\"}"}}
+[debug] [2025-01-31T05:40:56.807Z] DEBUG: File /Users/namick/code/thepsp/thepsp-cloud-functions/src/index.ts changed, reloading triggers
+[debug] [2025-01-31T05:40:57.210Z] DEBUG: File /Users/namick/code/thepsp/thepsp-cloud-functions/lib/index.js changed, reloading triggers
+[debug] [2025-01-31T05:40:57.210Z] DEBUG: File /Users/namick/code/thepsp/thepsp-cloud-functions/lib/createPostPhoto/index.js.map changed, reloading triggers
+[debug] [2025-01-31T05:40:57.210Z] DEBUG: File /Users/namick/code/thepsp/thepsp-cloud-functions/lib/createPostPhoto/index.js changed, reloading triggers
+[debug] [2025-01-31T05:40:57.210Z] DEBUG: File /Users/namick/code/thepsp/thepsp-cloud-functions/lib/index.js.map changed, reloading triggers
+[debug] [2025-01-31T05:40:58.212Z] Validating nodejs source
+[debug] [2025-01-31T05:40:58.750Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "child-process-promise": "^2.2.1",
+    "firebase-admin": "^13.0.2",
+    "firebase-functions": "^6.3.0",
+    "moment-timezone": "^0.5.47"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^5.2.3",
+    "firebase-functions-test": "^3.1.0",
+    "prettier": "^3.4.2",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2025-01-31T05:40:58.750Z] Building nodejs source
+[debug] [2025-01-31T05:40:58.750Z] Failed to find version of module node: reached end of search path /Users/namick/code/thepsp/thepsp-cloud-functions/node_modules
+[info] ✔  functions: Using node@22 from host. 
+[debug] [2025-01-31T05:40:58.751Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-01-31T05:40:58.753Z] Found firebase-functions binary at '/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8114
+
+[error] (node:51549) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+[debug] [2025-01-31T05:40:59.194Z] Got response from /__/functions.yaml {"endpoints":{"createDailyPostHandler":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"scheduleTrigger":{"schedule":"every day 04:55","retryConfig":{},"timeZone":"America/New_York"},"entryPoint":"createDailyPostHandler"},"createPostPhotoHandler":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"eventTrigger":{"eventType":"google.cloud.firestore.document.v1.created","eventFilters":{"database":"psp-dev","namespace":"(default)"},"eventFilterPathPatterns":{"document":"states/{stateCode}/posts/{date}"},"retry":false},"entryPoint":"createPostPhotoHandler"}},"specVersion":"v1alpha1","requiredAPIs":[{"api":"cloudscheduler.googleapis.com","reason":"Needed for scheduled functions."}],"extensions":{}}
+[debug] [2025-01-31T05:41:04.202Z] [functions] Loaded functions definitions from source: createDailyPostHandler, createPostPhotoHandler.
+[debug] [2025-01-31T05:41:04.202Z] DEBUG: [worker-pool] Shutting down IDLE worker (us-central1-createDailyPostHandler)
+[debug] [2025-01-31T05:41:04.202Z] DEBUG: [worker-us-central1-createDailyPostHandler-2280f8d0-5b0b-4568-8f80-4a006a437fc7]: FINISHING
+[debug] [2025-01-31T05:41:04.202Z] DEBUG: Definition for trigger createPostPhotoHandler changed from {"eventType":"google.cloud.firestore.document.v1.created","eventFilters":{"database":"(default)","namespace":"(default)"},"eventFilterPathPatterns":{"document":"states/{stateCode}/posts/{date}"}} to {"eventType":"google.cloud.firestore.document.v1.created","eventFilters":{"database":"psp-dev","namespace":"(default)"},"eventFilterPathPatterns":{"document":"states/{stateCode}/posts/{date}"}}
+[debug] [2025-01-31T05:41:04.202Z] [functions[us-central1-createPostPhotoHandler]] function ignored because the firestore emulator does not exist or is not running.
+[debug] [2025-01-31T05:41:04.208Z] DEBUG: [worker-us-central1-createDailyPostHandler-2280f8d0-5b0b-4568-8f80-4a006a437fc7]: exited
+[debug] [2025-01-31T05:41:04.208Z] DEBUG: [worker-us-central1-createDailyPostHandler-2280f8d0-5b0b-4568-8f80-4a006a437fc7]: FINISHED
+[debug] [2025-01-31T05:41:09.299Z] shell:createDailyPostHandler: trigger={"entryPoint":"createDailyPostHandler","platform":"gcfv2","region":"us-central1","name":"createDailyPostHandler","id":"us-central1-createDailyPostHandler","codebase":"thepsp","availableMemoryMb":256,"labels":{"EVENTARC_CLOUD_EVENT_SOURCE":"run-emulated.googleapis.com/projects/repsp123/locations/us-central1/services/createDailyPostHandler"},"timeoutSeconds":60,"secretEnvironmentVariables":[],"eventTrigger":{"eventType":"pubsub","resource":""},"schedule":{"schedule":"every day 04:55","timeZone":"America/New_York","retryConfig":{}}}
+[debug] [2025-01-31T05:41:09.299Z] shell:createDailyPostHandler: opts={}, data={}
+[debug] [2025-01-31T05:41:09.299Z] DEBUG: [worker-pool] Cleaned up workers for us-central1-createDailyPostHandler: 1 --> 0
+[debug] [2025-01-31T05:41:09.301Z] DEBUG: [worker-pool] addWorker(us-central1-createDailyPostHandler)
+[debug] [2025-01-31T05:41:09.301Z] DEBUG: [worker-pool] Adding worker with key us-central1-createDailyPostHandler, total=1
+[info] >  (node:51558) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead. {"user":"(node:51558) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"\u001b[90m> \u001b[39m (node:51558) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead."}}
+[info] >  (Use `node --trace-deprecation ...` to show where the warning was created) {"user":"(Use `node --trace-deprecation ...` to show where the warning was created)","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"\u001b[90m> \u001b[39m (Use `node --trace-deprecation ...` to show where the warning was created)"}}
+[debug] [2025-01-31T05:41:10.033Z] DEBUG: [runtime-status] [51558] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.0.2","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2025-01-31T05:41:10.033Z] DEBUG: [runtime-status] [51558] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.0","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/index.js"}
+[debug] [2025-01-31T05:41:10.033Z] DEBUG: [runtime-status] [51558] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}]
+[debug] [2025-01-31T05:41:10.034Z] DEBUG: [runtime-status] [51558] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.0","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/index.js"}
+[debug] [2025-01-31T05:41:10.227Z] DEBUG: [runtime-status] [51558] Checked functions.config() {"config":{}}
+[debug] [2025-01-31T05:41:10.227Z] DEBUG: [runtime-status] [51558] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"6.3.0","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/index.js"}}
+[debug] [2025-01-31T05:41:10.227Z] DEBUG: [runtime-status] [51558] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.0","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/index.js"}
+[debug] [2025-01-31T05:41:10.229Z] DEBUG: [runtime-status] [51558] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.0.2","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2025-01-31T05:41:10.230Z] DEBUG: [runtime-status] [51558] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.0","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/index.js"}
+[debug] [2025-01-31T05:41:10.230Z] DEBUG: [runtime-status] [51558] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"13.0.2","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-admin/lib/index.js"}}
+[debug] [2025-01-31T05:41:10.294Z] DEBUG: [runtime-status] [51558] Functions runtime initialized. {"cwd":"/Users/namick/code/thepsp/thepsp-cloud-functions","node_version":"22.6.0"}
+[debug] [2025-01-31T05:41:10.294Z] DEBUG: [runtime-status] [51558] Listening to port: /var/folders/m0/_6zrwdm128ldpsw24klxp18h0000gn/T/fire_emu_54195aaeb8138fb8.sock
+[debug] [2025-01-31T05:41:10.316Z] DEBUG: [worker-us-central1-createDailyPostHandler-e6b41833-dbae-4cd3-a943-9605a91bccb7]: IDLE
+[info] >  {"severity":"INFO","message":"Creating daily posts"} {"user":{"severity":"INFO","message":"Creating daily posts"},"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"\u001b[90m> \u001b[39m {\"severity\":\"INFO\",\"message\":\"Creating daily posts\"}"}}
+[warn] ⚠  Google API requested!
+   - URL: "https://oauth2.googleapis.com/token"
+   - Be careful, this may be a production service. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"Google API requested!\n   - URL: \"https://oauth2.googleapis.com/token\"\n   - Be careful, this may be a production service."}}
+[info] >  {"severity":"INFO","message":"Daily posts created"} {"user":{"severity":"INFO","message":"Daily posts created"},"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"\u001b[90m> \u001b[39m {\"severity\":\"INFO\",\"message\":\"Daily posts created\"}"}}
+[debug] [2025-01-31T05:41:53.763Z] DEBUG: File /Users/namick/code/thepsp/thepsp-cloud-functions/src/index.ts changed, reloading triggers
+[debug] [2025-01-31T05:41:54.065Z] DEBUG: File /Users/namick/code/thepsp/thepsp-cloud-functions/lib/createPostPhoto/index.js changed, reloading triggers
+[debug] [2025-01-31T05:41:54.066Z] DEBUG: File /Users/namick/code/thepsp/thepsp-cloud-functions/lib/createPostPhoto/index.js.map changed, reloading triggers
+[debug] [2025-01-31T05:41:54.066Z] DEBUG: File /Users/namick/code/thepsp/thepsp-cloud-functions/lib/index.js.map changed, reloading triggers
+[debug] [2025-01-31T05:41:54.066Z] DEBUG: File /Users/namick/code/thepsp/thepsp-cloud-functions/lib/index.js changed, reloading triggers
+[debug] [2025-01-31T05:41:55.067Z] Validating nodejs source
+[debug] [2025-01-31T05:41:55.557Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "child-process-promise": "^2.2.1",
+    "firebase-admin": "^13.0.2",
+    "firebase-functions": "^6.3.0",
+    "moment-timezone": "^0.5.47"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^5.2.3",
+    "firebase-functions-test": "^3.1.0",
+    "prettier": "^3.4.2",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2025-01-31T05:41:55.558Z] Building nodejs source
+[debug] [2025-01-31T05:41:55.558Z] Failed to find version of module node: reached end of search path /Users/namick/code/thepsp/thepsp-cloud-functions/node_modules
+[info] ✔  functions: Using node@22 from host. 
+[debug] [2025-01-31T05:41:55.558Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-01-31T05:41:55.559Z] Found firebase-functions binary at '/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8516
+
+[error] (node:51636) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+[debug] [2025-01-31T05:41:55.985Z] Got response from /__/functions.yaml {"endpoints":{"createDailyPostHandler":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"scheduleTrigger":{"schedule":"every day 04:55","retryConfig":{},"timeZone":"America/New_York"},"entryPoint":"createDailyPostHandler"},"createPostPhotoHandler":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"eventTrigger":{"eventType":"google.cloud.firestore.document.v1.created","eventFilters":{"database":"psp-dev","namespace":"(default)"},"eventFilterPathPatterns":{"document":"states/{stateCode}/posts/{date}"},"retry":false},"entryPoint":"createPostPhotoHandler"}},"specVersion":"v1alpha1","requiredAPIs":[{"api":"cloudscheduler.googleapis.com","reason":"Needed for scheduled functions."}],"extensions":{}}
+[debug] [2025-01-31T05:42:00.994Z] [functions] Loaded functions definitions from source: createDailyPostHandler, createPostPhotoHandler.
+[debug] [2025-01-31T05:42:00.994Z] DEBUG: [worker-pool] Shutting down IDLE worker (us-central1-createDailyPostHandler)
+[debug] [2025-01-31T05:42:00.994Z] DEBUG: [worker-us-central1-createDailyPostHandler-e6b41833-dbae-4cd3-a943-9605a91bccb7]: FINISHING
+[debug] [2025-01-31T05:42:00.997Z] DEBUG: [worker-us-central1-createDailyPostHandler-e6b41833-dbae-4cd3-a943-9605a91bccb7]: exited
+[debug] [2025-01-31T05:42:00.997Z] DEBUG: [worker-us-central1-createDailyPostHandler-e6b41833-dbae-4cd3-a943-9605a91bccb7]: FINISHED
+[debug] [2025-01-31T05:43:33.044Z] shell:createDailyPostHandler: trigger={"entryPoint":"createDailyPostHandler","platform":"gcfv2","region":"us-central1","name":"createDailyPostHandler","id":"us-central1-createDailyPostHandler","codebase":"thepsp","availableMemoryMb":256,"labels":{"EVENTARC_CLOUD_EVENT_SOURCE":"run-emulated.googleapis.com/projects/repsp123/locations/us-central1/services/createDailyPostHandler"},"timeoutSeconds":60,"secretEnvironmentVariables":[],"eventTrigger":{"eventType":"pubsub","resource":""},"schedule":{"schedule":"every day 04:55","timeZone":"America/New_York","retryConfig":{}}}
+[debug] [2025-01-31T05:43:33.044Z] shell:createDailyPostHandler: opts={}, data={}
+[debug] [2025-01-31T05:43:33.045Z] DEBUG: [worker-pool] Cleaned up workers for us-central1-createDailyPostHandler: 1 --> 0
+[debug] [2025-01-31T05:43:33.048Z] DEBUG: [worker-pool] addWorker(us-central1-createDailyPostHandler)
+[debug] [2025-01-31T05:43:33.048Z] DEBUG: [worker-pool] Adding worker with key us-central1-createDailyPostHandler, total=1
+[info] >  (node:51693) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead. {"user":"(node:51693) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"\u001b[90m> \u001b[39m (node:51693) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead."}}
+[info] >  (Use `node --trace-deprecation ...` to show where the warning was created) {"user":"(Use `node --trace-deprecation ...` to show where the warning was created)","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"\u001b[90m> \u001b[39m (Use `node --trace-deprecation ...` to show where the warning was created)"}}
+[debug] [2025-01-31T05:43:33.752Z] DEBUG: [runtime-status] [51693] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.0.2","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2025-01-31T05:43:33.753Z] DEBUG: [runtime-status] [51693] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.0","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/index.js"}
+[debug] [2025-01-31T05:43:33.753Z] DEBUG: [runtime-status] [51693] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}]
+[debug] [2025-01-31T05:43:33.753Z] DEBUG: [runtime-status] [51693] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.0","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/index.js"}
+[debug] [2025-01-31T05:43:33.974Z] DEBUG: [runtime-status] [51693] Checked functions.config() {"config":{}}
+[debug] [2025-01-31T05:43:33.974Z] DEBUG: [runtime-status] [51693] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"6.3.0","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/index.js"}}
+[debug] [2025-01-31T05:43:33.975Z] DEBUG: [runtime-status] [51693] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.0","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/index.js"}
+[debug] [2025-01-31T05:43:33.976Z] DEBUG: [runtime-status] [51693] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.0.2","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2025-01-31T05:43:33.977Z] DEBUG: [runtime-status] [51693] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.0","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-functions/lib/v2/index.js"}
+[debug] [2025-01-31T05:43:33.977Z] DEBUG: [runtime-status] [51693] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"13.0.2","resolution":"/Users/namick/code/thepsp/thepsp-cloud-functions/node_modules/firebase-admin/lib/index.js"}}
+[debug] [2025-01-31T05:43:34.039Z] DEBUG: [runtime-status] [51693] Functions runtime initialized. {"cwd":"/Users/namick/code/thepsp/thepsp-cloud-functions","node_version":"22.6.0"}
+[debug] [2025-01-31T05:43:34.039Z] DEBUG: [runtime-status] [51693] Listening to port: /var/folders/m0/_6zrwdm128ldpsw24klxp18h0000gn/T/fire_emu_0d286e6b66fbb384.sock
+[debug] [2025-01-31T05:43:34.064Z] DEBUG: [worker-us-central1-createDailyPostHandler-3460dfa6-4c48-4784-8134-8f8527e631a4]: IDLE
+[info] >  {"severity":"INFO","message":"Creating daily posts"} {"user":{"severity":"INFO","message":"Creating daily posts"},"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"\u001b[90m> \u001b[39m {\"severity\":\"INFO\",\"message\":\"Creating daily posts\"}"}}
+[warn] ⚠  Google API requested!
+   - URL: "https://oauth2.googleapis.com/token"
+   - Be careful, this may be a production service. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"Google API requested!\n   - URL: \"https://oauth2.googleapis.com/token\"\n   - Be careful, this may be a production service."}}
+[info] >  {"severity":"INFO","message":"Daily posts created"} {"user":{"severity":"INFO","message":"Daily posts created"},"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"\u001b[90m> \u001b[39m {\"severity\":\"INFO\",\"message\":\"Daily posts created\"}"}}
+[debug] [2025-01-31T05:47:35.378Z] shell:createDailyPostHandler: trigger={"entryPoint":"createDailyPostHandler","platform":"gcfv2","region":"us-central1","name":"createDailyPostHandler","id":"us-central1-createDailyPostHandler","codebase":"thepsp","availableMemoryMb":256,"labels":{"EVENTARC_CLOUD_EVENT_SOURCE":"run-emulated.googleapis.com/projects/repsp123/locations/us-central1/services/createDailyPostHandler"},"timeoutSeconds":60,"secretEnvironmentVariables":[],"eventTrigger":{"eventType":"pubsub","resource":""},"schedule":{"schedule":"every day 04:55","timeZone":"America/New_York","retryConfig":{}}}
+[debug] [2025-01-31T05:47:35.379Z] shell:createDailyPostHandler: opts={}, data={}
+[info] >  {"severity":"INFO","message":"Creating daily posts"} {"user":{"severity":"INFO","message":"Creating daily posts"},"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"\u001b[90m> \u001b[39m {\"severity\":\"INFO\",\"message\":\"Creating daily posts\"}"}}
+[info] >  {"severity":"INFO","message":"Daily posts created"} {"user":{"severity":"INFO","message":"Daily posts created"},"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createDailyPostHandler"},"extension":{},"message":"\u001b[90m> \u001b[39m {\"severity\":\"INFO\",\"message\":\"Daily posts created\"}"}}

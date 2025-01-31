@@ -10,7 +10,8 @@
     "strict": true,
     "target": "es2017",
     "forceConsistentCasingInFileNames": true,
-    "allowJs": true
+    "allowJs": true,
+    "skipLibCheck": true
   },
   "compileOnSave": true,
   "include": ["src"]

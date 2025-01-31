@@ -25,6 +25,7 @@ const timezone = 'America/New_York'
 const rss = require('./rss')
 
 const dateID = moment().tz(timezone).format('YYYY-MM-DD')
+
 exports.rss = functions.https.onRequest(rss(db, dateID))
 
 // exports.createPostPhoto = functions.firestore
@@ -49,17 +50,17 @@ exports.rss = functions.https.onRequest(rss(db, dateID))
 //     return Promise.all(posts)
 //   })
 
-// exports.createFacebookPost = functions.firestore
-//   .document('states/{stateCode}/posts/{dateID}')
-//   .onCreate((snapshot, context) => {
-//     const stateCode = context.params.stateCode
-//     const dateID = context.params.dateID
-//     const post = snapshot.data()
+exports.createFacebookPost = functions.firestore
+  .document('states/{stateCode}/posts/{dateID}')
+  .onCreate((snapshot, context) => {
+    const stateCode = context.params.stateCode
+    const dateID = context.params.dateID
+    const post = snapshot.data()
 
-//     const { createFacebookPost } = require('./facebook/createFacebookPost')
+    const { createFacebookPost } = require('./facebook/createFacebookPost')
 
-//     return createFacebookPost(db, dateID, stateCode, post)
-//   })
+    return createFacebookPost(db, dateID, stateCode, post)
+  })
 
 exports.createUserProfile = functions.auth.user().onCreate((user) => {
   const { createUserProfile } = require('./userProfile/createUserProfile')

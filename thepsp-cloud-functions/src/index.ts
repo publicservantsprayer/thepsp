@@ -18,53 +18,87 @@
 //   response.send('Hello from Firebase!')
 // })
 
-import * as functions from 'firebase-functions/v1'
-import * as admin from 'firebase-admin'
+import { initializeApp, applicationDefault } from 'firebase-admin/app'
+
+// import * as functions from 'firebase-functions/v1'
+import { onDocumentCreated } from 'firebase-functions/v2/firestore'
+import { onSchedule } from 'firebase-functions/v2/scheduler'
+import { logger } from 'firebase-functions'
+import { getFirestore } from 'firebase-admin/firestore'
+import { storage } from 'firebase-admin'
 import moment from 'moment-timezone'
-// import { stateCodes } from './utilities/states'
 import { createPostPhoto } from './createPostPhoto'
 import { createDailyPost } from './createDailyPost'
-import { createFacebookPost } from './facebook/createFacebookPost'
-import rss from './rss'
+import { Post } from './types'
+// import { createFacebookPost } from './facebook/createFacebookPost'
+// import rss from './rss'
 
-const stateCodes = ['AK']
+initializeApp({
+  credential: applicationDefault(),
+})
 
-admin.initializeApp()
-const db = admin.firestore()
+/**
+ * Development or Production database
+ */
+const databaseName = 'psp-dev'
+// const databaseName = '(default)'
 
-const timezone = 'America/New_York'
-const dateID = moment().tz(timezone).format('YYYY-MM-DD')
+export const db = getFirestore(databaseName)
+export const defaultBucket = storage().bucket('repsp123.appspot.com')
+export const leadersBucket = storage().bucket('repsp123-leaders')
+export const postsBucket = storage().bucket('repsp123-posts')
 
-export const rssHandler = functions.https.onRequest(rss(db, dateID))
+// const timezone = 'America/New_York'
 
-export const createPostPhotoHandler = functions.firestore
-  .document('states/{stateCode}/posts/{date}')
-  .onCreate((snap, context) => {
-    const stateCode = context.params.stateCode
-    const date = context.params.date
-    const post = snap.data()
+// export const rssHandler = functions.https.onRequest(rss(db, dateID))
 
-    return createPostPhoto(date, stateCode, post)
-  })
+/**
+ * Create daily posts for each state
+ */
+export const createDailyPostHandler = onSchedule(
+  {
+    schedule: 'every day 04:55',
+    timeZone: 'America/New_York', // Sets Eastern Time
+  },
+  async () => {
+    logger.info('Creating daily posts')
+    const dateID = moment().tz('America/New_York').format('YYYY-MM-DD')
 
-export const createDailyPostHandler = functions.pubsub
-  .schedule('55 4 * * *')
-  .timeZone(timezone)
-  .onRun(() => {
-    const dateID = moment().format('YYYY-MM-DD')
+    const statesSnapshot = await db
+      .collection('states')
+      .where('createDailyPost', '==', true)
+      .get()
+
+    const stateCodes = statesSnapshot.docs.map((doc) => doc.id)
+
     const posts = stateCodes.map(async (stateCode) => {
       return createDailyPost(db, stateCode, dateID)
     })
 
-    return Promise.all(posts)
-  })
+    await Promise.all(posts)
 
-export const createFacebookPostHandler = functions.firestore
-  .document('states/{stateCode}/posts/{dateID}')
-  .onCreate(async (snapshot, context) => {
-    const stateCode = context.params.stateCode
-    const dateID = context.params.dateID
+    logger.info('Daily posts created')
+  },
+)
+
+/**
+ * Create post photos
+ */
+export const createPostPhotoHandler = onDocumentCreated(
+  {
+    document: 'states/{stateCode}/posts/{date}',
+    database: databaseName,
+  },
+  async (event) => {
+    const stateCode = event.params.stateCode
+    const date = event.params.date
+    const snapshot = event.data
+
+    if (!snapshot)
+      throw new Error(`No snapshot found for ${stateCode}/posts/${date}`)
+
     const post = snapshot.data()
 
-    return createFacebookPost(db, dateID, stateCode, post)
-  })
+    return createPostPhoto(date, stateCode, post as Post)
+  },
+)

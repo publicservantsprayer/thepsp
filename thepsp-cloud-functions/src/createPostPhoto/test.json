@@ -1,0 +1,24 @@
+{
+  "dateID": "2025-01-30",
+  "leader1": {
+    "Title": "Title 1",
+    "NickName": "NickName 1",
+    "LastName": "LastName 1",
+    "PhotoFile": "Allard_Jamie_812214.jpg",
+    "permaLink": "/leader1"
+  },
+  "leader2": {
+    "Title": "Title 2",
+    "NickName": "NickName 2",
+    "LastName": "LastName 2",
+    "PhotoFile": "Bishop_Click_263565.jpg",
+    "permaLink": "/leader2"
+  },
+  "leader3": {
+    "Title": "Title 3",
+    "NickName": "NickName 3",
+    "LastName": "LastName 3",
+    "PhotoFile": "Armstrong_Jennie_812081.jpg",
+    "permaLink": "/leader3"
+  }
+}

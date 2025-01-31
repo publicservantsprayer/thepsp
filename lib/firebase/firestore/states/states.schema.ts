@@ -71,6 +71,7 @@ export const stateDbSchema = z.object({
   lieutenantGovernorRef: zodFirestoreDocumentReference.optional(),
   hasSecretaryOfState: z.boolean(),
   secretaryOfStateRef: zodFirestoreDocumentReference.optional(),
+  createDailyPost: z.boolean(),
 })
 
 /**

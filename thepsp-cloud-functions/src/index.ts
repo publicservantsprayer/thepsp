@@ -40,8 +40,8 @@ initializeApp({
 /**
  * Development or Production database
  */
-const databaseName = 'psp-dev'
-// const databaseName = '(default)'
+// const databaseName = 'psp-dev'
+const databaseName = '(default)'
 
 export const db = getFirestore(databaseName)
 export const defaultBucket = storage().bucket('repsp123.appspot.com')

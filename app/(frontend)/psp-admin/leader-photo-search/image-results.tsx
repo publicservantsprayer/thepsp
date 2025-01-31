@@ -7,16 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
 
 import { ScrollAreaWithHorizontal } from '@/components/ui/scroll-area'
 import { Code } from '@/payload/blocks/Code/Component.client'
@@ -27,9 +17,9 @@ import {
   performGoogleImageSearch,
 } from './perform-google-image-search'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 import { LoadMoreLink } from './load-more-link'
 import { Title } from '@/components/psp-admin/title'
+import { ImageEditDialog } from './image-edit-dialog'
 
 export async function ImageResponse({
   query,
@@ -126,57 +116,18 @@ function ImageResults({
             </CardHeader>
 
             <CardContent>
-              <Dialog>
-                <DialogTrigger>
-                  <img
-                    src={item.image.thumbnailLink}
-                    height={item.image.thumbnailHeight}
-                    width={item.image.thumbnailWidth}
-                    alt={item.title!}
-                  />
-                  {isPdf && (
-                    <span className="mt-1 block text-xs">(Image in PDF)</span>
-                  )}
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>{item.title}</DialogTitle>
-                    <DialogDescription>
-                      {isPdf && <span className="text-xs">(Image in PDF)</span>}
-                      {!isPdf && (
-                        <img
-                          src={item.link!}
-                          height={item.image.height}
-                          width={item.image.width}
-                          alt={item.title!}
-                        />
-                      )}
-                    </DialogDescription>
-                  </DialogHeader>
-
-                  <DialogFooter className="flex gap-4">
-                    <DialogClose asChild>
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        className="flex-1"
-                      >
-                        Close
-                      </Button>
-                    </DialogClose>
-
-                    {!isPdf && (
-                      <Button
-                        type="button"
-                        variant="default"
-                        className="flex-1"
-                      >
-                        Use this Photo
-                      </Button>
-                    )}
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+              <ImageEditDialog item={item} isPdf={isPdf}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={item.image.thumbnailLink}
+                  height={item.image.thumbnailHeight}
+                  width={item.image.thumbnailWidth}
+                  alt={item.title!}
+                />
+                {isPdf && (
+                  <span className="mt-1 block text-xs">(Image in PDF)</span>
+                )}
+              </ImageEditDialog>
             </CardContent>
           </Card>
         )

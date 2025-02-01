@@ -17,22 +17,38 @@ export async function uploadFileFromFormData({
 }) {
   mustGetCurrentAdmin()
 
-  const file = formData.get('file') as File
-  const arrayBuffer = await file.arrayBuffer()
-  const buffer = new Uint8Array(arrayBuffer)
+  const croppedImage = formData.get('croppedImage') as File
+  const thumbnailImage = formData.get('thumbnailImage') as File
 
-  // save uploaded image to bucket
+  const croppedBuffer = new Uint8Array(await croppedImage.arrayBuffer())
+  const thumbnailBuffer = new Uint8Array(await thumbnailImage.arrayBuffer())
+
+  // save uploaded images to bucket
   const bucket = leaderPhotoUploadBucket
-  const fileName = `${leaderPermaLink}.jpg`
-  const fileRef = bucket.file(fileName)
-  await fileRef.save(buffer)
+  const croppedFileName = `${leaderPermaLink}_cropped.jpg`
+  const thumbnailFileName = `${leaderPermaLink}.jpg`
+
+  const croppedFileRef = bucket.file(croppedFileName)
+  const thumbnailFileRef = bucket.file(thumbnailFileName)
+
+  await Promise.all([
+    croppedFileRef.save(croppedBuffer),
+    thumbnailFileRef.save(thumbnailBuffer),
+  ])
 
   await mergeUpdateLeader({
     permaLink: leaderPermaLink,
-    leaderData: { photoFile: fileName, hasPhoto: true },
+    leaderData: {
+      photoFile: croppedFileName,
+      hasPhoto: true,
+    },
   })
 
-  return { success: true, fileName: fileRef.name }
+  return {
+    success: true,
+    croppedFileName: croppedFileRef.name,
+    thumbnailFileName: thumbnailFileRef.name,
+  }
 }
 
 /**

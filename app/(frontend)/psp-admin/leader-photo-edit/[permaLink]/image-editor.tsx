@@ -15,9 +15,8 @@ export function ImageEditor({ leader }: { leader: Leader }) {
   const [crop, setCrop] = React.useState({ x: 0, y: 0 })
   const [zoom, setZoom] = React.useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = React.useState<Area>()
-  const [croppedImage, setCroppedImage] = React.useState(null)
-  const [targetWidth, setTargetWidth] = React.useState(108)
-  const [targetHeight, setTargetHeight] = React.useState(148)
+  const thumbnailWidth = 108
+  const thumbnailHeight = 148
   const { toast } = useToast()
 
   const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
@@ -34,20 +33,37 @@ export function ImageEditor({ leader }: { leader: Leader }) {
       return
     }
 
-    // Get the cropped (and optionally resized) image as a blob.
-    const blob = await getCroppedImg(
+    // Get the cropped and resized image as a blob.
+    const thumbnailBlob = await getCroppedImg(
       leaderPhotoUploadOriginalUrl,
       croppedAreaPixels,
       0,
       { horizontal: false, vertical: false },
-      targetWidth,
-      targetHeight,
+      thumbnailWidth,
+      thumbnailHeight,
     )
-    if (!blob) return
+    if (!thumbnailBlob) return
 
-    // Convert the blob into FormData.
+    // Get the cropped image as a blob.
+    const croppedImageBlob = await getCroppedImg(
+      leaderPhotoUploadOriginalUrl,
+      croppedAreaPixels,
+      0,
+      { horizontal: false, vertical: false },
+    )
+
+    // Convert the blobs into FormData.
     const formData = new FormData()
-    formData.append('file', blob as Blob, 'cropped-image.jpg')
+    formData.append(
+      'thumbnailImage',
+      thumbnailBlob as Blob,
+      'thumbnail-image.jpg',
+    )
+    formData.append(
+      'croppedImage',
+      croppedImageBlob as Blob,
+      'cropped-image.jpg',
+    )
     formData.append('leaderPermaLink', leader.permaLink)
 
     // Upload the form data to the server.

@@ -5,13 +5,13 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { name: string } },
+  { params }: { params: Promise<{ filename: string }> },
 ) {
   mustGetCurrentAdmin()
-  const objectName = params.name
+  const { filename } = await params
 
   try {
-    const file = leaderPhotoUploadBucket.file(objectName)
+    const file = leaderPhotoUploadBucket.file(filename)
     const [buffer] = await file.download()
 
     // Determine the content type based on the file extension or metadata
@@ -22,7 +22,7 @@ export async function GET(
       status: 200,
       headers: {
         'Content-Type': contentType,
-        'Content-Disposition': `inline; filename="${objectName}"`,
+        'Content-Disposition': `inline; filename="${filename}"`,
       },
     })
   } catch (error) {

@@ -196,8 +196,7 @@ export const getOrderedLeadersForDailyPost = async (stateCode: StateCode) => {
     .doc(stateCode)
     .collection('leaders')
     .withConverter(LeaderConverter)
-    .orderBy('LastName')
-    .orderBy('PID')
+    .orderBy('permaLink')
     .get()
 
   if (leadersSnapshot.empty) {
@@ -240,7 +239,7 @@ export const getCollectionGroupLeaderByPermaLink = async (
   return doc.docs[0].data()
 }
 
-export const getRootLeaderById = async (id: string) => {
+export const mustGetRootLeaderById = async (id: string) => {
   const doc = await db
     .collection('leaders')
     .withConverter(LeaderConverter)
@@ -248,6 +247,23 @@ export const getRootLeaderById = async (id: string) => {
     .get()
   if (doc.exists) {
     throw new Error('No root leader exists with id: ' + id)
+  }
+  return doc.data()
+}
+
+export const mustGetStateLeaderById = async (
+  id: string,
+  stateCode: StateCode,
+) => {
+  const doc = await db
+    .collection('states')
+    .doc(stateCode)
+    .collection('leaders')
+    .withConverter(LeaderConverter)
+    .doc(id)
+    .get()
+  if (doc.exists) {
+    throw new Error('No state leader exists with id: ' + id)
   }
   return doc.data()
 }
@@ -401,6 +417,7 @@ export const mergeUpdateLeader = async ({
   permaLink: string
   leaderData: Partial<Leader>
 }) => {
+  console.log('mergeUpdateLeader', permaLink, leaderData)
   const rootLeaderCollectionRef = db
     .collection('leaders')
     .withConverter(LeaderConverter)
@@ -412,6 +429,11 @@ export const mergeUpdateLeader = async ({
 
   await rootLeaderSnapshot.docs[0].ref.update(leaderData)
   const rootLeaderData = rootLeaderSnapshot.docs[0].data()
+  // tmp
+  console.log('rootLeaderData', rootLeaderData)
+  const rootLeader = await mustGetRootLeaderById(rootLeaderData.ref.id)
+  console.log('rootLeader', rootLeader)
+  //
 
   const stateLeaderCollectionRef = db
     .collection('leaders')
@@ -423,6 +445,13 @@ export const mergeUpdateLeader = async ({
   if (stateLeaderSnapshot.empty) {
     return
   }
+  // tmp
+  const stateLeader = await mustGetStateLeaderById(
+    rootLeaderData.ref.id,
+    rootLeaderData.StateCode,
+  )
+  console.log('stateLeader', stateLeader)
+  //
   const stateLeaderDocRef = stateLeaderSnapshot.docs[0].ref
   await stateLeaderDocRef.update(leaderData)
 }

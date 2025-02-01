@@ -18,12 +18,15 @@ export const leaderUtilitySchema = z.object({
     .default(false)
     .optional()
     .describe('Whether the public official has a photo or not'),
-  photoFile: z.string().optional().describe('The file name of the photo'),
+  PhotoFile: z
+    .string()
+    .optional()
+    .describe('The file name of the thumbnail photo'),
   photoUploadOriginal: z.string().optional(),
+  photoUploadCropped: z.string().optional(),
   StateCode: stateCodeSchema.describe(
     'The uppercase, two digit state code where the public official serves',
   ),
-  PhotoFile: z.string().optional(),
 
   // From KnowWho
   District: z.string().optional(),

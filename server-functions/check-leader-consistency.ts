@@ -4,7 +4,7 @@ import { stateCodes } from '@/data/states'
 import {
   getCollectionGroupLeaderByPermaLink,
   getStateLeaders,
-  getRootLeaderById,
+  mustGetRootLeaderById,
 } from '@/lib/firebase/firestore'
 import { storage } from '@/lib/firebase/server/admin-app'
 import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
@@ -38,7 +38,7 @@ export const checkLeadersForPhoto = async (stateCode: StateCode) => {
               // const downloadURL = await getDownloadURL(fileRef)
               // console.log(downloadURL)
             } else {
-              const rootLeader = await getRootLeaderById(leader.ref.id)
+              const rootLeader = await mustGetRootLeaderById(leader.ref.id)
               if (rootLeader) {
                 if (rootLeader.PhotoFile !== leader.PhotoFile) {
                   console.log(

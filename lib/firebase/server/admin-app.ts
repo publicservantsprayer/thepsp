@@ -41,6 +41,15 @@ export const db: FirebaseFirestore.Firestore = useDev
 
 export const storage = getStorage(adminApp)
 
-export const leaderPhotoUploadBucket = getStorage().bucket(
-  'repsp123-leader-photo-uploads',
-)
+// Uploaded leader photos
+// leader.photoUploadOriginal is the path to the original photo
+// leader.photoUploadCropped is the path to the cropped photo
+export const leaderPhotoUploadBucket = useDev
+  ? getStorage().bucket('repsp123-dev-leader-photo-uploads')
+  : getStorage().bucket('repsp123-leader-photo-uploads')
+
+// This has leader thumbnails
+// leader.photoFile is the path to the thumbnail
+export const leaderBucket = useDev
+  ? getStorage().bucket('repsp123-dev-leaders')
+  : getStorage().bucket('repsp123-leaders')

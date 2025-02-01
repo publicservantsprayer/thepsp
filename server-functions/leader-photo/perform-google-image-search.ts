@@ -1,3 +1,5 @@
+'use server'
+
 import { google } from 'googleapis'
 import { unstable_cache } from 'next/cache'
 
@@ -28,7 +30,7 @@ export const performGoogleImageSearch = async (
 
     const pageIndex = Number(page) - 1
 
-    return search.cse.list({
+    const response = await search.cse.list({
       q,
       cx: searchEngineId,
       auth: apiKey,
@@ -37,6 +39,9 @@ export const performGoogleImageSearch = async (
       num: 10,
       start: pageIndex * 10 + 1, // 1, 11, 21, 31, 41, 51, 61, 71, 81, 91 - but not more than 100
     })
+    const serializableResponse = JSON.parse(JSON.stringify(response))
+
+    return serializableResponse
   }
 
   const cachedImageSearch = async (

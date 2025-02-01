@@ -23,11 +23,10 @@ export async function uploadFileFromFormData({
   const croppedBuffer = new Uint8Array(await croppedImage.arrayBuffer())
   const thumbnailBuffer = new Uint8Array(await thumbnailImage.arrayBuffer())
 
-  // save uploaded images to bucket
-  const bucket = leaderPhotoUploadBucket
   const croppedFileName = `${leaderPermaLink}_cropped.jpg`
   const thumbnailFileName = `${leaderPermaLink}.jpg`
 
+  const bucket = leaderPhotoUploadBucket
   const croppedFileRef = bucket.file(croppedFileName)
   const thumbnailFileRef = bucket.file(thumbnailFileName)
 
@@ -39,15 +38,16 @@ export async function uploadFileFromFormData({
   await mergeUpdateLeader({
     permaLink: leaderPermaLink,
     leaderData: {
-      photoFile: croppedFileName,
+      PhotoFile: thumbnailFileName,
+      photoUploadCropped: croppedFileName,
       hasPhoto: true,
     },
   })
 
   return {
     success: true,
-    croppedFileName: croppedFileRef.name,
-    thumbnailFileName: thumbnailFileRef.name,
+    PhotoFile: thumbnailFileRef.name,
+    photoUploadCropped: croppedFileRef.name,
   }
 }
 
@@ -83,8 +83,8 @@ export async function uploadFileFromUrl({
       permaLink: leaderPermaLink,
       leaderData: { photoUploadOriginal: fileName },
     })
-
-    return { success: true, fileName: fileRef.name }
+    console.log('uploaded photo', fileName)
+    return { success: true, photoUploadOriginal: fileName }
   } catch (error) {
     console.error('Failed to upload image:', error)
     return {

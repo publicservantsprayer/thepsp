@@ -22,6 +22,7 @@ const contentVariants = cva(
         md: 'max-w-xl',
         lg: 'max-w-2xl',
         xl: 'max-w-3xl',
+        full: 'h-[calc(100vh-4rem)] w-[calc(100vw-4rem)] max-w-none',
       },
     },
     defaultVariants: {

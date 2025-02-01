@@ -16,10 +16,21 @@ const nextConfig: NextConfig = {
         hostname: 'firebasestorage.googleapis.com',
       },
       {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+        pathname: '/v0/b/leader-photo-upload.appspot.com/o/',
+      },
+      {
         protocol: url.protocol.replace(':', '') as 'https' | 'http' | undefined,
         hostname: url.hostname,
       },
     ],
+  },
+
+  transpilePackages: ['react-filerobot-image-editor', 'tippy.js'],
+  webpack: (config) => {
+    config.externals = [...config.externals, 'canvas', 'jsdom']
+    return config
   },
 }
 

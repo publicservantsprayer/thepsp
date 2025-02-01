@@ -19,6 +19,7 @@ export const leaderUtilitySchema = z.object({
     .optional()
     .describe('Whether the public official has a photo or not'),
   photoFile: z.string().optional().describe('The file name of the photo'),
+  photoUploadOriginal: z.string().optional(),
   StateCode: stateCodeSchema.describe(
     'The uppercase, two digit state code where the public official serves',
   ),

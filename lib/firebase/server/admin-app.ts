@@ -40,3 +40,7 @@ export const db: FirebaseFirestore.Firestore = useDev
   : getFirestore()
 
 export const storage = getStorage(adminApp)
+
+export const leaderPhotoUploadBucket = getStorage().bucket(
+  'repsp123-leader-photo-uploads',
+)

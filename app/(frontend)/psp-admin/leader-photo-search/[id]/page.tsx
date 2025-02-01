@@ -24,5 +24,12 @@ export default async function LeadersPage({
     query = `${leader.Title} ${leader.FirstName} ${leader.LastName}`
   }
 
-  return <ImageResponse query={query} page={page} imgType={imgType} />
+  return (
+    <ImageResponse
+      leader={leader}
+      query={query}
+      page={page}
+      imgType={imgType}
+    />
+  )
 }

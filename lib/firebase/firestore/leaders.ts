@@ -335,6 +335,7 @@ export const deleteLeaderFromRootCollection = async (leader: Leader) => {
 /**
  * Batch save leaders to root and state collections
  */
+// TODO: should this use `set` instead of `update`?
 export const saveLeaderBatch = async ({ leaders }: { leaders: Leader[] }) => {
   const batch = db.batch()
 
@@ -364,6 +365,7 @@ export const saveLeaderBatch = async ({ leaders }: { leaders: Leader[] }) => {
 /**
  * Save a single leader to root and state collections
  */
+// TODO: Rename this to saveLeaderToBothRootAndStateCollections
 export const saveLeader = async ({ leader }: { leader: Leader }) => {
   const dbLeader = leaderDbParser.parse(leader)
 
@@ -385,4 +387,42 @@ export const saveLeader = async ({ leader }: { leader: Leader }) => {
   await stateLeaderRef.set(dbLeader, { merge: true })
 
   return dbLeader
+}
+
+/**
+ * Save some fields of a leader to root and possibly state collection
+ * if it exists in the state collection. Does not parse the leader, so
+ * it will save any fields that are passed in to leaderData.
+ */
+export const mergeUpdateLeader = async ({
+  permaLink,
+  leaderData,
+}: {
+  permaLink: string
+  leaderData: Partial<Leader>
+}) => {
+  const rootLeaderCollectionRef = db
+    .collection('leaders')
+    .withConverter(LeaderConverter)
+    .where('permaLink', '==', permaLink)
+  const rootLeaderSnapshot = await rootLeaderCollectionRef.get()
+  if (rootLeaderSnapshot.empty) {
+    throw new Error('No root leader found with permaLink: ' + permaLink)
+  }
+
+  await rootLeaderSnapshot.docs[0].ref.update(leaderData)
+  const rootLeaderData = rootLeaderSnapshot.docs[0].data()
+
+  const stateLeaderCollectionRef = db
+    .collection('leaders')
+    .doc(rootLeaderData.StateCode)
+    .collection('leaders')
+    .withConverter(LeaderConverter)
+    .where('permaLink', '==', permaLink)
+  const stateLeaderSnapshot = await stateLeaderCollectionRef.get()
+  if (stateLeaderSnapshot.empty) {
+    return
+  }
+  const stateLeaderDocRef = stateLeaderSnapshot.docs[0].ref
+  await stateLeaderDocRef.update(leaderData)
 }

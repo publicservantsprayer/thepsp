@@ -20,15 +20,18 @@ import Link from 'next/link'
 import { LoadMoreLink } from './load-more-link'
 import { Title } from '@/components/psp-admin/title'
 import { ImageEditDialog } from './image-edit-dialog'
+import { Leader } from '@/lib/types'
 
 export async function ImageResponse({
   query,
   page,
   imgType,
+  leader,
 }: {
   query: string
   imgType: ImgType
   page?: string
+  leader: Leader
 }) {
   const response = await performGoogleImageSearch(query, imgType, page)
 
@@ -44,7 +47,9 @@ export async function ImageResponse({
           </TabsList>
           <TabsContent value="results">
             <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
-              {query && <ImageResults items={response?.data.items} />}
+              {query && (
+                <ImageResults items={response?.data.items} leader={leader} />
+              )}
             </div>
             <div className="flex justify-center p-4">
               <LoadMoreLink />
@@ -81,12 +86,14 @@ export async function ImageResponse({
 
 function ImageResults({
   items,
+  leader,
 }: {
   items: Awaited<ReturnType<typeof performGoogleImageSearch>> extends undefined
     ? never
     : NonNullable<
         Awaited<ReturnType<typeof performGoogleImageSearch>>
       >['data']['items']
+  leader: Leader
 }) {
   if (!items) {
     return <div>No results</div>
@@ -116,7 +123,7 @@ function ImageResults({
             </CardHeader>
 
             <CardContent>
-              <ImageEditDialog item={item} isPdf={isPdf}>
+              <ImageEditDialog item={item} isPdf={isPdf} leader={leader}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={item.image.thumbnailLink}

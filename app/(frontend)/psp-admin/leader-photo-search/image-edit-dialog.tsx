@@ -1,3 +1,5 @@
+'use client'
+
 /* eslint-disable @next/next/no-img-element */
 import React from 'react'
 
@@ -15,10 +17,14 @@ import {
 import { performGoogleImageSearch } from './perform-google-image-search'
 import { Button } from '@/components/ui/button'
 import { uploadFileFromUrl } from '@/server-functions/leader-photo/upload-photo'
+import { Leader } from '@/lib/types'
+import { useToast } from '@/components/hooks/use-toast'
+import { useRouter } from 'next/navigation'
 
 export function ImageEditDialog({
   item,
   isPdf,
+  leader,
   children,
 }: {
   item: Awaited<ReturnType<typeof performGoogleImageSearch>> extends undefined
@@ -28,11 +34,31 @@ export function ImageEditDialog({
           Awaited<ReturnType<typeof performGoogleImageSearch>>
         >['data']['items']
       >[number]
+  leader: Leader
   isPdf: boolean
   children: React.ReactNode
 }) {
+  const [loading, setLoading] = React.useState(false)
+  const { toast } = useToast()
+  const router = useRouter()
+
   if (!item) {
     return null
+  }
+
+  const handleUsePhoto = async () => {
+    setLoading(true)
+    const response = await uploadFileFromUrl({
+      url: item.link!,
+      leaderPermaLink: leader.permaLink,
+    })
+    if (response.success) {
+      toast({ title: 'Photo uploaded successfully' })
+    } else {
+      toast({ title: 'Failed to upload photo', variant: 'destructive' })
+    }
+    setLoading(false)
+    router.push(`/psp-admin/leader-photo-edit/${leader.permaLink}`)
   }
 
   return (
@@ -62,7 +88,14 @@ export function ImageEditDialog({
           </DialogClose>
 
           {!isPdf && (
-            <Button type="button" variant="default" className="flex-1">
+            <Button
+              onClick={handleUsePhoto}
+              loading={loading}
+              disabled={loading}
+              type="button"
+              variant="default"
+              className="flex-1"
+            >
               Use this Photo
             </Button>
           )}

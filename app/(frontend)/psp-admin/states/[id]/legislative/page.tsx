@@ -126,17 +126,34 @@ function sortByName(districts: District[]) {
 }
 
 function filterUSSenate(leaders: Leader[]) {
-  const filteredLeaders = leaders.filter(
-    (leader) => leader.LegType === 'FL' && leader.Chamber === 'S',
-  )
-  // remove leaders from leadersLeftOver
+  const filteredLeaders = leaders.filter((leader) => {
+    if (leader.LegType === 'FL' && leader.Chamber === 'S') {
+      return true
+    }
+    if (
+      leader.branch === 'legislative' &&
+      leader.jurisdiction === 'federal' &&
+      leader.legislativeChamber === 'upper'
+    ) {
+      return true
+    }
+  })
   return filteredLeaders
 }
 
 function filterUSHouse(leaders: Leader[]) {
-  return leaders.filter(
-    (leader) => leader.LegType === 'FL' && leader.Chamber === 'H',
-  )
+  return leaders.filter((leader) => {
+    if (leader.LegType === 'FL' && leader.Chamber === 'H') {
+      return true
+    }
+    if (
+      leader.branch === 'legislative' &&
+      leader.jurisdiction === 'federal' &&
+      leader.legislativeChamber === 'lower'
+    ) {
+      return true
+    }
+  })
 }
 
 function filterStateSenate(leaders: Leader[]) {

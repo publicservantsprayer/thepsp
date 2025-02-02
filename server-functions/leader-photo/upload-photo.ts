@@ -1,19 +1,25 @@
 'use server'
 
-import { leaderPhotoUploadBucket } from '@/lib/firebase/server/admin-app'
+import {
+  leaderPhotoUploadBucket,
+  leaderThumbnailBucket,
+} from '@/lib/firebase/server/admin-app'
 import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
 import { downloadImage } from './download-image'
 import { mergeUpdateLeader } from '@/lib/firebase/firestore'
+import { revalidatePath } from 'next/cache'
 
 /**
  * Uploads a file from a FormData object to the bucket.
  */
-export async function uploadFileFromFormData({
+export async function serverUploadFileFromFormData({
   formData,
   leaderPermaLink,
+  revalidatePath: path,
 }: {
   formData: FormData
   leaderPermaLink: string
+  revalidatePath?: string
 }) {
   mustGetCurrentAdmin()
 
@@ -26,15 +32,15 @@ export async function uploadFileFromFormData({
   const croppedFileName = `${leaderPermaLink}_cropped.jpg`
   const thumbnailFileName = `${leaderPermaLink}.jpg`
 
-  const bucket = leaderPhotoUploadBucket
-  const croppedFileRef = bucket.file(croppedFileName)
-  const thumbnailFileRef = bucket.file(thumbnailFileName)
+  const croppedFileRef = leaderPhotoUploadBucket.file(croppedFileName)
+  const thumbnailFileRef = leaderThumbnailBucket.file(thumbnailFileName)
 
   await Promise.all([
     croppedFileRef.save(croppedBuffer),
     thumbnailFileRef.save(thumbnailBuffer),
   ])
 
+  console.log('saving cropped and thumbnail filenames')
   await mergeUpdateLeader({
     permaLink: leaderPermaLink,
     leaderData: {
@@ -43,6 +49,10 @@ export async function uploadFileFromFormData({
       hasPhoto: true,
     },
   })
+
+  if (path) {
+    revalidatePath(path)
+  }
 
   return {
     success: true,
@@ -54,12 +64,14 @@ export async function uploadFileFromFormData({
 /**
  * Uploads a file from a URL to the bucket.
  */
-export async function uploadFileFromUrl({
+export async function serverUploadFileFromUrl({
   url,
   leaderPermaLink,
+  revalidatePath: path,
 }: {
   url: string
   leaderPermaLink: string
+  revalidatePath?: string
 }) {
   mustGetCurrentAdmin()
 
@@ -83,7 +95,11 @@ export async function uploadFileFromUrl({
       permaLink: leaderPermaLink,
       leaderData: { photoUploadOriginal: fileName },
     })
-    console.log('uploaded photo', fileName)
+
+    if (path) {
+      revalidatePath(path)
+    }
+
     return { success: true, photoUploadOriginal: fileName }
   } catch (error) {
     console.error('Failed to upload image:', error)

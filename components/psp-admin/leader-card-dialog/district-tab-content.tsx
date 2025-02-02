@@ -9,23 +9,19 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { District, Leader } from '@/lib/types'
+import { useLeaderData } from './use-leader-data'
 
-export function DistrictTabContent({
-  leader,
-  districts,
-}: {
-  leader: Leader
-  districts: District[]
-}) {
-  // Compute the current district for display and initialize the state.
-  const initialDistrict = districts.find(
-    (district) => district.ref === leader.districtRef,
-  )
+export function DistrictTabContent() {
+  const { leader, districts } = useLeaderData()
   const [districtPath, setDistrictPath] = React.useState<string | undefined>(
-    initialDistrict?.ref.path,
+    leader.districtRef?.path,
   )
 
-  // Local state handler
+  if (!districts) {
+    return null
+  }
+
+  // Compute the current district for display and initialize the state.
   const handleDistrictValueChange = (value: string) => {
     setDistrictPath(value)
   }

@@ -8,7 +8,7 @@ import Cropper, { Area } from 'react-easy-crop'
 import { Button } from '@/components/ui/button'
 
 import { Leader } from '@/lib/types'
-import { uploadFileFromFormData } from '@/server-functions/leader-photo/upload-photo'
+import { serverUploadFileFromFormData } from '@/server-functions/leader-photo/upload-photo'
 import { useToast } from '@/components/hooks/use-toast'
 
 export function ImageEditor({ leader }: { leader: Leader }) {
@@ -67,7 +67,7 @@ export function ImageEditor({ leader }: { leader: Leader }) {
     formData.append('leaderPermaLink', leader.permaLink)
 
     // Upload the form data to the server.
-    const result = await uploadFileFromFormData({
+    const result = await serverUploadFileFromFormData({
       formData,
       leaderPermaLink: leader.permaLink,
     })

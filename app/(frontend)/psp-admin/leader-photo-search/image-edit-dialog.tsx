@@ -16,7 +16,7 @@ import {
 
 import { performGoogleImageSearch } from './perform-google-image-search'
 import { Button } from '@/components/ui/button'
-import { uploadFileFromUrl } from '@/server-functions/leader-photo/upload-photo'
+import { serverUploadFileFromUrl } from '@/server-functions/leader-photo/upload-photo'
 import { Leader } from '@/lib/types'
 import { useToast } from '@/components/hooks/use-toast'
 import { useRouter } from 'next/navigation'
@@ -48,7 +48,7 @@ export function ImageEditDialog({
 
   const handleUsePhoto = async () => {
     setLoading(true)
-    const response = await uploadFileFromUrl({
+    const response = await serverUploadFileFromUrl({
       url: item.link!,
       leaderPermaLink: leader.permaLink,
     })

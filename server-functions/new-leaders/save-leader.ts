@@ -1,6 +1,6 @@
 'use server'
 
-import { saveLeader } from '@/lib/firebase/firestore'
+import { saveLeaderToBothRootAndStateCollections } from '@/lib/firebase/firestore'
 import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
 import { Leader } from '@/lib/types'
 import { revalidatePath } from 'next/cache'
@@ -14,8 +14,9 @@ export const serverSaveLeader = async ({
 }) => {
   mustGetCurrentAdmin()
 
+  let savedLeader: Leader
   try {
-    await saveLeader({ leader })
+    savedLeader = await saveLeaderToBothRootAndStateCollections({ leader })
   } catch (error) {
     return {
       success: false,
@@ -27,5 +28,5 @@ export const serverSaveLeader = async ({
     revalidatePath(path)
   }
 
-  return { success: true }
+  return { success: true, leader: savedLeader }
 }

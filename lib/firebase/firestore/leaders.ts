@@ -161,6 +161,24 @@ export const getStateLeaders: GetLeaders = async ({ stateCode }) => {
   return querySnapshot.docs.map((doc) => doc.data())
 }
 
+export const getRecentlyUpdatedLeaders = async ({
+  limit = 10,
+}: {
+  limit?: number
+}) => {
+  const collectionRef = db
+    .collection('leaders')
+    .withConverter(LeaderConverter)
+    .orderBy('updatedAt', 'desc')
+    .limit(limit)
+  const querySnapshot = await collectionRef.withConverter(LeaderConverter).get()
+  if (querySnapshot.empty) {
+    return []
+  }
+
+  return querySnapshot.docs.map((doc) => doc.data())
+}
+
 export const getLeadersWithoutPhoto = async (stateCode: StateCode) => {
   const collectionRef = db
     .collection('states')
@@ -239,22 +257,24 @@ export const getCollectionGroupLeaderByPermaLink = async (
   return doc.docs[0].data()
 }
 
-export const mustGetRootLeaderById = async (id: string) => {
+export const getRootLeaderById = async (id: string) => {
   const doc = await db
     .collection('leaders')
     .withConverter(LeaderConverter)
     .doc(id)
     .get()
-  if (doc.exists) {
-    throw new Error('No root leader exists with id: ' + id)
-  }
   return doc.data()
 }
 
-export const mustGetStateLeaderById = async (
-  id: string,
-  stateCode: StateCode,
-) => {
+export const mustGetRootLeaderById = async (id: string) => {
+  const leader = await getRootLeaderById(id)
+  if (!leader) {
+    throw new Error('No root leader exists with id: ' + id)
+  }
+  return leader
+}
+
+export const getStateLeaderById = async (id: string, stateCode: StateCode) => {
   const doc = await db
     .collection('states')
     .doc(stateCode)
@@ -262,10 +282,18 @@ export const mustGetStateLeaderById = async (
     .withConverter(LeaderConverter)
     .doc(id)
     .get()
-  if (doc.exists) {
+  return doc.data()
+}
+
+export const mustGetStateLeaderById = async (
+  id: string,
+  stateCode: StateCode,
+) => {
+  const leader = await getStateLeaderById(id, stateCode)
+  if (!leader) {
     throw new Error('No state leader exists with id: ' + id)
   }
-  return doc.data()
+  return leader
 }
 
 export const mergeUpdateStateLeaderById = async ({
@@ -354,9 +382,12 @@ export const deleteLeaderFromRootCollection = async (leader: Leader) => {
 // TODO: should this use `set` instead of `update`?
 export const saveLeaderBatch = async ({ leaders }: { leaders: Leader[] }) => {
   const batch = db.batch()
+  const now = new Date()
 
   leaders.forEach((unparsedLeader) => {
     const leader = leaderDbParser.parse(unparsedLeader)
+    leader.updatedAt = now
+
     const rootLeaderRef = db
       .collection('leaders')
       .withConverter(LeaderConverter)
@@ -382,7 +413,11 @@ export const saveLeaderBatch = async ({ leaders }: { leaders: Leader[] }) => {
  * Save a single leader to root and state collections
  */
 // TODO: Rename this to saveLeaderToBothRootAndStateCollections
-export const saveLeader = async ({ leader }: { leader: Leader }) => {
+export const saveLeaderToBothRootAndStateCollections = async ({
+  leader,
+}: {
+  leader: Leader
+}) => {
   const dbLeader = leaderDbParser.parse(leader)
 
   if (!leader.StateCode)
@@ -402,7 +437,7 @@ export const saveLeader = async ({ leader }: { leader: Leader }) => {
     .doc(leader.ref.id)
   await stateLeaderRef.set(dbLeader, { merge: true })
 
-  return dbLeader
+  return mustGetRootLeaderById(leader.ref.id)
 }
 
 /**
@@ -418,6 +453,7 @@ export const mergeUpdateLeader = async ({
   leaderData: Partial<Leader>
 }) => {
   console.log('mergeUpdateLeader', permaLink, leaderData)
+  leaderData.updatedAt = new Date()
   const rootLeaderCollectionRef = db
     .collection('leaders')
     .withConverter(LeaderConverter)
@@ -436,7 +472,7 @@ export const mergeUpdateLeader = async ({
   //
 
   const stateLeaderCollectionRef = db
-    .collection('leaders')
+    .collection('states')
     .doc(rootLeaderData.StateCode)
     .collection('leaders')
     .withConverter(LeaderConverter)

@@ -22,14 +22,10 @@ import { Title } from '@/components/psp-admin/title'
 import { Leader } from '@/lib/types'
 import { GaxiosResponse } from 'gaxios'
 import { ImageEditDialog } from './image-edit-dialog'
+import { useLeaderData } from '../../use-leader-data'
 
-export function ImageResponse({
-  response,
-  leader,
-}: {
-  response?: GaxiosResponse<unknown>
-  leader: Leader
-}) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function ImageResponse({ response }: { response?: any }) {
   if (!response) {
     return null
   }
@@ -43,7 +39,7 @@ export function ImageResponse({
         </TabsList>
         <TabsContent value="results">
           <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
-            <ImageResults items={response?.data.items} leader={leader} />
+            <ImageResults items={response?.data?.items} />
           </div>
           <div className="flex justify-center p-4">
             {/* <LoadMoreLink /> */}
@@ -74,21 +70,17 @@ export function ImageResponse({
   )
 }
 
-function ImageResults({
-  items,
-  leader,
-}: {
-  items: GaxiosResponse<unknown> extends undefined
-    ? never
-    : NonNullable<GaxiosResponse<unknown>>['data']['items']
-  leader: Leader
-}) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function ImageResults({ items }: { items?: any }) {
+  const { leader } = useLeaderData()
+
   if (!items) {
     return <div>No results</div>
   }
   return (
     <>
-      {items.map((item, i) => {
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      {items.map((item: any, i: number) => {
         if (!item.image?.contextLink) {
           return null
         }
@@ -111,7 +103,7 @@ function ImageResults({
             </CardHeader>
 
             <CardContent>
-              <ImageEditDialog item={item} isPdf={isPdf} leader={leader}>
+              <ImageEditDialog item={item} isPdf={isPdf}>
                 <img
                   src={item.image.thumbnailLink}
                   height={item.image.thumbnailHeight}

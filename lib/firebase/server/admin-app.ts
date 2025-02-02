@@ -50,6 +50,6 @@ export const leaderPhotoUploadBucket = useDev
 
 // This has leader thumbnails
 // leader.photoFile is the path to the thumbnail
-export const leaderBucket = useDev
+export const leaderThumbnailBucket = useDev
   ? getStorage().bucket('repsp123-dev-leaders')
   : getStorage().bucket('repsp123-leaders')

@@ -5,11 +5,13 @@ import React from 'react'
 
 import Cropper, { Area } from 'react-easy-crop'
 import { Button } from '@/components/ui/button'
-import { Leader } from '@/lib/types'
-import { uploadFileFromFormData } from '@/server-functions/leader-photo/upload-photo'
+import { serverUploadFileFromFormData } from '@/server-functions/leader-photo/upload-photo'
 import { useToast } from '@/components/hooks/use-toast'
+import { useLeaderData } from '../../use-leader-data'
+import { DialogClose } from '@/components/ui/dialog'
 
-export function ImageCropper({ leader }: { leader: Leader }) {
+export function ImageCropper() {
+  const { leader, setLeader } = useLeaderData()
   const [crop, setCrop] = React.useState({ x: 0, y: 0 })
   const [zoom, setZoom] = React.useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = React.useState<Area>()
@@ -52,24 +54,25 @@ export function ImageCropper({ leader }: { leader: Leader }) {
 
     // Convert the blobs into FormData.
     const formData = new FormData()
-    formData.append(
-      'thumbnailImage',
-      thumbnailBlob as Blob,
-      'thumbnail-image.jpg',
-    )
-    formData.append(
-      'croppedImage',
-      croppedImageBlob as Blob,
-      'cropped-image.jpg',
-    )
-    formData.append('leaderPermaLink', leader.permaLink)
+    formData.append('thumbnailImage', thumbnailBlob as Blob)
+    formData.append('croppedImage', croppedImageBlob as Blob)
 
     // Upload the form data to the server.
-    const result = await uploadFileFromFormData({
+    const result = await serverUploadFileFromFormData({
       formData,
       leaderPermaLink: leader.permaLink,
+      // Maybe we don't want to revalidate the path here because it
+      // will cause a page reload and we don't want to lose the current
+      // dialog state.
+      // revalidatePath: '/psp-admin/leaders-without-photos',
     })
     if (result.success) {
+      setLeader({
+        ...leader,
+        photoUploadCropped: result.photoUploadCropped,
+        PhotoFile: result.PhotoFile,
+        hasPhoto: true,
+      })
       toast({
         title: 'Image saved successfully',
       })
@@ -94,8 +97,11 @@ export function ImageCropper({ leader }: { leader: Leader }) {
           onZoomChange={setZoom}
         />
       </div>
-      <div className="mt-4 flex justify-end">
+      <div className="mt-4 flex flex-col gap-4">
         <Button onClick={handleSaveCroppedImage}>Save</Button>
+        <DialogClose asChild>
+          <Button variant="secondary">Close</Button>
+        </DialogClose>
       </div>
     </div>
   )

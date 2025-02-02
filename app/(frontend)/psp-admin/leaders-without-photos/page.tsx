@@ -3,6 +3,7 @@ import React from 'react'
 import { stateCodes } from '@/data/states'
 import {
   getOrderedLeadersForDailyPost,
+  getRecentlyUpdatedLeaders,
   getStates,
 } from '@/lib/firebase/firestore'
 import { Leader, StateCode } from '@/lib/types'
@@ -19,11 +20,16 @@ import { unstable_cache } from 'next/cache'
 import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
 import { LeaderCardDialog } from '@/components/psp-admin/leader-card-dialog'
 import { cn } from '@/lib/utils'
+import { formatDistanceToNow } from 'date-fns'
 
 export default async function LeadersPage() {
   await mustGetCurrentAdmin()
 
   const states = await getStates()
+
+  const recentlyUpdatedLeaders = await getRecentlyUpdatedLeaders({
+    limit: 10,
+  })
 
   const getStateLeadersObj = async () => {
     const stateLeaderPromises = stateCodes.map(async (stateCode) => {
@@ -85,8 +91,8 @@ export default async function LeadersPage() {
                 <CardTitle className="text-base">{state.name}</CardTitle>
               </CardHeader>
 
-              <CardContent>
-                <ScrollArea className="h-32">
+              <ScrollArea className="my-1 mr-1 h-32">
+                <CardContent>
                   <ul>
                     {stateLeaders[state.ref.id]?.map(({ leader, daysAway }) => (
                       <li
@@ -103,25 +109,54 @@ export default async function LeadersPage() {
                       </li>
                     ))}
                   </ul>
-                </ScrollArea>
-              </CardContent>
+                </CardContent>
+              </ScrollArea>
             </Card>
           ))}
         </div>
-        <Card className="max-w-xs">
-          <CardHeader>
-            <CardTitle>Check Leader Photos</CardTitle>
-            <CardDescription>
-              Check all current leaders for every state (regardless of the{' '}
-              <span className="text-code">hasPhoto</span> value), to see if a
-              photo actually exists. Update the{' '}
-              <span className="text-code">hasPhoto</span> value in the database.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <CheckLeadersForPhotoButton />
-          </CardContent>
-        </Card>
+        <div className="flex flex-col gap-4">
+          <Card className="max-w-xs">
+            <CardHeader>
+              <CardTitle>Check Leader Photos</CardTitle>
+              <CardDescription>
+                Check all current leaders for every state (regardless of the{' '}
+                <span className="text-code">hasPhoto</span> value), to see if a
+                photo actually exists. Update the{' '}
+                <span className="text-code">hasPhoto</span> value in the
+                database.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <CheckLeadersForPhotoButton />
+            </CardContent>
+          </Card>
+          <Card className="max-w-xs">
+            <CardHeader>
+              <CardTitle>Recently Updated</CardTitle>
+              <CardDescription></CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-[1fr_auto_auto] gap-4 text-sm">
+                {recentlyUpdatedLeaders.map((leader) => (
+                  <React.Fragment key={leader.ref.id}>
+                    <div>
+                      <LeaderCardDialog leader={leader}>
+                        {leader.fullname}
+                      </LeaderCardDialog>
+                    </div>
+                    <div>{leader.StateCode}</div>
+                    <div>
+                      {leader.updatedAt &&
+                        formatDistanceToNow(leader.updatedAt, {
+                          addSuffix: true,
+                        })}
+                    </div>
+                  </React.Fragment>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   )

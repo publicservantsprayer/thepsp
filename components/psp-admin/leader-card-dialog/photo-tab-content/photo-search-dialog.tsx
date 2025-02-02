@@ -4,6 +4,7 @@ import React from 'react'
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -16,7 +17,7 @@ import {
   ImgType,
   performGoogleImageSearch,
 } from '@/server-functions/leader-photo/perform-google-image-search'
-import { ImageResponse } from './image-results'
+import { ImageResponse } from './image-response'
 import { Leader } from '@/lib/types'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Input } from '@/components/ui/input'
@@ -33,6 +34,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { useLeaderData } from '../use-leader-data'
 
 const FormSchema = z.object({
   query: z.string().min(4, {
@@ -42,7 +44,9 @@ const FormSchema = z.object({
 })
 
 // Update the state type to match the returned GaxiosResponse type
-export function PhotoSearchDialog({ leader }: { leader: Leader }) {
+export function PhotoSearchDialog() {
+  const { leader } = useLeaderData()
+
   const [response, setResponse] = React.useState<
     GaxiosResponse<unknown> | undefined
   >(undefined)
@@ -63,6 +67,11 @@ export function PhotoSearchDialog({ leader }: { leader: Leader }) {
     setResponse(response)
   }
 
+  // const handleSubmitMore = () => {
+  //   setPage(page + 1)
+  //   // form.handleSubmit(onSubmit)
+  // }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -76,25 +85,21 @@ export function PhotoSearchDialog({ leader }: { leader: Leader }) {
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="h-[calc(100vh-200px)]">
-          <div className="mx-4 my-2">
+          <div className="mx-2 mb-8 mt-2 flex flex-col items-center gap-4">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="flex flex-row gap-4"
+                className="flex w-full flex-row gap-8"
               >
-                <FormItem className="w-2/3">
+                <FormItem className="w-full">
                   <FormField
                     control={form.control}
                     name="query"
                     render={({ field }) => (
                       <FormItem>
-                        {/* <FormLabel>Leader Name and Office</FormLabel> */}
                         <FormControl>
                           <Input className="" {...field} />
                         </FormControl>
-                        {/* <FormDescription>
-                      The name and office the leader holds.
-                    </FormDescription> */}
                         <FormMessage />
                       </FormItem>
                     )}
@@ -122,10 +127,22 @@ export function PhotoSearchDialog({ leader }: { leader: Leader }) {
                 <Button type="submit" className="w-full">
                   Search
                 </Button>
+                {/* <Button
+                  className="w-full"
+                  variant="secondary"
+                  onClick={handleSubmitMore}
+                >
+                  More
+                </Button> */}
+                <DialogClose asChild>
+                  <Button variant="secondary" className="w-full">
+                    Close
+                  </Button>
+                </DialogClose>
               </form>
             </Form>
           </div>
-          <ImageResponse response={response} leader={leader} />
+          <ImageResponse response={response} />
         </ScrollArea>
       </DialogContent>
     </Dialog>

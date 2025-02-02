@@ -62,10 +62,14 @@ export const getStates = async () => {
   return querySnapshot.docs.map((doc) => doc.data())
 }
 
-export const mustGetState = async (stateCode: StateCode) => {
+export const getState = async (stateCode: StateCode) => {
   const docRef = db.collection('states').doc(stateCode)
   const docSnapshot = await docRef.withConverter(StateConverter).get()
-  const state = docSnapshot.data()
+  return docSnapshot.data()
+}
+
+export const mustGetState = async (stateCode: StateCode) => {
+  const state = await getState(stateCode)
   if (!state) {
     throw new Error('State not found for stateCode: ' + stateCode)
   }

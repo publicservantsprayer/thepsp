@@ -36,6 +36,7 @@ import { useToast } from '@/components/hooks/use-toast'
 import { serverSaveNewStateLeader } from '@/server-functions/new-leaders/new-state-leader'
 import { SquareX } from 'lucide-react'
 import { DeleteLeaderDialog } from './delete-leader-dialog'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 export function DistrictManageDialog({
   state,
@@ -153,7 +154,7 @@ function AddLeaderDialog({
       districtRef: district.ref,
       StateCode: state.ref.id,
     }
-    
+
     const result = await serverSaveNewStateLeader({
       leader: newLeader,
       state,
@@ -179,24 +180,35 @@ function AddLeaderDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent size="default">
-        <DialogHeader>
+      <DialogContent
+        size="default"
+        className="flex h-[calc(100vh-8rem)] flex-col"
+      >
+        <DialogHeader className="">
           <DialogTitle>New Leader</DialogTitle>
-          <DialogDescription>Add a new leader.</DialogDescription>
+          <DialogDescription>
+            Add a new {state.name} leader to {district.name}.
+          </DialogDescription>
         </DialogHeader>
-        <LeaderForm
-          state={state}
-          setLeaderDesignation={setLeaderDesignation}
-          aiResult={aiResult}
-          onSubmit={onSubmit}
-        />
-        {leaderDesignation && (
-          <LeaderAiRequestForm
-            state={state}
-            leaderDesignation={leaderDesignation}
-            setAiResult={setAiResult}
-          />
-        )}
+        <div className="h-[calc(100vh-12rem)] [container-type:size]">
+          <ScrollArea className="-mr-4 h-[calc(100cqh-1rem)]">
+            <div className="mr-8">
+              <LeaderForm
+                state={state}
+                setLeaderDesignation={setLeaderDesignation}
+                aiResult={aiResult}
+                onSubmit={onSubmit}
+              />
+              {leaderDesignation && (
+                <LeaderAiRequestForm
+                  state={state}
+                  leaderDesignation={leaderDesignation}
+                  setAiResult={setAiResult}
+                />
+              )}
+            </div>
+          </ScrollArea>
+        </div>
       </DialogContent>
     </Dialog>
   )

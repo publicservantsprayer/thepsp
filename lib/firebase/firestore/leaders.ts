@@ -66,10 +66,11 @@ export const LeaderConverter: FirestoreDataConverter<Leader> = {
   },
 }
 
-export const saveNewLeader = async (leader: NewLeader) => {
+export const saveNewRootLeader = async (leader: NewLeader) => {
   const date = new Date()
   leader.createdAt = date
   leader.lastImportDate = date
+  leader.hasPhoto = false
 
   if (leader.districtRef) {
     const path = leader.districtRef.path
@@ -98,33 +99,37 @@ export const saveNewLeader = async (leader: NewLeader) => {
     .toLowerCase()
 
   const permaLink = [permaLinkName, savedLeader.ref.id].join('-')
-  savedLeader.permaLink = permaLink
 
-  await db
+  const rootLeaderDocRef = db
     .collection('leaders')
+    .withConverter(LeaderConverter)
     .doc(savedLeader.ref.id)
-    // doc.update does not use toFirestore so here we need to run
-    // it through the parser with the transform
-    .update(leaderDbParser.parse(savedLeader))
+  await rootLeaderDocRef.update({ permaLink })
 
-  return savedLeader
+  const rootLeaderSnapshot = await rootLeaderDocRef.get()
+  const savedRootLeader = rootLeaderSnapshot.data()
+
+  if (!savedRootLeader) {
+    throw new Error('Failed to update root leader with permaLink')
+  }
+  return savedRootLeader
 }
 
 export const saveNewLeaderToStateCollection = async (
   leader: NewLeader,
   state: State,
 ) => {
-  const savedLeader = await saveNewLeader(leader)
+  const savedRootLeader = await saveNewRootLeader(leader)
 
   await db
     .collection('states')
     .doc(state.ref.id)
     .collection('leaders')
     .withConverter(LeaderConverter)
-    .doc(savedLeader.ref.id)
-    .create(savedLeader)
+    .doc(savedRootLeader.ref.id)
+    .create(savedRootLeader)
 
-  return savedLeader
+  return savedRootLeader
 }
 
 export const getLeader = async (leaderRef?: Leader['ref']) => {
@@ -465,11 +470,6 @@ export const mergeUpdateLeader = async ({
 
   await rootLeaderSnapshot.docs[0].ref.update(leaderData)
   const rootLeaderData = rootLeaderSnapshot.docs[0].data()
-  // tmp
-  console.log('rootLeaderData', rootLeaderData)
-  const rootLeader = await mustGetRootLeaderById(rootLeaderData.ref.id)
-  console.log('rootLeader', rootLeader)
-  //
 
   const stateLeaderCollectionRef = db
     .collection('states')
@@ -481,13 +481,8 @@ export const mergeUpdateLeader = async ({
   if (stateLeaderSnapshot.empty) {
     return
   }
-  // tmp
-  const stateLeader = await mustGetStateLeaderById(
-    rootLeaderData.ref.id,
-    rootLeaderData.StateCode,
-  )
-  console.log('stateLeader', stateLeader)
-  //
   const stateLeaderDocRef = stateLeaderSnapshot.docs[0].ref
+  // update just the fields that are passed in to leaderData
+  // do not parse the leader
   await stateLeaderDocRef.update(leaderData)
 }

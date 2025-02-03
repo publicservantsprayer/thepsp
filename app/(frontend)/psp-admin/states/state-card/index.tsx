@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getLeader } from '@/lib/firebase/firestore'
-import { Branch, Jurisdiction, LeaderAiQuery, State } from '@/lib/types'
+import { Branch, Jurisdiction, Leader, LeaderAiQuery, State } from '@/lib/types'
 import {
   Dialog,
   DialogContent,
@@ -14,6 +14,7 @@ import React from 'react'
 import { leaderAiQuerySchema } from '@/lib/firebase/firestore/leaders.schema'
 import { QueryExecutiveBranchForm } from './query-executive-branch-form'
 import Link from 'next/link'
+import { LeaderCardDialog } from '@/components/psp-admin/leader-card-dialog'
 
 interface StateCardProps {
   state: State
@@ -151,101 +152,120 @@ async function BranchUpdateDialog({
 }
 
 async function Governor({ state }: StateCardProps) {
-  const governor = state.governorRef ? await getLeader(state.governorRef) : null
+  const governor = await getLeader(state.governorRef)
 
-  return <OfficeAndName office="Governor" name={governor?.fullname} />
+  return <OfficeAndName office="Governor" leader={governor} state={state} />
 }
 
 async function LieutenantGovernor({ state }: StateCardProps) {
   if (!state.hasLieutenantGovernor)
-    return <OfficeAndName office="Lieutenant Governor" name={null} />
+    return (
+      <OfficeAndName office="Lieutenant Governor" name={null} state={state} />
+    )
 
-  const lieutenantGovernor = state.lieutenantGovernorRef
-    ? await getLeader(state.lieutenantGovernorRef)
-    : null
+  const lieutenantGovernor = await getLeader(state.lieutenantGovernorRef)
 
   return (
     <OfficeAndName
       office="Lieutenant Governor"
-      name={lieutenantGovernor?.fullname}
+      leader={lieutenantGovernor}
+      state={state}
     />
   )
 }
 
 async function SecretaryOfState({ state }: StateCardProps) {
   if (!state.hasSecretaryOfState)
-    return <OfficeAndName office="Secretary of State" name={null} />
+    return (
+      <OfficeAndName office="Secretary of State" name={null} state={state} />
+    )
 
-  const secretaryOfState = state.secretaryOfStateRef
-    ? await getLeader(state.secretaryOfStateRef)
-    : null
+  const secretaryOfState = await getLeader(state.secretaryOfStateRef)
 
   return (
     <OfficeAndName
       office="Secretary of State"
-      name={secretaryOfState?.fullname}
+      leader={secretaryOfState}
+      state={state}
     />
   )
 }
 
-function JudicialSystem(
-  {
-    // state
-  }: StateCardProps,
-) {
+function JudicialSystem({ state }: StateCardProps) {
   return (
     <>
-      <OfficeAndName office="Highest Appellate Court" name={undefined} />
-      <OfficeAndName office="Number of Justices" name={undefined} />
+      <OfficeAndName
+        office="Highest Appellate Court"
+        name={null}
+        state={state}
+      />
+      <OfficeAndName office="Number of Justices" name={null} state={state} />
     </>
   )
 }
 
-function Justices(
-  {
-    // state
-  }: StateCardProps,
-) {
+function Justices({ state }: StateCardProps) {
   return (
     <>
-      <OfficeAndName office="Chief Justice" name={undefined} />
-      <OfficeAndName office="Associate Justices" name={undefined} />
+      <OfficeAndName office="Chief Justice" name={null} state={state} />
+      <OfficeAndName office="Associate Justices" name={null} state={state} />
     </>
   )
 }
 
-function LegislativeSystem(
-  {
-    // state
-  }: StateCardProps,
-) {
+function LegislativeSystem({ state }: StateCardProps) {
   return (
     <>
-      <OfficeAndName office="Upper Chamber" name="U.S. Senate" />
-      <OfficeAndName office="Number of Members" name="2" />
+      <OfficeAndName office="Upper Chamber" name={null} state={state} />
+      <OfficeAndName office="Number of Members" name="2" state={state} />
       <div className="p-1" />
       <OfficeAndName
         office="Lower Chamber"
         name="U.S. House of Representatives"
+        state={state}
       />
-      <OfficeAndName office="Number of Members" name={undefined} />
+      <OfficeAndName
+        office="Number of Members"
+        name={undefined}
+        state={state}
+      />
       <div className="p-1" />
 
-      <OfficeAndName office="State Upper Chamber" name={undefined} />
-      <OfficeAndName office="Number of Members" name={undefined} />
+      <OfficeAndName
+        office="State Upper Chamber"
+        name={undefined}
+        state={state}
+      />
+      <OfficeAndName
+        office="Number of Members"
+        name={undefined}
+        state={state}
+      />
       <div className="p-1" />
-      <OfficeAndName office="State Lower Chamber" name={undefined} />
-      <OfficeAndName office="Number of Members" name={undefined} />
+      <OfficeAndName
+        office="State Lower Chamber"
+        name={undefined}
+        state={state}
+      />
+      <OfficeAndName
+        office="Number of Members"
+        name={undefined}
+        state={state}
+      />
     </>
   )
 }
 
 function OfficeAndName({
   office,
+  leader,
   name,
+  state,
 }: {
   office?: string
+  leader?: Leader
   name?: string | null
+  state: State
 }) {
   return (
     <div className="grid grid-cols-2 text-sm">
@@ -253,9 +273,15 @@ function OfficeAndName({
         <div className="text-muted-foreground">{office}</div>
       )}
       {name === null && <div className="text-muted">{office}</div>}
-      {name && <div className="">{name}</div>}
+      {leader && (
+        <div className="">
+          <LeaderCardDialog leader={leader} state={state}>
+            {leader.fullname}
+          </LeaderCardDialog>
+        </div>
+      )}
       {name === null && <div className="text-muted">None</div>}
-      {name === undefined && (
+      {name === undefined && !leader && (
         <div className="text-warning-foreground">Unknown</div>
       )}
     </div>

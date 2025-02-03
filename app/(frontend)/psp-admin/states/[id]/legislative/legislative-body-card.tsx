@@ -1,4 +1,12 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+'use client'
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import {
   Table,
   TableBody,
@@ -21,8 +29,15 @@ import { DistrictManageDialog } from './district-manage-dialog'
 import Link from 'next/link'
 import { LeaderCardDialog } from '@/components/psp-admin/leader-card-dialog'
 import { LeaderTooltip } from '@/components/psp-admin/leader-tooltip'
-import { CircleChevronUp } from 'lucide-react'
+import {
+  Camera,
+  CircleChevronUp,
+  SquareAsterisk,
+  TextSelect,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import missingPhoto from '@/public/images/no-image.jpg'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 
 export function LegislativeBodyCard({
   state,
@@ -48,6 +63,11 @@ export function LegislativeBodyCard({
     dateElected: string
   }[]
 }) {
+  const [hasColumns, setHasColumns] = React.useState<string[]>([])
+  const showOldLeg = hasColumns.includes('oldLeg')
+  const showCurrentLeg = hasColumns.includes('currentLeg')
+  const showHasPhoto = hasColumns.includes('photo')
+
   const leadersToLineUp: Leader[] = []
   districts.forEach((district) => {
     const districtLeaders = findDistrictLeaders(leaders, district)
@@ -73,8 +93,26 @@ export function LegislativeBodyCard({
   let prevDistrictNumber = 0
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
+      <CardHeader className="relative flex flex-row justify-between">
+        <CardTitle className="pt-4">{title}</CardTitle>
+        <CardDescription></CardDescription>
+        <ToggleGroup
+          size={'sm'}
+          type="multiple"
+          onValueChange={setHasColumns}
+          value={hasColumns}
+          className="absolute right-1 top-0"
+        >
+          <ToggleGroupItem value="photo" aria-label="Toggle bold">
+            <Camera className="h-4 w-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="currentLeg" aria-label="Toggle underline">
+            <SquareAsterisk className="h-4 w-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="oldLeg" aria-label="Toggle italic">
+            <TextSelect className="h-4 w-4" />
+          </ToggleGroupItem>
+        </ToggleGroup>
       </CardHeader>
       <CardContent>
         <Table>
@@ -93,8 +131,11 @@ export function LegislativeBodyCard({
                 </EditDistrictsDialog>
               </TableHead>
               <TableHead className="py-2">Name</TableHead>
-              <TableHead className="py-2">Old Leg</TableHead>
-              <TableHead className="py-2">Current</TableHead>
+              {showOldLeg && <TableHead className="py-2">Old Leg</TableHead>}
+              {showCurrentLeg && (
+                <TableHead className="py-2">Current</TableHead>
+              )}
+              {showHasPhoto && <TableHead className="w-16 py-2"></TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -120,6 +161,7 @@ export function LegislativeBodyCard({
                   className="group"
                   data-dup={missingOrDuplicate}
                 >
+                  {/* District */}
                   <TableCell className="py-2 group-data-[dup=true]:text-yellow-500">
                     <DistrictManageDialog
                       state={state}
@@ -132,65 +174,85 @@ export function LegislativeBodyCard({
                       {district.name}
                     </DistrictManageDialog>
                   </TableCell>
-                  <TableCell className="py-2">
+
+                  {/* Name */}
+                  <TableCell className="py-2 text-left">
                     {districtLeaders.map((leader, index) => (
-                      <div key={index} className="flex items-center gap-2">
+                      <div key={index} className="flex gap-2">
                         <LeaderCardDialog
                           leader={leader}
                           state={state}
                           districts={districts}
-                          asChild
                         >
-                          <Button size="xs" variant="link">
-                            <CircleChevronUp />
-                          </Button>
-                        </LeaderCardDialog>
-                        <LeaderTooltip leader={leader} state={state}>
                           {leader?.fullname}
-                        </LeaderTooltip>
+                        </LeaderCardDialog>
                       </div>
                     ))}
                     {onlyOldDistrictLeaders.map((leader, index) => (
                       <div
                         key={index}
-                        className="flex items-center gap-2 text-muted-foreground"
+                        className="flex gap-2 text-muted-foreground"
                       >
                         <LeaderCardDialog
                           leader={leader}
                           state={state}
                           districts={districts}
-                          asChild
                         >
-                          <Button size="xs" variant="link">
-                            <CircleChevronUp />
-                          </Button>
-                        </LeaderCardDialog>
-                        <LeaderTooltip leader={leader} state={state}>
                           {leader?.fullname}
-                        </LeaderTooltip>
+                        </LeaderCardDialog>
                       </div>
                     ))}
                   </TableCell>
-                  <TableCell className="py-2">
-                    {districtLeaders.map((leader, index) => (
-                      <div key={index}>
-                        {leader?.District} - {leader?.Chamber}
-                      </div>
-                    ))}
-                    {onlyOldDistrictLeaders.map((leader, index) => (
-                      <div key={index}>
-                        {leader?.District} - {leader?.Chamber}
-                      </div>
-                    ))}
-                  </TableCell>
-                  <TableCell className="py-2">
-                    <Link
-                      href={updatedInfo?.[i]?.leaderURL || '#'}
-                      target="_blank"
-                    >
-                      {updatedInfo?.[i]?.leaderName}
-                    </Link>
-                  </TableCell>
+
+                  {/* Old Leg */}
+                  {showOldLeg && (
+                    <TableCell className="py-2">
+                      {districtLeaders.map((leader, index) => (
+                        <div key={index}>
+                          {leader?.District} - {leader?.Chamber}
+                        </div>
+                      ))}
+                      {onlyOldDistrictLeaders.map((leader, index) => (
+                        <div key={index}>
+                          {leader?.District} - {leader?.Chamber}
+                        </div>
+                      ))}
+                    </TableCell>
+                  )}
+
+                  {/* Current Leg */}
+                  {showCurrentLeg && (
+                    <TableCell className="py-2">
+                      <Link
+                        href={updatedInfo?.[i]?.leaderURL || '#'}
+                        target="_blank"
+                      >
+                        {updatedInfo?.[i]?.leaderName}
+                      </Link>
+                    </TableCell>
+                  )}
+
+                  {/* Photo */}
+                  {showHasPhoto && (
+                    <TableCell className="py-2 text-right">
+                      {districtLeaders.map((leader, index) => (
+                        <img
+                          key={index}
+                          src={
+                            leader.hasPhoto
+                              ? `/images/leader-photo/thumbnail/${leader.PhotoFile}`
+                              : missingPhoto.src
+                          }
+                          alt="Thumbnail"
+                          className="h-[37px] w-[27px] rounded"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null // Prevent looping if the fallback image fails to load
+                            e.currentTarget.src = missingPhoto.src
+                          }}
+                        />
+                      ))}
+                    </TableCell>
+                  )}
                 </TableRow>
               )
             })}

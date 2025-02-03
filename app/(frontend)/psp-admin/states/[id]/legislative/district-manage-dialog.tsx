@@ -175,8 +175,6 @@ function AddLeaderDialog({
     }
   }
 
-  console.log('render')
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>

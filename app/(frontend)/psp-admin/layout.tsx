@@ -14,12 +14,15 @@ import {
 } from '@/components/ui/menubar'
 import { getStates } from '@/lib/firebase/firestore'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
 
 interface Props {
   children: React.ReactNode
 }
 
-export default function DefaultLayout({ children }: Props) {
+export default async function DefaultLayout({ children }: Props) {
+  await mustGetCurrentAdmin()
+
   return (
     <>
       <SiteNavBar />

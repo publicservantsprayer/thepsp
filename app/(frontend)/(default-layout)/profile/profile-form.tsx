@@ -10,7 +10,8 @@ export function ProfileForm({
 }: {
   initialUser: CurrentUser | null
 }) {
-  const user = useUserSession(initialUser)
+  const { currentUser: user, isLoading } = useUserSession(initialUser)
+  if (isLoading) return <div>Loading...</div>
 
   if (!user) {
     return null

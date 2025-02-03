@@ -14,6 +14,7 @@ import { indianaHouseOfRepresentatives, indianaStateSenate } from './indiana'
 import { ExpandableContainerTitle } from '@/components/psp-admin/expandable-container-title'
 import { LegislativeBodyCard } from './legislative-body-card'
 import { LeaderCardDialog } from '@/components/psp-admin/leader-card-dialog'
+import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
 
 interface Props {
   params: Promise<{
@@ -22,6 +23,8 @@ interface Props {
 }
 
 export default async function StatePage({ params }: Props) {
+  await mustGetCurrentAdmin()
+
   const { id } = await params
 
   const stateCode = validateStateCode(id)

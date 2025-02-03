@@ -42,7 +42,7 @@ export function LoginForm({
   const handleEmailChange: React.ChangeEventHandler<HTMLInputElement> = (
     event,
   ) => setEmail(event.target.value)
-  const currentUser = useUserSession(initialUser)
+  const { currentUser, isLoading } = useUserSession(initialUser)
 
   React.useEffect(() => {
     if (currentUser) {
@@ -90,6 +90,8 @@ export function LoginForm({
     event.preventDefault()
     signInWithGoogle()
   }
+
+  if (isLoading) return <div>Loading...</div>
 
   return (
     <div className={cn('my8 flex flex-col gap-6', className)} {...props}>

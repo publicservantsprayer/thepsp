@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/menubar'
 
 export function UserMenu({ initialUser }: { initialUser: CurrentUser | null }) {
-  const user = useUserSession(initialUser)
+  const { currentUser: user } = useUserSession(initialUser)
 
   return (
     <Menubar className="border-none">

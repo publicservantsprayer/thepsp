@@ -1,0 +1,8 @@
+---
+description: Don't import React functions
+globs: *.tsx
+---
+
+# Your rule content
+
+- Instead of importing functions from 'react', use the functions from the React object instead like this: `React.useEffect()`

@@ -48,19 +48,27 @@ const leaderPersonalSchema = z.object({
     .string()
     .default('')
     .describe('The last name of the public official'),
-  LegalName: z
-    .string()
-    .default('')
-    .describe('The full legal name of the public official'),
   MidName: z
     .string()
     .default('')
-    .describe('The middle name of the public official'),
-  NickName: z
-    .string()
-    .default('')
-    .describe('The nickname of the public official'),
-  Prefix: z.string().default('').describe('The prefix of the public official'),
+    .describe(
+      'The middle name initial or abbreviation (followed by a dot) of the public official',
+    ),
+  Prefix: z
+    .enum([
+      'Sen.',
+      'Rep.',
+      'U.S. Sen.',
+      'U.S. Rep.',
+      'Gov.',
+      'Lt. Gov.',
+      'SOS.',
+      'J.',
+      'CJ.',
+      '',
+    ])
+    .default('') // default to empty string, however, required to non-empty in leader form
+    .describe('The prefix of the public official'),
   BirthDate: z
     .string()
     .default('')
@@ -93,7 +101,9 @@ const leaderPersonalSchema = z.object({
   Family: z
     .string()
     .default('')
-    .describe('How many children the public official has, if any'),
+    .describe(
+      'How many children the public official has, if any.  Example: "3 children"',
+    ),
   Residence: z
     .string()
     .default('')

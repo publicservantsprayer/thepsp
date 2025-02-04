@@ -45,7 +45,7 @@ function TableRowCell({ name, data }: { name: string; data: React.ReactNode }) {
 const LeaderName = ({ leader }: { leader: PostLeader }) => {
   return (
     <div>
-      {leader.Prefix} {leader.NickName} {leader.LastName}
+      {leader.Prefix} {leader.fullname}
     </div>
   )
 }

@@ -28,16 +28,17 @@ import React from 'react'
 import { DistrictManageDialog } from './district-manage-dialog'
 import Link from 'next/link'
 import { LeaderCardDialog } from '@/components/psp-admin/leader-card-dialog'
-import { LeaderTooltip } from '@/components/psp-admin/leader-tooltip'
-import {
-  Camera,
-  CircleChevronUp,
-  SquareAsterisk,
-  TextSelect,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import missingPhoto from '@/public/images/no-image.jpg'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuSeparator,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
+import { MoreVertical } from 'lucide-react'
 
 export function LegislativeBodyCard({
   state,
@@ -63,10 +64,13 @@ export function LegislativeBodyCard({
     dateElected: string
   }[]
 }) {
-  const [hasColumns, setHasColumns] = React.useState<string[]>([])
-  const showOldLeg = hasColumns.includes('oldLeg')
-  const showCurrentLeg = hasColumns.includes('currentLeg')
-  const showHasPhoto = hasColumns.includes('photo')
+  const [showDistrict, setShowDistrict] = React.useState(true)
+  const [showPrefix, setShowPrefix] = React.useState(false)
+  const [showTitle, setShowTitle] = React.useState(false)
+  const [showName, setShowName] = React.useState(true)
+  const [showHasPhoto, setShowHasPhoto] = React.useState(false)
+  const [showCurrentLeg, setShowCurrentLeg] = React.useState(false)
+  const [showOldLeg, setShowOldLeg] = React.useState(false)
 
   const leadersToLineUp: Leader[] = []
   districts.forEach((district) => {
@@ -94,26 +98,67 @@ export function LegislativeBodyCard({
   return (
     <Card>
       <CardHeader className="relative flex flex-row justify-between">
-        <CardTitle className="pt-4">{title}</CardTitle>
+        <CardTitle className="">{title}</CardTitle>
         <CardDescription></CardDescription>
-        <ToggleGroup
-          size={'sm'}
-          type="multiple"
-          onValueChange={setHasColumns}
-          value={hasColumns}
-          className="absolute right-1 top-0"
-        >
-          <ToggleGroupItem value="photo" aria-label="Toggle bold">
-            <Camera className="h-4 w-4" />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="currentLeg" aria-label="Toggle underline">
-            <SquareAsterisk className="h-4 w-4" />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="oldLeg" aria-label="Toggle italic">
-            <TextSelect className="h-4 w-4" />
-          </ToggleGroupItem>
-        </ToggleGroup>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute right-2 top-1"
+            >
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="end">
+            <DropdownMenuLabel>Columns</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuCheckboxItem
+              checked={showDistrict}
+              onCheckedChange={setShowDistrict}
+            >
+              District
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={showPrefix}
+              onCheckedChange={setShowPrefix}
+            >
+              Prefix
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={showTitle}
+              onCheckedChange={setShowTitle}
+            >
+              Title
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={showName}
+              onCheckedChange={setShowName}
+            >
+              Name
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={showHasPhoto}
+              onCheckedChange={setShowHasPhoto}
+            >
+              Photo
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={showCurrentLeg}
+              onCheckedChange={setShowCurrentLeg}
+            >
+              Current Legislators
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={showOldLeg}
+              onCheckedChange={setShowOldLeg}
+            >
+              Old Legislator ID
+            </DropdownMenuCheckboxItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </CardHeader>
+
       <CardContent>
         <Table>
           <TableCaption>{caption}</TableCaption>
@@ -127,9 +172,11 @@ export function LegislativeBodyCard({
                   legislativeChamber={legislativeChamber}
                   leadersToLineUp={leadersToLineUp}
                 >
-                  District
+                  <span className="hover:underline">District</span>
                 </EditDistrictsDialog>
               </TableHead>
+              {showPrefix && <TableHead className="py-2">Prefix</TableHead>}
+              {showTitle && <TableHead className="py-2">Title</TableHead>}
               <TableHead className="py-2">Name</TableHead>
               {showOldLeg && <TableHead className="py-2">Old Leg</TableHead>}
               {showCurrentLeg && (
@@ -171,9 +218,27 @@ export function LegislativeBodyCard({
                       jurisdiction={jurisdiction}
                       legislativeChamber={legislativeChamber}
                     >
-                      {district.name}
+                      <span className="hover:underline">{district.name}</span>
                     </DistrictManageDialog>
                   </TableCell>
+
+                  {/* Prefix */}
+                  {showPrefix && (
+                    <TableCell className="py-2 text-left">
+                      {districtLeaders.map((leader, index) => (
+                        <div key={index}>{leader?.Prefix}</div>
+                      ))}
+                    </TableCell>
+                  )}
+
+                  {/* Title */}
+                  {showTitle && (
+                    <TableCell className="py-2 text-left">
+                      {districtLeaders.map((leader, index) => (
+                        <div key={index}>{leader?.Title}</div>
+                      ))}
+                    </TableCell>
+                  )}
 
                   {/* Name */}
                   <TableCell className="py-2 text-left">
@@ -184,7 +249,9 @@ export function LegislativeBodyCard({
                           state={state}
                           districts={districts}
                         >
-                          {leader?.fullname}
+                          <span className="hover:underline">
+                            {leader?.fullname}
+                          </span>
                         </LeaderCardDialog>
                       </div>
                     ))}
@@ -236,6 +303,7 @@ export function LegislativeBodyCard({
                   {showHasPhoto && (
                     <TableCell className="py-2 text-right">
                       {districtLeaders.map((leader, index) => (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img
                           key={index}
                           src={

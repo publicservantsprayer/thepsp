@@ -56,7 +56,7 @@ export const LeaderConverter: FirestoreDataConverter<Leader> = {
         data.updatedAt instanceof Timestamp
           ? data.updatedAt.toDate()
           : data.updatedAt,
-      fullname: [data.FirstName, data.LastName].join(' '),
+      fullname: [data.FirstName, data.MidName, data.LastName].join(' '),
     }
   },
   toFirestore: (leader: Leader) => {

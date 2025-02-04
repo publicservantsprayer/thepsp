@@ -22,12 +22,10 @@ import Link from 'next/link'
 export const emptyNewLeaderWithDefaultValues: NewLeaderForm = {
   FirstName: '',
   LastName: '',
+  MidName: '',
   Title: '',
   Prefix: '',
   Gender: '',
-  LegalName: '',
-  MidName: '',
-  NickName: '',
   BirthDate: '',
   BirthMonth: '',
   BirthYear: '',
@@ -79,11 +77,20 @@ export function LeaderForm({
     FirstName: z.string().nonempty(),
     LastName: z.string().nonempty(),
     Title: z.string().nonempty(),
-    Prefix: z.string().nonempty(),
+    Prefix: z.enum([
+      'Sen.',
+      'Rep.',
+      'U.S. Sen.',
+      'U.S. Rep.',
+      'Gov.',
+      'Lt. Gov.',
+      'SOS.',
+      'J.',
+      'CJ.',
+      '',
+    ]),
     Gender: z.enum(['M', 'F']),
-    LegalName: z.string().optional(),
     MidName: z.string().optional(),
-    NickName: z.string().optional(),
     BirthDate: z.string().optional(),
     BirthMonth: z.string().optional(),
     BirthYear: z.string().optional(),
@@ -129,8 +136,6 @@ export function LeaderForm({
       form.reset(aiResult)
     }
   }, [aiResult, form])
-
-  const formSubmitted = form.formState.isSubmitted
 
   // TODO: Deal with other errors
   // console.log(form.formState.errors)

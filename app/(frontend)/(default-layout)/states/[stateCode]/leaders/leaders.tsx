@@ -45,9 +45,7 @@ export const Leaders = ({ leaders, chamber, legType }: Props) => {
                     className="m-[10px] h-[60px] w-[60px]"
                   />
                 </div>
-                <div className="text-center text-sm">
-                  {leader.NickName} {leader.LastName}
-                </div>
+                <div className="text-center text-sm">{leader.fullname}</div>
               </div>
             </div>
           </Link>

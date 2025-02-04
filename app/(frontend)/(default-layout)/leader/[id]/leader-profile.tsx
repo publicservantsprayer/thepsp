@@ -27,16 +27,14 @@ interface Props {
 }
 
 export function LeaderProfile({ leader }: Props) {
-  const name = `${leader.Title} ${leader.NickName} ${leader.LastName}`
+  const name = `${leader.Title} ${leader.fullname}`
 
   return (
     <div className="bg-black px-2 pb-2 pt-4 md:pb-6 md:pt-8">
       <div className="mx-auto max-w-lg pt-4 md:pt-8">
         <div className="mb-2 rounded-t-lg bg-primary py-1 pt-4 text-primary-foreground md:pt-8">
           <div>{leader.Title}</div>
-          <h2>
-            {leader.NickName} {leader.LastName}
-          </h2>
+          <h2>{leader.fullname}</h2>
         </div>
 
         <div className="flex justify-center">

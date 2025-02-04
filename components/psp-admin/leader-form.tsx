@@ -160,7 +160,7 @@ export function LeaderForm({
                 type="submit"
                 className=""
                 loading={form.formState.isSubmitting}
-                disabled={formSubmitted}
+                disabled={form.formState.isSubmitSuccessful}
               >
                 {!form.formState.isSubmitSuccessful && 'Save Leader Info'}
                 {form.formState.isSubmitSuccessful && 'Leader Saved'}

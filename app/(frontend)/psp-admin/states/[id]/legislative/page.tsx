@@ -15,6 +15,7 @@ import { ExpandableContainerTitle } from '@/components/psp-admin/expandable-cont
 import { LegislativeBodyCard } from './legislative-body-card'
 import { LeaderCardDialog } from '@/components/psp-admin/leader-card-dialog'
 import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
+import { StrayLeaders } from './stray-leaders'
 
 interface Props {
   params: Promise<{
@@ -209,94 +210,5 @@ function filterStateLowerDistricts(districts: District[]) {
     (district) =>
       district.jurisdiction === 'state' &&
       district.legislativeChamber === 'lower',
-  )
-}
-
-function filterLeadersWithoutOldDistrict(leaders: Leader[]) {
-  return leaders.filter((leader) => !leader.District && !leader.districtRef)
-}
-
-function filterLeadersWithoutOldChamber(leaders: Leader[]) {
-  return leaders.filter(
-    (leader) =>
-      !['S', 'H'].includes(leader.Chamber!) && !leader.legislativeChamber,
-  )
-}
-
-function StrayLeaders({
-  leaders,
-  leadersLeftOver,
-  state,
-  districts,
-}: {
-  leaders: Leader[]
-  leadersLeftOver: Leader[]
-  state: State
-  districts: District[]
-}) {
-  const noDistrict = filterLeadersWithoutOldDistrict(leaders)
-  const noChamber = filterLeadersWithoutOldChamber(leaders)
-
-  // if (noDistrict.length === 0 && noChamber.length === 0) return null
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Stray Leaders</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {leadersLeftOver.length > 0 && (
-          <div>
-            <h3>Left Over</h3>
-            <ul>
-              {leadersLeftOver.map((leader) => (
-                <li key={leader.ref.id}>
-                  <DeleteLeaderDialog state={state} leader={leader}>
-                    <SquareX size={16} />
-                  </DeleteLeaderDialog>
-                  <LeaderCardDialog
-                    leader={leader}
-                    state={state}
-                    districts={districts}
-                  >
-                    {leader.fullname}
-                  </LeaderCardDialog>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {noDistrict.length > 0 && (
-          <div>
-            <h3>Leaders Without Old District</h3>
-            <ul>
-              {noDistrict.map((leader) => (
-                <li key={leader.ref.id}>
-                  <DeleteLeaderDialog state={state} leader={leader}>
-                    <SquareX size={16} />
-                  </DeleteLeaderDialog>
-                  {leader.fullname} - {leader.LegType} - {leader.Chamber}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {noChamber.length > 0 && (
-          <div>
-            <h3>Leaders Without Old Chamber</h3>
-            <ul>
-              {noChamber.map((leader) => (
-                <li key={leader.ref.id}>
-                  <DeleteLeaderDialog state={state} leader={leader}>
-                    <SquareX size={16} />
-                  </DeleteLeaderDialog>
-                  {leader.fullname} - {leader.LegType} - {leader.Chamber}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </CardContent>
-    </Card>
   )
 }

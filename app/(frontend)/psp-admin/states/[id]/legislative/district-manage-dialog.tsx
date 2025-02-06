@@ -33,7 +33,9 @@ import { SquareX } from 'lucide-react'
 import { DeleteLeaderDialog } from './delete-leader-dialog'
 import { AddLeaderDialog } from './add-leader-dialog'
 import { liteClient as algoliasearch } from 'algoliasearch/lite'
-import { leaderAlgoliaIndex } from '@/lib/firebase/server/admin-app'
+import { LeaderCardDialog } from '@/components/psp-admin/leader-card-dialog'
+import { leaderAlgoliaIndex } from '@/lib/firebase/env'
+import { LeaderPhoto } from '@/components/psp-admin/leader-photo'
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || '',
   process.env.NEXT_PUBLIC_ALGOLIA_CLIENT_SEARCH_API_KEY || '',
@@ -74,9 +76,10 @@ export function DistrictManageDialog({
           <TableCaption></TableCaption>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-8 py-2"></TableHead>
               <TableHead className="py-2">Name</TableHead>
-              <TableHead className="py-2"></TableHead>
-              <TableHead className="py-2"></TableHead>
+              <TableHead className="py-2">Residence</TableHead>
+              <TableHead className="py-2">Photo</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -88,9 +91,18 @@ export function DistrictManageDialog({
                       <SquareX size={16} />
                     </DeleteLeaderDialog>
                   </TableCell>
-                  <TableCell className="py-2">{leader.fullname}</TableCell>
-                  <TableCell className="py-2">{leader?.fullname}</TableCell>
-                  <TableCell className="py-2"></TableCell>
+                  <TableCell className="py-2">
+                    <LeaderCardDialog leader={leader} state={state}>
+                      <span className="hover:underline">
+                        {leader.Prefix}
+                        {leader.fullname}
+                      </span>
+                    </LeaderCardDialog>
+                  </TableCell>
+                  <TableCell className="py-2">{leader.Residence}</TableCell>
+                  <TableCell className="py-2">
+                    <LeaderPhoto leader={leader} />
+                  </TableCell>
                 </TableRow>
               )
             })}
@@ -102,9 +114,14 @@ export function DistrictManageDialog({
                       <SquareX size={16} />
                     </DeleteLeaderDialog>
                   </TableCell>
-                  <TableCell className="py-2">{leader.fullname}</TableCell>
-                  <TableCell className="py-2">{leader?.fullname}</TableCell>
-                  <TableCell className="py-2"></TableCell>
+                  <TableCell className="py-2">
+                    {leader.Prefix}
+                    {leader.fullname}
+                  </TableCell>
+                  <TableCell className="py-2">{leader.Residence}</TableCell>
+                  <TableCell className="py-2">
+                    <LeaderPhoto leader={leader} />
+                  </TableCell>
                 </TableRow>
               )
             })}

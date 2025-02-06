@@ -29,7 +29,7 @@ import React from 'react'
 import { DistrictManageDialog } from './district-manage-dialog'
 import Link from 'next/link'
 import { LeaderCardDialog } from '@/components/psp-admin/leader-card-dialog'
-import missingPhoto from '@/public/images/no-image.jpg'
+import { LeaderPhoto } from '@/components/psp-admin/leader-photo'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -245,38 +245,40 @@ export function LegislativeBodyCard({
 
                   {/* Name */}
                   <TableCell className="py-2 text-left">
-                    {districtLeaders.map((leader, index) => (
-                      <div key={index} className="flex gap-2">
-                        <LeaderCardDialog
-                          leader={leader}
-                          state={state}
-                          districts={districts}
+                    <div className="flex flex-col gap-3 py-2">
+                      {districtLeaders.map((leader, index) => (
+                        <div key={index} className="flex gap-2">
+                          <LeaderCardDialog
+                            leader={leader}
+                            state={state}
+                            districts={districts}
+                          >
+                            <span className="hover:underline">
+                              {leader?.fullname}
+                            </span>
+                          </LeaderCardDialog>
+                        </div>
+                      ))}
+                      {onlyOldDistrictLeaders.map((leader, index) => (
+                        <div
+                          key={index}
+                          className="flex gap-2 text-muted-foreground"
                         >
-                          <span className="hover:underline">
+                          <LeaderCardDialog
+                            leader={leader}
+                            state={state}
+                            districts={districts}
+                          >
                             {leader?.fullname}
-                          </span>
-                        </LeaderCardDialog>
-                      </div>
-                    ))}
-                    {onlyOldDistrictLeaders.map((leader, index) => (
-                      <div
-                        key={index}
-                        className="flex gap-2 text-muted-foreground"
-                      >
-                        <LeaderCardDialog
-                          leader={leader}
-                          state={state}
-                          districts={districts}
-                        >
-                          {leader?.fullname}
-                        </LeaderCardDialog>
-                      </div>
-                    ))}
+                          </LeaderCardDialog>
+                        </div>
+                      ))}
+                    </div>
                   </TableCell>
 
                   {/* Old Leg */}
                   {showOldLeg && (
-                    <TableCell className="py-2">
+                    <TableCell className="flex flex-col justify-between py-2">
                       {districtLeaders.map((leader, index) => (
                         <div key={index}>
                           {leader?.District} - {leader?.Chamber}
@@ -304,23 +306,12 @@ export function LegislativeBodyCard({
 
                   {/* Photo */}
                   {showHasPhoto && (
-                    <TableCell className="py-2 text-right">
-                      {districtLeaders.map((leader, index) => (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          key={index}
-                          src={
-                            leader.hasPhoto
-                              ? `/images/leader-photo/thumbnail/${leader.PhotoFile}`
-                              : missingPhoto.src
-                          }
-                          alt="Thumbnail"
-                          className="h-[37px] w-[27px] rounded"
-                          onError={(e) => {
-                            e.currentTarget.onerror = null // Prevent looping if the fallback image fails to load
-                            e.currentTarget.src = missingPhoto.src
-                          }}
-                        />
+                    <TableCell className="flex flex-col gap-1 py-2 text-right">
+                      {districtLeaders.map((leader) => (
+                        <LeaderPhoto key={leader.ref.id} leader={leader} />
+                      ))}
+                      {onlyOldDistrictLeaders.map((leader) => (
+                        <LeaderPhoto key={leader.ref.id} leader={leader} />
                       ))}
                     </TableCell>
                   )}

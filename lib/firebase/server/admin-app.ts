@@ -15,7 +15,7 @@ import {
 } from 'firebase-admin/auth'
 import { getFirestore } from 'firebase-admin/firestore'
 import { getStorage } from 'firebase-admin/storage'
-import { getURL } from '@/payload/utilities/getURL'
+import { devDatabaseId, useDev } from '../env'
 
 // Check if the app is already initialized
 let adminApp: App
@@ -30,14 +30,9 @@ if (!getApps().length) {
 // Initialize the Auth service with the app instance
 export const auth: Auth = getAuth(adminApp)
 
-// Check if we want to use the development database
-const devDatabaseId = process.env.FIREBASE_DEV_DATABASE_ID
-const useDev = devDatabaseId && getURL().includes('localhost')
-
 // Initialize the Firestore service
-export const db: FirebaseFirestore.Firestore = useDev
-  ? getFirestore(devDatabaseId)
-  : getFirestore()
+export const db: FirebaseFirestore.Firestore =
+  useDev && devDatabaseId ? getFirestore(devDatabaseId) : getFirestore()
 
 export const storage = getStorage(adminApp)
 
@@ -53,5 +48,3 @@ export const leaderPhotoUploadBucket = useDev
 export const leaderThumbnailBucket = useDev
   ? getStorage().bucket('repsp123-dev-leaders')
   : getStorage().bucket('repsp123-leaders')
-
-export const leaderAlgoliaIndex = useDev ? 'dev-leaders' : 'psp-prod'

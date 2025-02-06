@@ -82,4 +82,4 @@ env:
   - variable: NEXT_PUBLIC_ALGOLIA_APP_ID
     value: 99QQZQ3D2P
   - variable: NEXT_PUBLIC_ALGOLIA_CLIENT_SEARCH_API_KEY
-    variable: algoliaClientSearchApiKey
+    secret: algoliaClientSearchApiKey

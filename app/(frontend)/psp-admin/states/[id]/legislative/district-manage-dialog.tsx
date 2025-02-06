@@ -33,7 +33,7 @@ import { SquareX } from 'lucide-react'
 import { DeleteLeaderDialog } from './delete-leader-dialog'
 import { AddLeaderDialog } from './add-leader-dialog'
 import { liteClient as algoliasearch } from 'algoliasearch/lite'
-
+import { leaderAlgoliaIndex } from '@/lib/firebase/server/admin-app'
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || '',
   process.env.NEXT_PUBLIC_ALGOLIA_CLIENT_SEARCH_API_KEY || '',
@@ -111,7 +111,10 @@ export function DistrictManageDialog({
           </TableBody>
         </Table>
         <div className="flex justify-end">
-          <InstantSearch indexName="dev-leaders" searchClient={searchClient}>
+          <InstantSearch
+            indexName={leaderAlgoliaIndex}
+            searchClient={searchClient}
+          >
             <AddLeaderDialog
               state={state}
               district={district}

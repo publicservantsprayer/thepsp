@@ -53,3 +53,5 @@ export const leaderPhotoUploadBucket = useDev
 export const leaderThumbnailBucket = useDev
   ? getStorage().bucket('repsp123-dev-leaders')
   : getStorage().bucket('repsp123-leaders')
+
+export const leaderAlgoliaIndex = useDev ? 'dev-leaders' : 'psp-prod'

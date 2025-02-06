@@ -13,12 +13,8 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import type { GaxiosResponse } from 'gaxios'
-import {
-  ImgType,
-  performGoogleImageSearch,
-} from '@/server-functions/leader-photo/perform-google-image-search'
+import { performGoogleImageSearch } from '@/server-functions/leader-photo/perform-google-image-search'
 import { ImageResponse } from './image-response'
-import { Leader } from '@/lib/types'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Input } from '@/components/ui/input'
 import { z } from 'zod'
@@ -27,10 +23,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
@@ -50,7 +44,7 @@ export function PhotoSearchDialog() {
   const [response, setResponse] = React.useState<
     GaxiosResponse<unknown> | undefined
   >(undefined)
-  const [page, setPage] = React.useState<string>('1')
+  const [page] = React.useState<string>('1')
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),

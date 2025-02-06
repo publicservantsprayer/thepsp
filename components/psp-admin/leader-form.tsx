@@ -35,7 +35,6 @@ export const emptyNewLeaderWithDefaultValues: NewLeaderForm = {
   Family: '',
   Residence: '',
   ElectDate: '',
-  Party: '',
   Religion: '',
   TwitterHandle: '',
   Facebook: '',

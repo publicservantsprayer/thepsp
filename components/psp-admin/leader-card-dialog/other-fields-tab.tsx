@@ -3,10 +3,21 @@
 import { Button } from '@/components/ui/button'
 import { Code } from '@/payload/blocks/Code/Component.client'
 import { useLeaderData } from './use-leader-data'
+import { Leader } from '@/lib/types'
 
 export function OtherFieldsTab() {
   const { rootLeader, stateLeader, isLoading, getRootAndStateLeader } =
     useLeaderData()
+
+  const sortObjectProperties = (obj: Leader | undefined) => {
+    if (!obj) return null
+    return Object.fromEntries(
+      Object.entries(obj).sort(([a], [b]) => a.localeCompare(b)),
+    ) as Leader
+  }
+
+  const sortedRootLeader = sortObjectProperties(rootLeader)
+  const sortedStateLeader = sortObjectProperties(stateLeader)
 
   return (
     <div className="my-4 flex flex-col gap-4">
@@ -25,7 +36,7 @@ export function OtherFieldsTab() {
           <div>
             {rootLeader && (
               <Code
-                code={JSON.stringify(rootLeader, null, 2)}
+                code={JSON.stringify(sortedRootLeader, null, 2)}
                 language="json"
               />
             )}
@@ -36,7 +47,7 @@ export function OtherFieldsTab() {
           <div>
             {stateLeader && (
               <Code
-                code={JSON.stringify(stateLeader, null, 2)}
+                code={JSON.stringify(sortedStateLeader, null, 2)}
                 language="json"
               />
             )}

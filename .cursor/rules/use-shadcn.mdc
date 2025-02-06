@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+---
+
+# Your rule content
+
+- Whenever making new components, always use the Shadcn UI library rather than plain html elements.

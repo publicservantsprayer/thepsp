@@ -9,10 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { State } from '@/lib/types'
 import { Button } from '@/components/ui/button'
-import { getRootLeaderById, getStateLeaders } from '@/lib/firebase/firestore'
+import { State } from '@/lib/types'
 
 export function VerifyRootLeaders({
   states,

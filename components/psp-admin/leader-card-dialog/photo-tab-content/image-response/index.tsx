@@ -13,14 +13,8 @@ import {
 
 import { ScrollAreaWithHorizontal } from '@/components/ui/scroll-area'
 import { Code } from '@/payload/blocks/Code/Component.client'
-// import { SearchLeaderForm } from './search-leader-form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Link from 'next/link'
-// import { LoadMoreLink } from './load-more-link'
-import { Title } from '@/components/psp-admin/title'
-// import { ImageEditDialog } from './image-edit-dialog'
-import { Leader } from '@/lib/types'
-import { GaxiosResponse } from 'gaxios'
 import { ImageEditDialog } from './image-edit-dialog'
 import { useLeaderData } from '../../use-leader-data'
 

@@ -33,6 +33,7 @@ export function DeleteLeaderDialog({
   const [deleteRoot, setDeleteRoot] = React.useState(false)
   const [areYouSure, setAreYouSure] = React.useState(false)
   const [open, setOpen] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
 
   const handleOnOpenChange = (open: boolean) => {
     setDeleteRoot(false)
@@ -42,6 +43,7 @@ export function DeleteLeaderDialog({
 
   const handleDelete: MouseEventHandler<HTMLButtonElement> = async () => {
     if (deleteRoot && areYouSure) {
+      setLoading(true)
       const result = await serverDeleteStateAndRootLeader({
         state,
         leader,
@@ -52,8 +54,10 @@ export function DeleteLeaderDialog({
           title: leader.fullname + ' deleted.',
         })
         setOpen(false)
+        setLoading(false)
       }
     } else {
+      setLoading(true)
       const result = await serverDeleteStateLeader({
         state,
         leader,
@@ -64,6 +68,7 @@ export function DeleteLeaderDialog({
           title: leader.fullname + ' removed.',
         })
         setOpen(false)
+        setLoading(false)
       }
     }
   }
@@ -76,7 +81,7 @@ export function DeleteLeaderDialog({
     }
   }
 
-  const buttonEnabled = !deleteRoot || (deleteRoot && areYouSure)
+  const buttonEnabled = !loading && (!deleteRoot || (deleteRoot && areYouSure))
   const buttonText = deleteRoot ? 'Delete Leader' : 'Remove Leader'
 
   return (
@@ -92,7 +97,11 @@ export function DeleteLeaderDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <Button onClick={handleDelete} disabled={!buttonEnabled}>
+        <Button
+          onClick={handleDelete}
+          disabled={!buttonEnabled}
+          loading={loading}
+        >
           {buttonText}
         </Button>
         <div className="flex items-center space-x-2">

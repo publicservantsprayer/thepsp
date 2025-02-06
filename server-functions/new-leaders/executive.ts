@@ -1,7 +1,7 @@
 'use server'
 
 import {
-  saveNewLeaderToStateCollection,
+  saveNewLeaderToStateAndRootCollection,
   updateState,
 } from '@/lib/firebase/firestore'
 import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
@@ -24,25 +24,32 @@ export const serverSaveNewExecutiveStateLeader = async ({
     throw new Error('Leader is not a state executive')
   }
 
-  let savedLeader
-
   if (leader.stateExecutiveOffice === 'governor') {
     if (state.governorRef) throw new Error('State already has a governor')
 
-    savedLeader = await saveNewLeaderToStateCollection(leader, state)
-    await updateState(state, { governorRef: savedLeader.ref })
+    const { savedRootLeader } = await saveNewLeaderToStateAndRootCollection({
+      newLeader: leader,
+      state,
+    })
+    await updateState(state, { governorRef: savedRootLeader.ref })
   } else if (leader.stateExecutiveOffice === 'lieutenant-governor') {
     if (state.lieutenantGovernorRef)
       throw new Error('State already has a lieutenant governor')
 
-    savedLeader = await saveNewLeaderToStateCollection(leader, state)
-    await updateState(state, { lieutenantGovernorRef: savedLeader.ref })
+    const { savedRootLeader } = await saveNewLeaderToStateAndRootCollection({
+      newLeader: leader,
+      state,
+    })
+    await updateState(state, { lieutenantGovernorRef: savedRootLeader.ref })
   } else if (leader.stateExecutiveOffice === 'secretary-of-state') {
     if (state.secretaryOfStateRef)
       throw new Error('State already has a secretary of state')
 
-    savedLeader = await saveNewLeaderToStateCollection(leader, state)
-    await updateState(state, { secretaryOfStateRef: savedLeader.ref })
+    const { savedRootLeader } = await saveNewLeaderToStateAndRootCollection({
+      newLeader: leader,
+      state,
+    })
+    await updateState(state, { secretaryOfStateRef: savedRootLeader.ref })
   }
 
   if (path) {

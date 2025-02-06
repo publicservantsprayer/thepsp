@@ -114,10 +114,6 @@ const leaderPersonalSchema = z.object({
     .string()
     .default('')
     .describe('The date the public official was elected'),
-  Party: z
-    .string()
-    .default('')
-    .describe('The political party of the public official'),
   Religion: z
     .string()
     .default('')

@@ -1,4 +1,10 @@
-import { District, DistrictDb, NewDistrict, State } from '@/lib/types'
+import {
+  District,
+  DistrictDb,
+  NewDistrict,
+  State,
+  StateCode,
+} from '@/lib/types'
 import { db } from '../../server/admin-app'
 import {
   FirestoreDataConverter,
@@ -35,6 +41,19 @@ export const getDistricts = async (state: State) => {
   const stateSnapshot = await collectionRef.get()
 
   return stateSnapshot.docs.map((doc) => doc.data())
+}
+
+export const getDistrict = async (districtId: string, stateCode: StateCode) => {
+  const collectionRef = db
+    .collection('states')
+    .doc(stateCode)
+    .collection('districts')
+    .doc(districtId)
+    .withConverter(DistrictConverter)
+
+  const snapshot = await collectionRef.get()
+
+  return snapshot.data()
 }
 
 export const setNewStateDistrict = async (

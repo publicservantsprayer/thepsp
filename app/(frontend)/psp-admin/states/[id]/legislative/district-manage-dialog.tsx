@@ -18,25 +18,26 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { InstantSearch } from 'react-instantsearch'
 
 import {
   District,
   Jurisdiction,
   Leader,
-  LeaderAiQuery,
   LegislativeChamber,
-  NewLeader,
-  NewLeaderForm,
   State,
+  Branch,
 } from '@/lib/types'
 import React from 'react'
-import { LeaderForm } from '@/components/psp-admin/leader-form'
-import { LeaderAiRequestForm } from '@/components/psp-admin/leader-ai-request-form'
-import { useToast } from '@/components/hooks/use-toast'
-import { serverSaveNewStateLeader } from '@/server-functions/new-leaders/new-state-leader'
 import { SquareX } from 'lucide-react'
 import { DeleteLeaderDialog } from './delete-leader-dialog'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { AddLeaderDialog } from './add-leader-dialog'
+import { liteClient as algoliasearch } from 'algoliasearch/lite'
+
+const searchClient = algoliasearch(
+  process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || '',
+  process.env.NEXT_PUBLIC_ALGOLIA_CLIENT_SEARCH_API_KEY || '',
+)
 
 export function DistrictManageDialog({
   state,
@@ -45,6 +46,7 @@ export function DistrictManageDialog({
   oldLeaders,
   jurisdiction,
   legislativeChamber,
+  branch,
   children,
 }: {
   state: State
@@ -53,6 +55,7 @@ export function DistrictManageDialog({
   oldLeaders: Leader[]
   jurisdiction: Jurisdiction
   legislativeChamber: LegislativeChamber
+  branch: Branch
   children?: React.ReactNode
 }) {
   return (
@@ -63,6 +66,9 @@ export function DistrictManageDialog({
           <DialogTitle>
             {state.name} - {district.name}
           </DialogTitle>
+          <DialogDescription>
+            Manage legislative leaders for {district.name} in {state.name}.
+          </DialogDescription>
         </DialogHeader>
         <Table>
           <TableCaption></TableCaption>
@@ -105,107 +111,17 @@ export function DistrictManageDialog({
           </TableBody>
         </Table>
         <div className="flex justify-end">
-          <AddLeaderDialog
-            state={state}
-            district={district}
-            leaders={leaders}
-            jurisdiction={jurisdiction}
-            legislativeChamber={legislativeChamber}
-          >
-            <Button>Add New Leader</Button>
-          </AddLeaderDialog>
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-function AddLeaderDialog({
-  state,
-  district,
-  jurisdiction,
-  legislativeChamber,
-  children,
-}: {
-  state: State
-  district: District
-  leaders: Leader[]
-  jurisdiction: Jurisdiction
-  legislativeChamber: LegislativeChamber
-  children?: React.ReactNode
-}) {
-  const { toast } = useToast()
-  const [aiResult, setAiResult] = React.useState<LeaderAiQuery | undefined>()
-  const [leaderDesignation, setLeaderDesignation] = React.useState<string>()
-
-  const [open, setOpen] = React.useState(false)
-  const onOpenChange = (open: boolean) => {
-    setAiResult(undefined)
-    setLeaderDesignation(undefined)
-    setOpen(open)
-  }
-
-  const onSubmit = async (leaderFormData: NewLeaderForm) => {
-    const newLeader: NewLeader = {
-      ...leaderFormData,
-      jurisdiction,
-      branch: 'legislative',
-      legislativeChamber,
-      districtRef: district.ref,
-      StateCode: state.ref.id,
-    }
-
-    const result = await serverSaveNewStateLeader({
-      leader: newLeader,
-      state,
-      revalidatePath: `/psp-admin/states/${state.ref.id.toLowerCase()}/legislative`,
-    })
-    if (result.success) {
-      toast({
-        title: 'Success',
-        description: result.newLeader.fullname + ' info saved successfully.',
-      })
-      setOpen(false)
-    } else {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to save leader info.',
-      })
-    }
-  }
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent
-        size="default"
-        className="flex h-[calc(100vh-8rem)] flex-col"
-      >
-        <DialogHeader className="">
-          <DialogTitle>New Leader</DialogTitle>
-          <DialogDescription>
-            Add a new {state.name} leader to {district.name}.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="h-[calc(100vh-12rem)] [container-type:size]">
-          <ScrollArea className="-mr-4 h-[calc(100cqh-1rem)]">
-            <div className="mr-8">
-              <LeaderForm
-                state={state}
-                setLeaderDesignation={setLeaderDesignation}
-                aiResult={aiResult}
-                onSubmit={onSubmit}
-              />
-              {leaderDesignation && (
-                <LeaderAiRequestForm
-                  state={state}
-                  leaderDesignation={leaderDesignation}
-                  setAiResult={setAiResult}
-                />
-              )}
-            </div>
-          </ScrollArea>
+          <InstantSearch indexName="dev-leaders" searchClient={searchClient}>
+            <AddLeaderDialog
+              state={state}
+              district={district}
+              jurisdiction={jurisdiction}
+              legislativeChamber={legislativeChamber}
+              branch={branch}
+            >
+              <Button>Add New Leader</Button>
+            </AddLeaderDialog>
+          </InstantSearch>
         </div>
       </DialogContent>
     </Dialog>

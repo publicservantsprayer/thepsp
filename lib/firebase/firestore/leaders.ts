@@ -18,6 +18,7 @@ import { leaderDbSchema, leaderDbSuperRefine } from './leaders.schema'
  * Used for transforming non-database fields in the FirestoreDataConverter.
  */
 const leaderDbParser = leaderDbSchema
+  .passthrough() // This allows us to pass through any fields that are not defined in the schema
   .superRefine(leaderDbSuperRefine)
   .transform((data) => {
     if (data.districtRef) {
@@ -115,21 +116,55 @@ export const saveNewRootLeader = async (leader: NewLeader) => {
   return savedRootLeader
 }
 
-export const saveNewLeaderToStateCollection = async (
-  leader: NewLeader,
-  state: State,
-) => {
-  const savedRootLeader = await saveNewRootLeader(leader)
-
+export const saveNewLeaderToStateCollection = async ({
+  existingRootLeader,
+  state,
+}: {
+  existingRootLeader: Leader
+  state: State
+}) => {
+  // Reset the createdAt date to the current date
+  existingRootLeader.createdAt = new Date()
+  // Save a copy of the existing root leader to the state collection
   await db
     .collection('states')
     .doc(state.ref.id)
     .collection('leaders')
     .withConverter(LeaderConverter)
-    .doc(savedRootLeader.ref.id)
-    .create(savedRootLeader)
+    .doc(existingRootLeader.ref.id)
+    .create(existingRootLeader)
 
-  return savedRootLeader
+  const savedStateLeaderSnapshot = await db
+    .collection('states')
+    .doc(state.ref.id)
+    .collection('leaders')
+    .doc(existingRootLeader.ref.id)
+    .get()
+
+  const savedStateLeader = savedStateLeaderSnapshot.data()
+
+  if (!savedStateLeader) {
+    throw new Error('Failed to save state leader')
+  }
+
+  return savedStateLeader
+}
+
+export const saveNewLeaderToStateAndRootCollection = async ({
+  newLeader,
+  state,
+}: {
+  newLeader: NewLeader
+  state: State
+}) => {
+  const savedRootLeader = await saveNewRootLeader(newLeader)
+
+  const savedStateLeader = await saveNewLeaderToStateCollection({
+    existingRootLeader: savedRootLeader,
+    state,
+  })
+
+  return { savedRootLeader, savedStateLeader }
 }
 
 export const getLeader = async (leaderRef?: Leader['ref']) => {
@@ -145,9 +180,29 @@ export const mustGetLeader = async (leaderRef: Leader['ref']) => {
   const leader = await getLeader(leaderRef)
 
   if (!leader) {
-    throw new Error('Leader not found for ref: ' + leaderRef.path)
+    throw new Error(
+      'Leader not found for ref: ' +
+        (leaderRef?.path || JSON.stringify(leaderRef)),
+    )
   }
 
+  return leader
+}
+
+export const getRootLeaderByPermaLink = async (permaLink: string) => {
+  const doc = await db
+    .collection('leaders')
+    .where('permaLink', '==', permaLink)
+    .withConverter(LeaderConverter)
+    .get()
+  return doc.docs[0].data()
+}
+
+export const mustGetRootLeaderByPermaLink = async (permaLink: string) => {
+  const leader = await getRootLeaderByPermaLink(permaLink)
+  if (!leader) {
+    throw new Error('Leader not found for permaLink: ' + permaLink)
+  }
   return leader
 }
 
@@ -290,15 +345,24 @@ export const getStateLeaderById = async (id: string, stateCode: StateCode) => {
   return doc.data()
 }
 
-export const mustGetStateLeaderById = async (
-  id: string,
-  stateCode: StateCode,
-) => {
-  const leader = await getStateLeaderById(id, stateCode)
-  if (!leader) {
-    throw new Error('No state leader exists with id: ' + id)
+export const getAnyStateLeaderByPermaLink = async (permaLink: string) => {
+  const doc = await db
+    .collectionGroup('leaders')
+    .where('permaLink', '==', permaLink)
+    .withConverter(LeaderConverter)
+    .get()
+  if (doc.empty) {
+    return undefined
   }
-  return leader
+  console.log(
+    'Found leader refs:',
+    doc.docs.map((d) => d.ref.path),
+  )
+  const stateLeaders = doc.docs.filter((d) => d.ref.path.startsWith('states/'))
+  if (stateLeaders.length === 0) {
+    return undefined
+  }
+  return stateLeaders[0].data()
 }
 
 export const mergeUpdateStateLeaderById = async ({
@@ -417,7 +481,6 @@ export const saveLeaderBatch = async ({ leaders }: { leaders: Leader[] }) => {
 /**
  * Save a single leader to root and state collections
  */
-// TODO: Rename this to saveLeaderToBothRootAndStateCollections
 export const saveLeaderToBothRootAndStateCollections = async ({
   leader,
 }: {
@@ -449,6 +512,8 @@ export const saveLeaderToBothRootAndStateCollections = async ({
  * Save some fields of a leader to root and possibly state collection
  * if it exists in the state collection. Does not parse the leader, so
  * it will save any fields that are passed in to leaderData.
+ *
+ * Returns the root leader and the state leader if it exists.
  */
 export const mergeUpdateLeader = async ({
   permaLink,
@@ -457,7 +522,6 @@ export const mergeUpdateLeader = async ({
   permaLink: string
   leaderData: Partial<Leader>
 }) => {
-  console.log('mergeUpdateLeader', permaLink, leaderData)
   leaderData.updatedAt = new Date()
   const rootLeaderCollectionRef = db
     .collection('leaders')
@@ -469,20 +533,23 @@ export const mergeUpdateLeader = async ({
   }
 
   await rootLeaderSnapshot.docs[0].ref.update(leaderData)
-  const rootLeaderData = rootLeaderSnapshot.docs[0].data()
+  const rootLeader = rootLeaderSnapshot.docs[0].data()
 
   const stateLeaderCollectionRef = db
     .collection('states')
-    .doc(rootLeaderData.StateCode)
+    .doc(rootLeader.StateCode)
     .collection('leaders')
     .withConverter(LeaderConverter)
     .where('permaLink', '==', permaLink)
   const stateLeaderSnapshot = await stateLeaderCollectionRef.get()
+
   if (stateLeaderSnapshot.empty) {
-    return
+    return { rootLeader, stateLeader: undefined }
   }
+
   const stateLeaderDocRef = stateLeaderSnapshot.docs[0].ref
-  // update just the fields that are passed in to leaderData
-  // do not parse the leader
   await stateLeaderDocRef.update(leaderData)
+  const stateLeader = stateLeaderSnapshot.docs[0].data()
+
+  return { rootLeader, stateLeader }
 }

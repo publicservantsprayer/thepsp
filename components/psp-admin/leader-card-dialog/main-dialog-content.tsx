@@ -16,8 +16,7 @@ import { useLeaderData } from './use-leader-data'
 import { ProfileImage } from './profile-image'
 
 export function MainDialogContent() {
-  const { leader, state, districts, handleSaveLeader, setLeader } =
-    useLeaderData()
+  const { leader, state, districts, handleSaveLeader } = useLeaderData()
 
   return (
     <>

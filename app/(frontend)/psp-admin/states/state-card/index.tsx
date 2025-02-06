@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getLeader } from '@/lib/firebase/firestore'
-import { Branch, Jurisdiction, Leader, LeaderAiQuery, State } from '@/lib/types'
+import { Branch, Jurisdiction, Leader, State } from '@/lib/types'
 import {
   Dialog,
   DialogContent,
@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import React from 'react'
-import { leaderAiQuerySchema } from '@/lib/firebase/firestore/leaders.schema'
 import { QueryExecutiveBranchForm } from './query-executive-branch-form'
 import Link from 'next/link'
 import { LeaderCardDialog } from '@/components/psp-admin/leader-card-dialog'
@@ -28,9 +27,9 @@ export async function StateCard({ state }: StateCardProps) {
   ])
 
   const previous = {
-    governor: leaderAiQuerySchema.parse(governor),
-    lieutenantGovernor: leaderAiQuerySchema.parse(lieutenantGovernor),
-    secretaryOfState: leaderAiQuerySchema.parse(secretaryOfState),
+    governor,
+    lieutenantGovernor,
+    secretaryOfState,
   }
 
   return (
@@ -108,9 +107,9 @@ export async function StateCard({ state }: StateCardProps) {
 }
 
 export interface PreviousStateExecutiveLeaders {
-  governor: LeaderAiQuery
-  lieutenantGovernor: LeaderAiQuery
-  secretaryOfState: LeaderAiQuery
+  governor: Leader | undefined
+  lieutenantGovernor: Leader | undefined
+  secretaryOfState: Leader | undefined
 }
 
 async function BranchUpdateDialog({

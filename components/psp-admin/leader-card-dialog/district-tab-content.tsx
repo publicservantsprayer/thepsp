@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { District, Leader } from '@/lib/types'
+import { District } from '@/lib/types'
 import { useLeaderData } from './use-leader-data'
 
 export function DistrictTabContent() {

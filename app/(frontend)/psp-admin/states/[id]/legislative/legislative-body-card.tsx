@@ -17,6 +17,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import {
+  Branch,
   District,
   Jurisdiction,
   Leader,
@@ -64,6 +65,7 @@ export function LegislativeBodyCard({
     dateElected: string
   }[]
 }) {
+  const branch: Branch = 'legislative'
   const [showDistrict, setShowDistrict] = React.useState(true)
   const [showPrefix, setShowPrefix] = React.useState(false)
   const [showTitle, setShowTitle] = React.useState(false)
@@ -217,6 +219,7 @@ export function LegislativeBodyCard({
                       oldLeaders={onlyOldDistrictLeaders}
                       jurisdiction={jurisdiction}
                       legislativeChamber={legislativeChamber}
+                      branch={branch}
                     >
                       <span className="hover:underline">{district.name}</span>
                     </DistrictManageDialog>

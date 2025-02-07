@@ -43,11 +43,7 @@ export function MainDialogContent() {
             {/* Profile */}
             <TabsContent value="profile" className="mt-6">
               {state && (
-                <LeaderForm
-                  leader={leader}
-                  state={state}
-                  onSubmit={handleSaveLeader}
-                />
+                <LeaderForm leader={leader} onSubmit={handleSaveLeader} />
               )}
             </TabsContent>
 

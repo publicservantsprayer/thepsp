@@ -108,13 +108,20 @@ export function AddLeaderDialog({
         </DialogHeader>
         <div className="h-[calc(100vh-12rem)] [container-type:size]">
           <ScrollArea className="-mr-4 h-[calc(100cqh-1rem)]">
-            <div className="mr-8">
+            <div className="ml-1 mr-8">
               <div className="grid grid-cols-2 gap-4">
                 {/* First Column */}
-                <div className="col-span-1">
+                <div className="grid grid-rows-2 gap-6">
                   <LeaderSearchCard
                     setExistingLeader={setExistingLeader}
                     setTabsValue={setTabsValue}
+                  />
+                  <LeaderAiRequestForm
+                    state={state}
+                    setAiResult={setAiResult}
+                    district={district}
+                    jurisdiction={jurisdiction}
+                    legislativeChamber={legislativeChamber}
                   />
                 </div>
                 {/* Second Column */}
@@ -150,17 +157,11 @@ export function AddLeaderDialog({
                       jurisdiction={jurisdiction}
                       legislativeChamber={legislativeChamber}
                       setOpen={setOpen}
+                      aiResult={aiResult}
                     />
                   </TabsContent>
                 </Tabs>
               </div>
-              {leaderDesignation && (
-                <LeaderAiRequestForm
-                  state={state}
-                  leaderDesignation={leaderDesignation}
-                  setAiResult={setAiResult}
-                />
-              )}
             </div>
           </ScrollArea>
         </div>

@@ -35,10 +35,6 @@ import { SquareX } from 'lucide-react'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import {
-  FindLegislativeAiRequestForm,
-  LegislativeDistrictAiResult,
-} from './find-legislative-ai-request-form'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { serverSaveLinedUpLeaders } from '@/server-functions/new-leaders/save-leader-batch'
 
@@ -58,9 +54,9 @@ export function EditDistrictsDialog({
   children?: React.ReactNode
 }) {
   const { toast } = useToast()
-  const [aiResult, setAiResult] = React.useState<
-    LegislativeDistrictAiResult | undefined
-  >()
+  // const [aiResult, setAiResult] = React.useState<
+  //   LegislativeDistrictAiResult | undefined
+  // >()
   const [savingLinedUpLeaders, setSavingLinedUpLeaders] = React.useState(false)
 
   const handleSaveLinedUpLeaders = async () => {
@@ -155,12 +151,12 @@ export function EditDistrictsDialog({
             </div>
           </TabsContent>
           <TabsContent value="update-leaders">
-            <FindLegislativeAiRequestForm
+            {/* <FindLegislativeAiRequestForm
               state={state}
               jurisdiction={jurisdiction}
               legislativeChamber={legislativeChamber}
               setAiResult={setAiResult}
-            />
+            /> */}
           </TabsContent>
 
           <TabsContent value="super-admin">

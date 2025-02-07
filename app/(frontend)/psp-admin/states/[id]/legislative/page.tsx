@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   getDistricts,
   getStateLeaders,
@@ -6,16 +5,14 @@ import {
 } from '@/lib/firebase/firestore'
 import { validateStateCode } from '@/lib/get-state-info'
 import { notFound } from 'next/navigation'
-import { District, Leader, State } from '@/lib/types'
+import { District, Leader } from '@/lib/types'
 import React from 'react'
-import { SquareX } from 'lucide-react'
-import { DeleteLeaderDialog } from './delete-leader-dialog'
 import { indianaHouseOfRepresentatives, indianaStateSenate } from './indiana'
-import { ExpandableContainerTitle } from '@/components/psp-admin/expandable-container-title'
+import { ExpandableContainer } from '@/components/psp-admin/expandable-container'
 import { LegislativeBodyCard } from './legislative-body-card'
-import { LeaderCardDialog } from '@/components/psp-admin/leader-card-dialog'
 import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
 import { StrayLeaders } from './stray-leaders'
+import { StateSettings } from './state-settings'
 
 interface Props {
   params: Promise<{
@@ -61,7 +58,10 @@ export default async function StatePage({ params }: Props) {
   )
 
   return (
-    <ExpandableContainerTitle title={state.name}>
+    <ExpandableContainer
+      title={state.name}
+      buttons={<StateSettings state={state} />}
+    >
       <div className="grid w-full grid-cols-3 gap-4">
         <div className="flex flex-col gap-4">
           <LegislativeBodyCard
@@ -116,7 +116,7 @@ export default async function StatePage({ params }: Props) {
           />
         </div>
       </div>
-    </ExpandableContainerTitle>
+    </ExpandableContainer>
   )
 }
 

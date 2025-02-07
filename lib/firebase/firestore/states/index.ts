@@ -1,6 +1,7 @@
 import {
   QueryDocumentSnapshot,
   FirestoreDataConverter,
+  Timestamp,
 } from 'firebase-admin/firestore'
 import { db } from '@/lib/firebase/server/admin-app'
 import { State, StateCode, StateDb } from '@/lib/types'
@@ -15,6 +16,10 @@ const StateConverter: FirestoreDataConverter<State, StateDb> = {
         id: snapshot.id as StateCode,
         path: snapshot.ref.path,
       },
+      updatedAt:
+        data.updatedAt instanceof Timestamp
+          ? data.updatedAt.toDate()
+          : data.updatedAt,
       governorRef: data.governorRef && {
         id: data.governorRef.id,
         path: data.governorRef.path,
@@ -78,6 +83,7 @@ export const mustGetState = async (stateCode: StateCode) => {
 }
 
 export const updateState = async (state: State, data: Partial<State>) => {
+  data.updatedAt = new Date()
   return db
     .collection('states')
     .doc(state.ref.id)

@@ -6,7 +6,7 @@ import {
   getStates,
 } from '@/lib/firebase/firestore'
 import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
-import { ExpandableContainerTitle } from '@/components/psp-admin/expandable-container-title'
+import { ExpandableContainer } from '@/components/psp-admin/expandable-container'
 import { VerifyRootLeaders } from './verify-root-leaders'
 import { State } from '@/lib/types'
 
@@ -32,11 +32,11 @@ export default async function LeadersPage() {
   }
 
   return (
-    <ExpandableContainerTitle title="Superadmin Data">
+    <ExpandableContainer title="Superadmin Data">
       <VerifyRootLeaders
         states={states}
         verifyRootLeadersForState={verifyRootLeadersForState}
       />
-    </ExpandableContainerTitle>
+    </ExpandableContainer>
   )
 }

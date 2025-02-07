@@ -91,9 +91,8 @@ export function UpdateExecutiveBranchForm({
             <h2 className="text-center font-semibold text-muted-foreground">
               New Governor
             </h2>
-            <LeaderForm state={state} leader={previous.governor} disabled />
+            <LeaderForm leader={previous.governor} disabled />
             <LeaderForm
-              state={state}
               leader={result?.governor}
               onSubmit={getOnSubmit({ stateExecutiveOffice: 'governor' })}
             />
@@ -112,13 +111,8 @@ export function UpdateExecutiveBranchForm({
               <h2 className="text-center font-semibold text-muted-foreground">
                 New Lieutenant Governor
               </h2>
+              <LeaderForm leader={previous.lieutenantGovernor} disabled />
               <LeaderForm
-                state={state}
-                leader={previous.lieutenantGovernor}
-                disabled
-              />
-              <LeaderForm
-                state={state}
                 leader={result?.lieutenantGovernor}
                 onSubmit={getOnSubmit({
                   stateExecutiveOffice: 'lieutenant-governor',
@@ -141,13 +135,8 @@ export function UpdateExecutiveBranchForm({
               <h2 className="text-center font-semibold text-muted-foreground">
                 New Secretary of State
               </h2>
+              <LeaderForm leader={previous.secretaryOfState} disabled />
               <LeaderForm
-                state={state}
-                leader={previous.secretaryOfState}
-                disabled
-              />
-              <LeaderForm
-                state={state}
                 leader={result?.secretaryOfState}
                 onSubmit={getOnSubmit({
                   stateExecutiveOffice: 'secretary-of-state',

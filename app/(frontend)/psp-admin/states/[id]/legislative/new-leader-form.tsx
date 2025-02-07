@@ -6,7 +6,7 @@ import { serverSaveNewStateLeader } from '@/server-functions/new-leaders/new-sta
 import {
   District,
   Jurisdiction,
-  Leader,
+  LeaderAiQuery,
   LegislativeChamber,
   NewLeader,
   NewLeaderForm as NewLeaderFormType,
@@ -20,12 +20,14 @@ export function NewLeaderForm({
   jurisdiction,
   legislativeChamber,
   setOpen,
+  aiResult,
 }: {
   state: State
   district: District
   jurisdiction: Jurisdiction
   legislativeChamber: LegislativeChamber
   setOpen: (open: boolean) => void
+  aiResult: LeaderAiQuery | undefined
 }) {
   const { toast } = useToast()
 
@@ -62,7 +64,7 @@ export function NewLeaderForm({
 
   return (
     <div className="col-span-1">
-      <LeaderForm state={state} onSubmit={onSubmit} />
+      <LeaderForm leader={aiResult} onSubmit={onSubmit} />
     </div>
   )
 }

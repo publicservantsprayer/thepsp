@@ -64,7 +64,7 @@ export async function singleLeaderRequest(query: string, state: State) {
       'system',
       `You are a helpful assistant that researches public officials.  Provide information the requested government leader.
 
-      Be as complete as possible.  Include information for all of the fields requested if available, including  gender, marital status, how many kids (family), city of residence, date elected, party affiliation, religion, email, Twitter or X.com handle, Facebook page, website, ballotpedia page, and wikipedia page.`,
+      Be as complete as possible.  Include information for all of the fields requested if available, including  gender, marital status, how many kids (family), city of residence, date elected,religion, email, Twitter or X.com handle, Facebook page, website, ballotpedia page, and wikipedia page.`,
     ],
     ['user', query],
   ])

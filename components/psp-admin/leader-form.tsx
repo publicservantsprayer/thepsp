@@ -12,7 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { LeaderAiQuery, NewLeaderForm, State } from '@/lib/types'
+import { LeaderAiQuery, NewLeaderForm } from '@/lib/types'
 
 import { Input } from '@/components/ui/input'
 import { z } from 'zod'
@@ -48,24 +48,12 @@ type NameType = keyof NewLeaderForm
 type UseFormType = UseFormReturn<NewLeaderForm>
 
 interface LeaderFormProps {
-  state: State
-  leader?: NewLeaderForm
-  setLeaderDesignation?: React.Dispatch<
-    React.SetStateAction<string | undefined>
-  >
-  aiResult?: LeaderAiQuery
+  leader?: NewLeaderForm | LeaderAiQuery
   disabled?: boolean
   onSubmit?: (data: NewLeaderForm) => void
 }
 
-export function LeaderForm({
-  state,
-  leader,
-  setLeaderDesignation,
-  disabled,
-  aiResult,
-  onSubmit,
-}: LeaderFormProps) {
+export function LeaderForm({ leader, disabled, onSubmit }: LeaderFormProps) {
   if (!onSubmit) {
     onSubmit = () => {
       throw new Error('This form cannot be submitted')
@@ -114,27 +102,12 @@ export function LeaderForm({
     defaultValues: leader || emptyNewLeaderWithDefaultValues,
   })
 
-  const [firstName, lastName] = form.watch(['FirstName', 'LastName'])
-  const touchedName =
-    form.formState.touchedFields.FirstName &&
-    form.formState.touchedFields.LastName
-
+  // Add this effect to reset form when leader prop changes
   React.useEffect(() => {
-    if (!setLeaderDesignation) return
-    if (touchedName) {
-      const office = state.upperChamberName
-      const title = 'Senator'
-      setLeaderDesignation(
-        `${title} ${firstName} ${lastName} ` + `from the ${office}.`,
-      )
+    if (leader) {
+      form.reset(leader)
     }
-  }, [touchedName, firstName, lastName, setLeaderDesignation, state])
-
-  React.useEffect(() => {
-    if (aiResult) {
-      form.reset(aiResult)
-    }
-  }, [aiResult, form])
+  }, [leader, form])
 
   // TODO: Deal with other errors
   // console.log(form.formState.errors)
@@ -144,25 +117,27 @@ export function LeaderForm({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-0 pr-2"
+          className="w-full space-y-4 pr-2"
         >
-          {Object.keys(emptyNewLeaderWithDefaultValues).map((key) => {
-            const name = key as NameType
-            return (
-              <FieldInput
-                key={key}
-                name={name}
-                form={form}
-                disabled={disabled}
-              />
-            )
-          })}
+          <div className="">
+            {Object.keys(emptyNewLeaderWithDefaultValues).map((key) => {
+              const name = key as NameType
+              return (
+                <FieldInput
+                  key={key}
+                  name={name}
+                  form={form}
+                  disabled={disabled}
+                />
+              )
+            })}
+          </div>
 
           {!disabled && (
-            <div className="flex justify-end py-4">
+            <div className="">
               <Button
                 type="submit"
-                className=""
+                className="w-full"
                 loading={form.formState.isSubmitting}
                 disabled={form.formState.isSubmitSuccessful}
               >

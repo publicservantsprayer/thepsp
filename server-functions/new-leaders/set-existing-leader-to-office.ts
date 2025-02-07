@@ -60,6 +60,10 @@ export const serverSetExistingLeaderToOffice = async ({
       legislativeChamber,
       districtRef: district.ref,
       StateCode: state.ref.id,
+      LegType: '',
+      Chamber: '',
+      District: '',
+      DistrictID: '',
     },
     state,
   })
@@ -73,6 +77,10 @@ export const serverSetExistingLeaderToOffice = async ({
       legislativeChamber,
       districtRef: district.ref,
       StateCode: state.ref.id,
+      LegType: '',
+      Chamber: '',
+      District: '',
+      DistrictID: '',
     },
   })
 

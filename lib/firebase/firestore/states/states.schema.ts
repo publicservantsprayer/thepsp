@@ -72,6 +72,7 @@ export const stateDbSchema = z.object({
   hasSecretaryOfState: z.boolean(),
   secretaryOfStateRef: zodFirestoreDocumentReference.optional(),
   createDailyPost: z.boolean(),
+  updatedAt: z.date().optional(),
 })
 
 /**
@@ -91,6 +92,10 @@ export const stateSchema = stateDbSchema.extend({
   secretaryOfStateRef: zodSimpleDocumentRef.optional(),
   upperChamberName: z.string().optional(),
   lowerChamberName: z.string().optional(),
+  usSenateName: z.string(),
+  usSenateFullname: z.string(),
+  usHouseName: z.string(),
+  usHouseFullname: z.string(),
 })
 
 /**

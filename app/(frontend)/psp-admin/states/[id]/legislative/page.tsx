@@ -176,9 +176,18 @@ function filterStateSenate(leaders: Leader[]) {
 }
 
 function filterStateHouse(leaders: Leader[]) {
-  return leaders.filter(
-    (leader) => leader.LegType === 'SL' && leader.Chamber === 'H',
-  )
+  return leaders.filter((leader) => {
+    if (leader.LegType === 'SL' && leader.Chamber === 'H') {
+      return true
+    }
+    if (
+      leader.branch === 'legislative' &&
+      leader.jurisdiction === 'state' &&
+      leader.legislativeChamber === 'lower'
+    ) {
+      return true
+    }
+  })
 }
 
 function filterFederalUpperDistricts(districts: District[]) {

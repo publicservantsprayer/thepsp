@@ -1,9 +1,11 @@
 'use client'
 
+import { useToast } from '@/components/hooks/use-toast'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Leader } from '@/lib/types'
+import { serverGetRootLeader } from '@/server-functions/new-leaders/get-root-leader'
 import { Search as SearchIcon } from 'lucide-react'
 import React from 'react'
 import { useHits, useInstantSearch, useSearchBox } from 'react-instantsearch'
@@ -13,7 +15,7 @@ export type SearchLeaderHit = Omit<Leader, 'ref'> & {
 }
 
 interface LeaderSearchCardProps {
-  setExistingLeader: (leader: SearchLeaderHit) => void
+  setExistingLeader: (leader: Leader) => void
   setTabsValue: (value: 'existing' | 'new') => void
 }
 
@@ -65,17 +67,17 @@ function Hits({
   setExistingLeader,
   setTabsValue,
 }: {
-  setExistingLeader: (leader: SearchLeaderHit) => void
+  setExistingLeader: (leader: Leader) => void
   setTabsValue: (value: 'existing' | 'new') => void
 }) {
-  const { items } = useHits()
+  const { items } = useHits<SearchLeaderHit>()
 
   return (
     <div>
       {items.map((item) => (
         <Hit
           key={item.objectID}
-          item={item as Partial<Leader> as Leader}
+          item={item}
           setExistingLeader={setExistingLeader}
           setTabsValue={setTabsValue}
         />
@@ -89,13 +91,25 @@ function Hit({
   setExistingLeader,
   setTabsValue,
 }: {
-  item: Leader
-  setExistingLeader: (leader: SearchLeaderHit) => void
+  item: SearchLeaderHit
+  setExistingLeader: (leader: Leader) => void
   setTabsValue: (value: 'existing' | 'new') => void
 }) {
-  const handleClick = () => {
-    setExistingLeader(item as unknown as SearchLeaderHit)
-    setTabsValue('existing')
+  const { toast } = useToast()
+  const handleClick = async () => {
+    const result = await serverGetRootLeader({
+      leaderId: item.objectID,
+    })
+    if (result.success && result.rootLeader) {
+      setExistingLeader(result.rootLeader)
+      setTabsValue('existing')
+    } else {
+      toast({
+        title: 'Error',
+        description: result.error,
+        variant: 'destructive',
+      })
+    }
   }
   return (
     <div className="border border-x-0 border-t-0 border-b-border">

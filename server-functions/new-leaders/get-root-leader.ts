@@ -14,6 +14,13 @@ export const serverGetRootLeader = async ({
   mustGetCurrentAdmin()
 
   const rootLeader = await getRootLeaderById(leaderId)
+  if (!rootLeader) {
+    console.error('Leader not found with id: ' + leaderId)
+    return {
+      success: false,
+      error: 'Leader not found with id: ' + leaderId,
+    }
+  }
 
   if (path) {
     revalidatePath(path)

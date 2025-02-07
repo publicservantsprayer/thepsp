@@ -45,7 +45,7 @@ export function AddLeaderDialog({
   const [aiResult, setAiResult] = React.useState<LeaderAiQuery | undefined>()
   const [leaderDesignation, setLeaderDesignation] = React.useState<string>()
   const [existingLeader, setExistingLeader] = React.useState<
-    SearchLeaderHit | undefined
+    Leader | undefined
   >()
   const [open, setOpen] = React.useState(false)
   const [tabsValue, setTabsValue] = React.useState<'existing' | 'new'>('new')
@@ -58,7 +58,7 @@ export function AddLeaderDialog({
     if (!existingLeader) return
     const getLeader = async () => {
       const result = await serverGetStateLeader({
-        leaderId: existingLeader.objectID,
+        leaderId: existingLeader.ref.id,
         stateCode: existingLeader.StateCode,
       })
       if (result) {

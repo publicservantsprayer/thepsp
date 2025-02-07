@@ -1,13 +1,13 @@
-import { SearchLeaderHit } from '@/app/(frontend)/psp-admin/states/[id]/legislative/leader-search-card'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getStateInfo } from '@/lib/get-state-info'
 import { District, Leader } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import React from 'react'
+import { LeaderCardDialog } from './psp-admin/leader-card-dialog'
 
 interface LeaderCardProps {
-  leader?: Leader | SearchLeaderHit | undefined
-  stateLeader?: Leader | undefined // fresh from the database
+  leader?: Leader
+  stateLeader?: Leader
   stateLeaderDistrict?: District | undefined
   className?: string
 }
@@ -42,7 +42,9 @@ export function LeaderCard({
   return (
     <Card className={cn('', className)}>
       <CardHeader>
-        <CardTitle>{fullName}</CardTitle>
+        <CardTitle>
+          <LeaderCardDialog leader={leader}>{fullName}</LeaderCardDialog>
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-4 text-sm">

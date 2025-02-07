@@ -15,6 +15,7 @@ import {
 import { getStates } from '@/lib/firebase/firestore'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { mustGetCurrentAdmin } from '@/lib/firebase/server/auth'
+import { leaderAlgoliaIndex } from '@/lib/firebase/env'
 
 interface Props {
   children: React.ReactNode
@@ -80,9 +81,14 @@ async function PspAdminNavBar() {
               </ScrollArea>
             </MenubarContent>
           </MenubarMenu>
+          {!usingDevDatabase && (
+            <div className="text-xs italic text-background">
+              Using Production Database w/ {leaderAlgoliaIndex} index
+            </div>
+          )}
           {usingDevDatabase && (
             <div className="text-xs italic text-destructive">
-              Using Dev Database
+              Using Dev Database w/ {leaderAlgoliaIndex} index
             </div>
           )}
         </Menubar>

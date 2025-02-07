@@ -12,11 +12,10 @@ import {
   LegislativeChamber,
   State,
 } from '@/lib/types'
-import { SearchLeaderHit } from './leader-search-card'
 import React from 'react'
 
 interface ExistingLeaderTabContentProps {
-  existingLeader: SearchLeaderHit | undefined
+  existingLeader: Leader | undefined
   stateLeader: Leader | undefined
   state: State
   stateLeaderDistrict: District | undefined

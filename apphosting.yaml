@@ -83,3 +83,5 @@ env:
     value: 99QQZQ3D2P
   - variable: NEXT_PUBLIC_ALGOLIA_CLIENT_SEARCH_API_KEY
     secret: algoliaClientSearchApiKey
+  - variable: NEXT_PUBLIC_ALGOLIA_LEADER_INDEX
+    value: psp-prod

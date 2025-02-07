@@ -195,6 +195,9 @@ export const getRootLeaderByPermaLink = async (permaLink: string) => {
     .where('permaLink', '==', permaLink)
     .withConverter(LeaderConverter)
     .get()
+  if (doc.empty) {
+    return undefined
+  }
   return doc.docs[0].data()
 }
 

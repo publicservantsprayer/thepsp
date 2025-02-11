@@ -17,7 +17,7 @@ const dayOfTheWeekColor = [
 ] as const
 
 const nameAndTitle = (leader: Leader): string =>
-  `${leader.Title} ${leader.NickName} ${leader.LastName}`
+  `${leader.Title} ${leader.FirstName} ${leader.LastName}`
 
 export const createPostPhoto = async (
   dateID: string,

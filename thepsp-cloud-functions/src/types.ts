@@ -1,6 +1,6 @@
 export interface Leader {
   Title: string
-  NickName: string
+  FirstName: string
   LastName: string
   PhotoFile: string
   hasPhoto: boolean

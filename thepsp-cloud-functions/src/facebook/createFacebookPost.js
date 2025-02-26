@@ -1,5 +1,5 @@
 const leaderName = (leader) =>
-  `${leader.Prefix} ${leader.NickName} ${leader.LastName}`
+  `${leader.Prefix} ${leader.FirstName} ${leader.LastName}`
 
 const description = (dateID, stateCode, post) => {
   const [year, month, day] = dateID.split('-')

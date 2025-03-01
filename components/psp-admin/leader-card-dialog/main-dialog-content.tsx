@@ -12,7 +12,7 @@ import { LeaderForm } from '../leader-form'
 import { DistrictTabContent } from './district-tab-content'
 import { PhotoTabContent } from './photo-tab-content'
 import { OtherFieldsTab } from './other-fields-tab'
-import { useLeaderData } from './use-leader-data'
+import { useLeaderData, PhotoRefreshProvider } from './use-leader-data'
 import { ProfileImage } from './profile-image'
 
 export function MainDialogContent() {
@@ -20,50 +20,52 @@ export function MainDialogContent() {
 
   return (
     <>
-      <DialogContent size="xl" className="">
-        <ProfileImage />
+      <PhotoRefreshProvider>
+        <DialogContent size="xl" className="">
+          <ProfileImage />
 
-        <DialogHeader>
-          <DialogTitle>{leader.fullname}</DialogTitle>
-          <DialogDescription></DialogDescription>
-        </DialogHeader>
+          <DialogHeader>
+            <DialogTitle>{leader.fullname}</DialogTitle>
+            <DialogDescription></DialogDescription>
+          </DialogHeader>
 
-        <Tabs
-          defaultValue="profile"
-          className="h-[calc(100vh-200px)] [container-type:size]"
-        >
-          <TabsList>
-            <TabsTrigger value="profile">Profile</TabsTrigger>
-            <TabsTrigger value="district">District</TabsTrigger>
-            <TabsTrigger value="other">Other Fields</TabsTrigger>
-            <TabsTrigger value="photo">Photo</TabsTrigger>
-          </TabsList>
+          <Tabs
+            defaultValue="profile"
+            className="h-[calc(100vh-200px)] [container-type:size]"
+          >
+            <TabsList>
+              <TabsTrigger value="profile">Profile</TabsTrigger>
+              <TabsTrigger value="district">District</TabsTrigger>
+              <TabsTrigger value="other">Other Fields</TabsTrigger>
+              <TabsTrigger value="photo">Photo</TabsTrigger>
+            </TabsList>
 
-          <ScrollArea className="h-[calc(100cqh-4rem)] pr-4">
-            {/* Profile */}
-            <TabsContent value="profile" className="mt-6">
-              {state && (
-                <LeaderForm leader={leader} onSubmit={handleSaveLeader} />
-              )}
-            </TabsContent>
+            <ScrollArea className="h-[calc(100cqh-4rem)] pr-4">
+              {/* Profile */}
+              <TabsContent value="profile" className="mt-6">
+                {state && (
+                  <LeaderForm leader={leader} onSubmit={handleSaveLeader} />
+                )}
+              </TabsContent>
 
-            {/* Districts */}
-            <TabsContent value="district" className="mt-6">
-              {districts && <DistrictTabContent />}
-            </TabsContent>
+              {/* Districts */}
+              <TabsContent value="district" className="mt-6">
+                {districts && <DistrictTabContent />}
+              </TabsContent>
 
-            {/* Photo */}
-            <TabsContent value="photo" className="mt-6">
-              <PhotoTabContent />
-            </TabsContent>
+              {/* Photo */}
+              <TabsContent value="photo" className="mt-6">
+                <PhotoTabContent />
+              </TabsContent>
 
-            {/* Other fields */}
-            <TabsContent value="other">
-              <OtherFieldsTab />
-            </TabsContent>
-          </ScrollArea>
-        </Tabs>
-      </DialogContent>
+              {/* Other fields */}
+              <TabsContent value="other">
+                <OtherFieldsTab />
+              </TabsContent>
+            </ScrollArea>
+          </Tabs>
+        </DialogContent>
+      </PhotoRefreshProvider>
     </>
   )
 }

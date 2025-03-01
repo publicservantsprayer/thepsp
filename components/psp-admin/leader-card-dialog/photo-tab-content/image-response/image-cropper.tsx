@@ -7,11 +7,18 @@ import Cropper, { Area } from 'react-easy-crop'
 import { Button } from '@/components/ui/button'
 import { serverUploadFileFromFormData } from '@/server-functions/leader-photo/upload-photo'
 import { useToast } from '@/components/hooks/use-toast'
-import { useLeaderData } from '../../use-leader-data'
+import { useLeaderData, usePhotoRefresh } from '../../use-leader-data'
 import { DialogClose } from '@/components/ui/dialog'
 
-export function ImageCropper() {
+interface ImageCropperProps {
+  onCropComplete?: () => void
+}
+
+export function ImageCropper({
+  onCropComplete: onCropCompleteCallback,
+}: ImageCropperProps) {
   const { leader, setLeader } = useLeaderData()
+  const { triggerPhotoRefresh } = usePhotoRefresh()
   const [crop, setCrop] = React.useState({ x: 0, y: 0 })
   const [zoom, setZoom] = React.useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = React.useState<Area>()
@@ -73,9 +80,27 @@ export function ImageCropper() {
         PhotoFile: result.PhotoFile,
         hasPhoto: true,
       })
+
+      // Trigger photo refresh to update all images
+      triggerPhotoRefresh()
+
+      // Call the callback if provided
+      if (onCropCompleteCallback) {
+        onCropCompleteCallback()
+      }
+
       toast({
         title: 'Image saved successfully',
+        description: 'The cropped photo has been updated.',
       })
+
+      // Find the closest dialog element and close it
+      const dialogCloseButton = document.querySelector(
+        '[data-dialog-close]',
+      ) as HTMLButtonElement | null
+      if (dialogCloseButton) {
+        dialogCloseButton.click()
+      }
     } else {
       toast({
         title: 'Error saving image',
@@ -86,21 +111,43 @@ export function ImageCropper() {
 
   return (
     <div className="container">
-      <div className="relative h-[60vh] w-full rounded">
-        <Cropper
-          image={leaderPhotoUploadOriginalUrl}
-          crop={crop}
-          zoom={zoom}
-          aspect={108 / 148}
-          onCropChange={setCrop}
-          onCropComplete={onCropComplete}
-          onZoomChange={setZoom}
-        />
+      <div className="flex flex-col">
+        <div className="relative h-[50vh] w-full rounded">
+          <Cropper
+            image={leaderPhotoUploadOriginalUrl}
+            crop={crop}
+            zoom={zoom}
+            aspect={108 / 148}
+            onCropChange={setCrop}
+            onCropComplete={onCropComplete}
+            onZoomChange={setZoom}
+          />
+        </div>
+        <div className="mt-2">
+          <label className="text-sm text-muted-foreground">
+            Zoom: {zoom.toFixed(1)}x
+          </label>
+          <input
+            type="range"
+            value={zoom}
+            min={1}
+            max={3}
+            step={0.1}
+            aria-labelledby="Zoom"
+            onChange={(e) => setZoom(Number(e.target.value))}
+            className="w-full"
+          />
+        </div>
       </div>
-      <div className="mt-4 flex flex-col gap-4">
-        <Button onClick={handleSaveCroppedImage}>Save</Button>
-        <DialogClose asChild>
-          <Button variant="secondary">Close</Button>
+
+      <div className="mt-6 flex flex-col gap-4 sm:flex-row">
+        <Button onClick={handleSaveCroppedImage} className="flex-1">
+          Save
+        </Button>
+        <DialogClose asChild data-dialog-close>
+          <Button variant="secondary" className="flex-1">
+            Close
+          </Button>
         </DialogClose>
       </div>
     </div>

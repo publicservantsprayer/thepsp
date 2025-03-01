@@ -5,54 +5,123 @@ import React from 'react'
 import Link from 'next/link'
 import missingPhoto from '@/public/images/no-image.jpg'
 import { PhotoSearchDialog } from './photo-search-dialog'
-import { useLeaderData } from '../use-leader-data'
+import { useLeaderData, usePhotoRefresh } from '../use-leader-data'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { ImageCropper } from './image-response/image-cropper'
 
 export function PhotoTabContent() {
   const { leader } = useLeaderData()
+  const { refreshTimestamp } = usePhotoRefresh()
+  const [reCropDialogOpen, setReCropDialogOpen] = React.useState(false)
+  const [imageTimestamp, setImageTimestamp] = React.useState(Date.now())
+
+  // Update timestamp when leader data changes or when refresh is triggered
+  React.useEffect(() => {
+    setImageTimestamp(Date.now())
+  }, [leader.photoUploadCropped, refreshTimestamp])
+
+  // Function to handle dialog close and refresh the image
+  const handleDialogOpenChange = (open: boolean) => {
+    setReCropDialogOpen(open)
+    if (!open) {
+      // When dialog closes, update the timestamp to force image refresh
+      setImageTimestamp(Date.now())
+    }
+  }
 
   return (
     <div className="flex h-[calc(100cqh-8rem)] flex-col items-center justify-center gap-4 p-4">
-      {/* Cropped Image Section */}
-      {leader.photoUploadCropped && (
+      {/* Photos Section - Side by Side */}
+      <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2">
+        {/* Original Photo */}
         <div className="flex flex-col items-center">
-          <h3 className="mb-2 text-lg font-semibold">Cropped Upload</h3>
-          <img
-            src={`/images/leader-photo/${leader.photoUploadCropped}`}
-            alt="Cropped"
-            className="max-w-full rounded-lg object-cover"
-            onError={(e) => {
-              e.currentTarget.onerror = null // Prevents looping if missingPhoto fails
-              e.currentTarget.src = missingPhoto.src
-            }}
-          />
+          <h3 className="mb-2 text-lg font-semibold">Original Photo</h3>
+          {leader.photoUploadOriginal ? (
+            <img
+              src={`/images/leader-photo/${leader.photoUploadOriginal}`}
+              alt="Original"
+              className="max-h-[300px] max-w-full rounded-lg object-contain"
+              onError={(e) => {
+                e.currentTarget.onerror = null
+                e.currentTarget.src = missingPhoto.src
+              }}
+            />
+          ) : (
+            <div className="flex h-[300px] w-full items-center justify-center rounded-lg border border-dashed">
+              <p className="text-muted-foreground">
+                No original photo uploaded
+              </p>
+            </div>
+          )}
         </div>
-      )}
 
-      {!leader.photoUploadCropped && (
+        {/* Cropped Photo */}
         <div className="flex flex-col items-center">
-          <h3 className="mb-2 py-12 text-lg font-semibold">
-            No photo uploaded yet.
-          </h3>
+          <h3 className="mb-2 text-lg font-semibold">Cropped Photo</h3>
+          {leader.photoUploadCropped ? (
+            <div className="flex flex-col items-center gap-4">
+              <img
+                src={`/images/leader-photo/${leader.photoUploadCropped}?t=${imageTimestamp}`}
+                alt="Cropped"
+                className="max-h-[300px] max-w-full rounded-lg object-contain"
+                onError={(e) => {
+                  e.currentTarget.onerror = null
+                  e.currentTarget.src = missingPhoto.src
+                }}
+              />
+              {leader.photoUploadOriginal && (
+                <Button
+                  variant="outline"
+                  onClick={() => setReCropDialogOpen(true)}
+                  size="sm"
+                >
+                  Re-crop Photo
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div className="flex h-[300px] w-full items-center justify-center rounded-lg border border-dashed">
+              <p className="text-muted-foreground">
+                No cropped photo available
+              </p>
+            </div>
+          )}
         </div>
-      )}
+      </div>
 
-      <div className="mx-auto flex w-2/3 flex-col gap-6">
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 pt-6">
         {/* Photo Search Dialog Component */}
         <PhotoSearchDialog />
 
-        {/* Link to Original */}
-        <Button variant="secondary" asChild>
-          <Link
-            href={`/images/leader-photo/${leader.photoUploadOriginal}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className=""
-          >
-            View Original Uploaded Photo
-          </Link>
-        </Button>
+        {/* Link to Original - Only show if there's an original photo */}
+        {leader.photoUploadOriginal && (
+          <Button variant="secondary" asChild>
+            <Link
+              href={`/images/leader-photo/${leader.photoUploadOriginal}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Original Uploaded Photo
+            </Link>
+          </Button>
+        )}
       </div>
+
+      {/* Re-crop Dialog */}
+      <Dialog open={reCropDialogOpen} onOpenChange={handleDialogOpenChange}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Re-crop Photo</DialogTitle>
+          </DialogHeader>
+          <ImageCropper onCropComplete={() => setImageTimestamp(Date.now())} />
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

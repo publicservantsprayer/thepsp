@@ -61,23 +61,28 @@ export function ImageEditDialog({
   return (
     <Dialog>
       <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-4xl">
         <DialogHeader>
           <DialogTitle>{item.title}</DialogTitle>
           <DialogDescription>
             {isPdf && <span className="text-xs">(Image in PDF)</span>}
-            {!isPdf && !originalPhotoSaved && (
-              <img
-                src={item.link!}
-                height={item.image?.height}
-                width={item.image?.width}
-                alt={item.title!}
-              />
-            )}
           </DialogDescription>
         </DialogHeader>
 
+        {!originalPhotoSaved && !isPdf && (
+          <div className="flex flex-col items-center justify-center p-4">
+            <img
+              src={item.link!}
+              height={item.image?.height}
+              width={item.image?.width}
+              alt={item.title!}
+              className="max-h-[60vh] max-w-full object-contain"
+            />
+          </div>
+        )}
+
         {originalPhotoSaved && <ImageCropper />}
+
         <DialogFooter className="flex gap-4">
           {!originalPhotoSaved && (
             <DialogClose asChild>

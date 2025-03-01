@@ -5,7 +5,7 @@ import { serverGetRootLeader } from '@/server-functions/new-leaders/get-root-lea
 import { serverGetState } from '@/server-functions/get-state'
 import { serverGetStateLeader } from '@/server-functions/new-leaders/get-state-leader'
 import { District, Leader, NewLeaderForm, State } from '@/lib/types'
-import React from 'react'
+import React, { createContext, useContext, useState } from 'react'
 import { serverSaveLeader } from '@/server-functions/new-leaders/save-leader'
 
 interface LeaderDataContextType {
@@ -24,6 +24,15 @@ interface LeaderDataContextType {
 const LeaderDataContext = React.createContext<
   LeaderDataContextType | undefined
 >(undefined)
+
+// Create a context for photo refresh events
+const PhotoRefreshContext = createContext<{
+  refreshTimestamp: number
+  triggerPhotoRefresh: () => void
+}>({
+  refreshTimestamp: Date.now(),
+  triggerPhotoRefresh: () => {},
+})
 
 export function LeaderDataProvider({
   initialLeader,
@@ -133,4 +142,30 @@ export function useLeaderData() {
     throw new Error('useLeaderData must be used within a LeaderDataProvider')
   }
   return context
+}
+
+// Create a provider component
+export function PhotoRefreshProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const [refreshTimestamp, setRefreshTimestamp] = useState(Date.now())
+
+  const triggerPhotoRefresh = () => {
+    setRefreshTimestamp(Date.now())
+  }
+
+  return (
+    <PhotoRefreshContext.Provider
+      value={{ refreshTimestamp, triggerPhotoRefresh }}
+    >
+      {children}
+    </PhotoRefreshContext.Provider>
+  )
+}
+
+// Create a hook to use the photo refresh context
+export function usePhotoRefresh() {
+  return useContext(PhotoRefreshContext)
 }

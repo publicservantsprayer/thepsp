@@ -5,10 +5,10 @@ import React from 'react'
 
 import Cropper, { Area } from 'react-easy-crop'
 import { Button } from '@/components/ui/button'
-import { serverUploadFileFromFormData } from '@/server-functions/leader-photo/upload-photo'
 import { useToast } from '@/components/hooks/use-toast'
 import { useLeaderData, usePhotoRefresh } from '../../use-leader-data'
 import { DialogClose } from '@/components/ui/dialog'
+import { uploadCroppedLeaderPhoto } from '@/lib/api/leader-photo'
 
 interface ImageCropperProps {
   onCropComplete?: () => void
@@ -25,6 +25,7 @@ export function ImageCropper({
   const [crop, setCrop] = React.useState({ x: 0, y: 0 })
   const [zoom, setZoom] = React.useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = React.useState<Area>()
+  const [isUploading, setIsUploading] = React.useState(false)
 
   // Constants
   const thumbnailWidth = 108
@@ -48,6 +49,8 @@ export function ImageCropper({
     }
 
     try {
+      setIsUploading(true)
+
       // Get the cropped and resized image as a blob.
       const thumbnailBlob = await getCroppedImg(
         leaderPhotoUploadOriginalUrl,
@@ -72,8 +75,8 @@ export function ImageCropper({
       formData.append('thumbnailImage', thumbnailBlob as Blob)
       formData.append('croppedImage', croppedImageBlob as Blob)
 
-      // Upload the form data to the server.
-      const result = await serverUploadFileFromFormData({
+      // Upload the form data using our client-side utility function
+      const result = await uploadCroppedLeaderPhoto({
         formData,
         leaderPermaLink: leader.permaLink,
       })
@@ -111,6 +114,7 @@ export function ImageCropper({
       } else {
         toast({
           title: 'Error saving image',
+          description: result.error || 'Failed to save the cropped image',
           variant: 'destructive',
         })
       }
@@ -121,6 +125,8 @@ export function ImageCropper({
         description: 'There was a problem cropping the image.',
         variant: 'destructive',
       })
+    } finally {
+      setIsUploading(false)
     }
   }
 
@@ -156,14 +162,18 @@ export function ImageCropper({
       </div>
 
       <div className="mt-6 flex flex-col gap-4 sm:flex-row">
-        <Button onClick={handleSaveCroppedImage} className="flex-1">
-          Save
-        </Button>
         <DialogClose asChild data-dialog-close>
-          <Button variant="secondary" className="flex-1">
+          <Button variant="secondary" className="flex-1" disabled={isUploading}>
             Close
           </Button>
         </DialogClose>
+        <Button
+          onClick={handleSaveCroppedImage}
+          className="flex-1"
+          disabled={isUploading}
+        >
+          {isUploading ? 'Saving...' : 'Save'}
+        </Button>
       </div>
     </div>
   )

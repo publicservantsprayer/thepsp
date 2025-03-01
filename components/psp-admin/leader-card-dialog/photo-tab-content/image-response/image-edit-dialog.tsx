@@ -15,10 +15,10 @@ import {
 } from '@/components/ui/dialog'
 
 import { Button } from '@/components/ui/button'
-import { serverUploadFileFromUrl } from '@/server-functions/leader-photo/upload-photo'
 import { useToast } from '@/components/hooks/use-toast'
 import { ImageCropper } from './image-cropper'
 import { useLeaderData, usePhotoRefresh } from '../../use-leader-data'
+import { uploadLeaderPhotoFromUrl } from '@/lib/api/leader-photo'
 
 interface ImageEditDialogProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,7 +45,9 @@ export function ImageEditDialog({
   const handleUsePhoto = async () => {
     try {
       setLoading(true)
-      const response = await serverUploadFileFromUrl({
+
+      // Use the client-side utility function to upload the photo from URL
+      const response = await uploadLeaderPhotoFromUrl({
         url: item.link!,
         leaderPermaLink: leader.permaLink,
       })
@@ -68,6 +70,7 @@ export function ImageEditDialog({
       } else {
         toast({
           title: 'Failed to upload photo',
+          description: response.error,
           variant: 'destructive',
         })
       }

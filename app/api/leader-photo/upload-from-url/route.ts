@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     // Authenticate the request
     try {
       mustGetCurrentAdmin()
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 },

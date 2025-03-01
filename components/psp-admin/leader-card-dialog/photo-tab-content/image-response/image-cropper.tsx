@@ -293,7 +293,7 @@ async function getCroppedImg(
       targetWidth,
       targetHeight,
     )
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resizedCanvas.toBlob((file) => {
         resolve(file)
       }, 'image/jpeg')
@@ -301,7 +301,7 @@ async function getCroppedImg(
   }
 
   // Otherwise, return the cropped image.
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     croppedCanvas.toBlob((file) => {
       resolve(file)
     }, 'image/jpeg')

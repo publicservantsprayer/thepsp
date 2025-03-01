@@ -19,91 +19,106 @@ export function ImageCropper({
 }: ImageCropperProps) {
   const { leader, setLeader } = useLeaderData()
   const { triggerPhotoRefresh } = usePhotoRefresh()
+  const { toast } = useToast()
+
+  // Cropper state
   const [crop, setCrop] = React.useState({ x: 0, y: 0 })
   const [zoom, setZoom] = React.useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = React.useState<Area>()
+
+  // Constants
   const thumbnailWidth = 108
   const thumbnailHeight = 148
-  const { toast } = useToast()
 
-  const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
-    setCroppedAreaPixels(croppedAreaPixels)
-  }
-
+  // Check if we have an original photo to crop
   if (!leader.photoUploadOriginal) {
     return <div>Leader has no photo</div>
   }
+
   const leaderPhotoUploadOriginalUrl = `/images/leader-photo/${leader.photoUploadOriginal}`
+
+  // Handlers
+  const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPixels(croppedAreaPixels)
+  }
 
   const handleSaveCroppedImage = async () => {
     if (!croppedAreaPixels) {
       return
     }
 
-    // Get the cropped and resized image as a blob.
-    const thumbnailBlob = await getCroppedImg(
-      leaderPhotoUploadOriginalUrl,
-      croppedAreaPixels,
-      0,
-      { horizontal: false, vertical: false },
-      thumbnailWidth,
-      thumbnailHeight,
-    )
-    if (!thumbnailBlob) return
+    try {
+      // Get the cropped and resized image as a blob.
+      const thumbnailBlob = await getCroppedImg(
+        leaderPhotoUploadOriginalUrl,
+        croppedAreaPixels,
+        0,
+        { horizontal: false, vertical: false },
+        thumbnailWidth,
+        thumbnailHeight,
+      )
+      if (!thumbnailBlob) return
 
-    // Get the cropped image as a blob.
-    const croppedImageBlob = await getCroppedImg(
-      leaderPhotoUploadOriginalUrl,
-      croppedAreaPixels,
-      0,
-      { horizontal: false, vertical: false },
-    )
+      // Get the cropped image as a blob.
+      const croppedImageBlob = await getCroppedImg(
+        leaderPhotoUploadOriginalUrl,
+        croppedAreaPixels,
+        0,
+        { horizontal: false, vertical: false },
+      )
 
-    // Convert the blobs into FormData.
-    const formData = new FormData()
-    formData.append('thumbnailImage', thumbnailBlob as Blob)
-    formData.append('croppedImage', croppedImageBlob as Blob)
+      // Convert the blobs into FormData.
+      const formData = new FormData()
+      formData.append('thumbnailImage', thumbnailBlob as Blob)
+      formData.append('croppedImage', croppedImageBlob as Blob)
 
-    // Upload the form data to the server.
-    const result = await serverUploadFileFromFormData({
-      formData,
-      leaderPermaLink: leader.permaLink,
-      // Maybe we don't want to revalidate the path here because it
-      // will cause a page reload and we don't want to lose the current
-      // dialog state.
-      // revalidatePath: '/psp-admin/leaders-without-photos',
-    })
-    if (result.success) {
-      setLeader({
-        ...leader,
-        photoUploadCropped: result.photoUploadCropped,
-        PhotoFile: result.PhotoFile,
-        hasPhoto: true,
+      // Upload the form data to the server.
+      const result = await serverUploadFileFromFormData({
+        formData,
+        leaderPermaLink: leader.permaLink,
       })
 
-      // Trigger photo refresh to update all images
-      triggerPhotoRefresh()
+      if (result.success) {
+        // Update leader data
+        setLeader({
+          ...leader,
+          photoUploadCropped: result.photoUploadCropped,
+          PhotoFile: result.PhotoFile,
+          hasPhoto: true,
+        })
 
-      // Call the callback if provided
-      if (onCropCompleteCallback) {
-        onCropCompleteCallback()
+        // Trigger photo refresh to update all images
+        triggerPhotoRefresh()
+
+        // Call the callback if provided
+        if (onCropCompleteCallback) {
+          onCropCompleteCallback()
+        }
+
+        // Show success message
+        toast({
+          title: 'Image saved successfully',
+          description: 'The cropped photo has been updated.',
+        })
+
+        // Close the dialog
+        const dialogCloseButton = document.querySelector(
+          '[data-dialog-close]',
+        ) as HTMLButtonElement | null
+        if (dialogCloseButton) {
+          dialogCloseButton.click()
+        }
+      } else {
+        toast({
+          title: 'Error saving image',
+          variant: 'destructive',
+        })
       }
-
+    } catch (error) {
+      console.error('Error saving cropped image:', error)
       toast({
-        title: 'Image saved successfully',
-        description: 'The cropped photo has been updated.',
-      })
-
-      // Find the closest dialog element and close it
-      const dialogCloseButton = document.querySelector(
-        '[data-dialog-close]',
-      ) as HTMLButtonElement | null
-      if (dialogCloseButton) {
-        dialogCloseButton.click()
-      }
-    } else {
-      toast({
-        title: 'Error saving image',
+        title: 'Error processing image',
+        description: 'There was a problem cropping the image.',
         variant: 'destructive',
       })
     }

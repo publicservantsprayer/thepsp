@@ -8,6 +8,12 @@ import { District, Leader, NewLeaderForm, State } from '@/lib/types'
 import React, { createContext, useContext, useState } from 'react'
 import { serverSaveLeader } from '@/server-functions/new-leaders/save-leader'
 
+// Utility function to generate image URLs with cache-busting timestamp
+export function getImageUrl(path: string, timestamp?: number) {
+  const ts = timestamp || Date.now()
+  return `${path}?t=${ts}`
+}
+
 interface LeaderDataContextType {
   rootLeader: Leader | undefined
   stateLeader: Leader | undefined

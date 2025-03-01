@@ -4,7 +4,7 @@
 import React from 'react'
 import missingPhoto from '@/public/images/no-image.jpg'
 import Link from 'next/link'
-import { useLeaderData, usePhotoRefresh } from './use-leader-data'
+import { useLeaderData, usePhotoRefresh, getImageUrl } from './use-leader-data'
 
 export function ProfileImage() {
   const { leader } = useLeaderData()
@@ -17,7 +17,10 @@ export function ProfileImage() {
   }, [leader.PhotoFile, leader.photoUploadCropped, refreshTimestamp])
 
   const thumbnailUrl = leader.hasPhoto
-    ? `/images/leader-photo/thumbnail/${leader.PhotoFile}?t=${imageTimestamp}`
+    ? getImageUrl(
+        `/images/leader-photo/thumbnail/${leader.PhotoFile}`,
+        imageTimestamp,
+      )
     : missingPhoto.src
 
   return (

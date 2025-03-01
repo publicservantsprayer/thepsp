@@ -18,44 +18,69 @@ import { Button } from '@/components/ui/button'
 import { serverUploadFileFromUrl } from '@/server-functions/leader-photo/upload-photo'
 import { useToast } from '@/components/hooks/use-toast'
 import { ImageCropper } from './image-cropper'
-import { useLeaderData } from '../../use-leader-data'
+import { useLeaderData, usePhotoRefresh } from '../../use-leader-data'
+
+interface ImageEditDialogProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  item: any
+  isPdf: boolean
+  children: React.ReactNode
+}
 
 export function ImageEditDialog({
   item,
   isPdf,
   children,
-}: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  item: any
-  isPdf: boolean
-  children: React.ReactNode
-}) {
+}: ImageEditDialogProps) {
   const { leader, setLeader } = useLeaderData()
+  const { triggerPhotoRefresh } = usePhotoRefresh()
+  const { toast } = useToast()
   const [loading, setLoading] = React.useState(false)
   const [originalPhotoSaved, setOriginalPhotoSaved] = React.useState(false)
-  const { toast } = useToast()
 
   if (!item) {
     return null
   }
 
   const handleUsePhoto = async () => {
-    setLoading(true)
-    const response = await serverUploadFileFromUrl({
-      url: item.link!,
-      leaderPermaLink: leader.permaLink,
-    })
-    if (response.success) {
-      toast({ title: 'Photo uploaded successfully' })
-      setLeader({
-        ...leader,
-        photoUploadOriginal: response.photoUploadOriginal,
+    try {
+      setLoading(true)
+      const response = await serverUploadFileFromUrl({
+        url: item.link!,
+        leaderPermaLink: leader.permaLink,
       })
-    } else {
-      toast({ title: 'Failed to upload photo', variant: 'destructive' })
+
+      if (response.success) {
+        // Update leader data
+        setLeader({
+          ...leader,
+          photoUploadOriginal: response.photoUploadOriginal,
+        })
+
+        // Show success message
+        toast({ title: 'Photo uploaded successfully' })
+
+        // Update state to show cropper
+        setOriginalPhotoSaved(true)
+
+        // Trigger photo refresh
+        triggerPhotoRefresh()
+      } else {
+        toast({
+          title: 'Failed to upload photo',
+          variant: 'destructive',
+        })
+      }
+    } catch (error) {
+      console.error('Error uploading photo:', error)
+      toast({
+        title: 'Error uploading photo',
+        description: 'There was a problem uploading the photo.',
+        variant: 'destructive',
+      })
+    } finally {
+      setLoading(false)
     }
-    setOriginalPhotoSaved(true)
-    setLoading(false)
   }
 
   return (

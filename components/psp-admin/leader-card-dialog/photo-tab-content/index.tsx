@@ -5,7 +5,7 @@ import React from 'react'
 import Link from 'next/link'
 import missingPhoto from '@/public/images/no-image.jpg'
 import { PhotoSearchDialog } from './photo-search-dialog'
-import { useLeaderData, usePhotoRefresh } from '../use-leader-data'
+import { useLeaderData, usePhotoRefresh, getImageUrl } from '../use-leader-data'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -35,6 +35,26 @@ export function PhotoTabContent() {
     }
   }
 
+  // Common image error handler
+  const handleImageError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>,
+  ) => {
+    e.currentTarget.onerror = null // Prevent looping if the fallback image fails to load
+    e.currentTarget.src = missingPhoto.src
+  }
+
+  // Generate image URLs with cache busting
+  const originalPhotoUrl = leader.photoUploadOriginal
+    ? `/images/leader-photo/${leader.photoUploadOriginal}`
+    : ''
+
+  const croppedPhotoUrl = leader.photoUploadCropped
+    ? getImageUrl(
+        `/images/leader-photo/${leader.photoUploadCropped}`,
+        imageTimestamp,
+      )
+    : ''
+
   return (
     <div className="flex h-[calc(100cqh-8rem)] flex-col items-center justify-center gap-4 p-4">
       {/* Photos Section - Side by Side */}
@@ -44,13 +64,10 @@ export function PhotoTabContent() {
           <h3 className="mb-2 text-lg font-semibold">Original Photo</h3>
           {leader.photoUploadOriginal ? (
             <img
-              src={`/images/leader-photo/${leader.photoUploadOriginal}`}
+              src={originalPhotoUrl}
               alt="Original"
               className="max-h-[300px] max-w-full rounded-lg object-contain"
-              onError={(e) => {
-                e.currentTarget.onerror = null
-                e.currentTarget.src = missingPhoto.src
-              }}
+              onError={handleImageError}
             />
           ) : (
             <div className="flex h-[300px] w-full items-center justify-center rounded-lg border border-dashed">
@@ -67,13 +84,10 @@ export function PhotoTabContent() {
           {leader.photoUploadCropped ? (
             <div className="flex flex-col items-center gap-4">
               <img
-                src={`/images/leader-photo/${leader.photoUploadCropped}?t=${imageTimestamp}`}
+                src={croppedPhotoUrl}
                 alt="Cropped"
                 className="max-h-[300px] max-w-full rounded-lg object-contain"
-                onError={(e) => {
-                  e.currentTarget.onerror = null
-                  e.currentTarget.src = missingPhoto.src
-                }}
+                onError={handleImageError}
               />
               {leader.photoUploadOriginal && (
                 <Button
@@ -103,7 +117,7 @@ export function PhotoTabContent() {
         {leader.photoUploadOriginal && (
           <Button variant="secondary" asChild>
             <Link
-              href={`/images/leader-photo/${leader.photoUploadOriginal}`}
+              href={originalPhotoUrl}
               target="_blank"
               rel="noopener noreferrer"
             >
